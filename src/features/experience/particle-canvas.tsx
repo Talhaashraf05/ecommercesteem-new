@@ -10,7 +10,6 @@ import { subscribeToTicker } from "@/lib/animation/ticker";
 
 import { experienceProgress } from "./progress";
 import { TIER_CONFIG } from "./quality";
-import { backgroundFragmentShader, backgroundVertexShader } from "./shaders/background";
 import { particleFragmentShader, particleVertexShader } from "./shaders/particles";
 import { cameraAt, particleFade } from "./timeline";
 
@@ -39,7 +38,7 @@ export interface ParticleCanvasProps {
 
 /**
  * WebGL backdrop for the home experience, ported from New Era's particle canvas:
- * an aurora shader + the scroll-driven particle morph + (high tier) UnrealBloom.
+ * the scroll-driven particle morph + (high tier) UnrealBloom.
  *
  * Progress is read from `experienceProgress` (section-relative, legacy units),
  * written each frame by ExperienceSection — never from document scroll. Sized to
@@ -63,8 +62,8 @@ export const ParticleCanvas = ({ tier, active, onContextLost }: ParticleCanvasPr
 
     const scene = new THREE.Scene();
     // Clear to the page --bg token so the stage hands off to the next section
-    // without a seam. (A Color background force-clears this pass, so — as in
-    // New Era — the aurora pass below ends up covered by it.)
+    // without a seam. (New Era's aurora pass was dropped: this Color background
+    // force-clears the frame, so the aurora was never visible.)
     const pageBg = getComputedStyle(document.documentElement).getPropertyValue("--bg").trim();
     scene.background = new THREE.Color(pageBg || "#07070a");
 
@@ -82,25 +81,6 @@ export const ParticleCanvas = ({ tier, active, onContextLost }: ParticleCanvasPr
       onContextLostRef.current();
     };
     renderer.domElement.addEventListener("webglcontextlost", handleContextLost);
-
-    // --- AURORA BACKGROUND SETUP ---
-    const bgScene = new THREE.Scene();
-    const bgCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, -1, 1);
-    const bgGeometry = new THREE.PlaneGeometry(2, 2);
-    const bgMaterial = new THREE.ShaderMaterial({
-      uniforms: {
-        uTime: { value: 0 },
-        uScroll: { value: 0.0 },
-        uResolution: { value: new THREE.Vector2(w, h) },
-        color1: { value: new THREE.Color("#dc3326") },
-        color2: { value: new THREE.Color("#5a0f0a") },
-      },
-      vertexShader: backgroundVertexShader,
-      fragmentShader: backgroundFragmentShader,
-      depthWrite: false,
-    });
-    const bgQuad = new THREE.Mesh(bgGeometry, bgMaterial);
-    bgScene.add(bgQuad);
 
     // Dense SphereGeometry rendered as Points — the moiré rings come for free.
     const geometry = new THREE.SphereGeometry(4.2, config.widthSegments, config.heightSegments);
@@ -126,12 +106,7 @@ export const ParticleCanvas = ({ tier, active, onContextLost }: ParticleCanvasPr
     // --- POST-PROCESSING ---
     const composer = new EffectComposer(renderer);
 
-    const renderBg = new RenderPass(bgScene, bgCamera);
-    composer.addPass(renderBg);
-
     const renderFg = new RenderPass(scene, camera);
-    renderFg.clear = false;
-    renderFg.clearDepth = true;
     composer.addPass(renderFg);
 
     // Bloom (high tier only) runs at half resolution. The composer resizes
@@ -165,7 +140,6 @@ export const ParticleCanvas = ({ tier, active, onContextLost }: ParticleCanvasPr
       renderer.setSize(w, h);
       composer.setSize(w, h);
       sizeBloom();
-      bgMaterial.uniforms.uResolution.value.set(w, h);
     });
     resizeObserver.observe(container);
 
@@ -183,8 +157,6 @@ export const ParticleCanvas = ({ tier, active, onContextLost }: ParticleCanvasPr
       material.uniforms.uTime.value = time;
       material.uniforms.uScroll.value = p;
       material.uniforms.uFade.value = particleFade(p);
-      bgMaterial.uniforms.uTime.value = time;
-      bgMaterial.uniforms.uScroll.value = p;
 
       // Intro dolly — start ~3 units closer and ease back to rest. Faded out
       // past the top so scrolling mid-intro doesn't fight the scroll camera.
@@ -208,8 +180,6 @@ export const ParticleCanvas = ({ tier, active, onContextLost }: ParticleCanvasPr
       renderer.domElement.remove();
       geometry.dispose();
       material.dispose();
-      bgGeometry.dispose();
-      bgMaterial.dispose();
       bloomPass?.dispose();
       composer.dispose();
       renderer.dispose();
