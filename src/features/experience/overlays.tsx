@@ -16,6 +16,10 @@ import { heroOpacity, waveOpacity } from "./timeline";
  * mid-section shows the right beat. Roots are pointer-events-none (buttons opt
  * back in) and `visibility: hidden` when faded out so hidden CTAs can't be
  * clicked or tabbed to. Reduced motion: CSS forces the end state.
+ *
+ * Screen readers: the wave copy is only visible during its beat, so its text is
+ * aria-hidden here and ExperienceSection renders an sr-only copy (with the real
+ * h2) in DOM order. The CTA stays exposed so keyboard users can reach it.
  */
 const useProgressStyle = (fn: (p: number) => number) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -82,10 +86,10 @@ export const WaveOverlay = ({ eyebrow, title, body }: { eyebrow: string; title: 
       style={{ opacity: 0, visibility: "hidden" }}
       className={`pointer-events-none absolute inset-0 z-10 flex items-center justify-center gap-15 px-gutter max-lg:flex-col max-lg:items-start max-lg:justify-center max-lg:gap-8 ${REDUCED_STATIC}`}
     >
-      <div className="max-w-title-sm flex-1 max-lg:flex-none">
+      <div aria-hidden="true" className="max-w-title-sm flex-1 max-lg:flex-none">
         <Eyebrow className="mb-6">{eyebrow}</Eyebrow>
         <AnimatedHeading
-          as="h2"
+          as="div"
           startWhen={startWhen}
           className="font-display text-display-sm font-semibold leading-title tracking-title"
         >
@@ -93,7 +97,7 @@ export const WaveOverlay = ({ eyebrow, title, body }: { eyebrow: string; title: 
         </AnimatedHeading>
       </div>
       <div className="max-w-lead-sm flex-1 max-lg:flex-none">
-        <p className="mb-8 text-lead text-muted">{body}</p>
+        <p aria-hidden="true" className="mb-8 text-lead text-muted">{body}</p>
         <GlassButton href="/services" withArrow>
           Explore services
         </GlassButton>

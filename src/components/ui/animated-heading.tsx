@@ -22,7 +22,8 @@ import { useRevealCascade } from "@/components/common/use-reveal-cascade";
 
 export interface AnimatedHeadingProps {
   children: string;
-  as?: "h1" | "h2" | "h3";
+  /** "div" renders a purely visual copy (no aria-label) — wrap it in aria-hidden. */
+  as?: "h1" | "h2" | "h3" | "div";
   className?: string;
   id?: string;
   /** Per-letter target opacity given the letter's 0..1 position; default solid (1). */
@@ -65,7 +66,7 @@ export const AnimatedHeading = ({
 
   let li = 0;
   return (
-    <Tag ref={rootRef} id={id} aria-label={text} className={className}>
+    <Tag ref={rootRef} id={id} aria-label={as === "div" ? undefined : text} className={className}>
       {words.flatMap((word, wi) => {
         const nodes = [
           <span key={`w${wi}`} aria-hidden="true" className="inline-block">

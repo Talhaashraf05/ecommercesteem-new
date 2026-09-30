@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { frameSteps, nearestSlot, stepTarget, wheelLayout, wrapDeg, SLOT_DEG } from "./wheel-math";
+import { autoSpinRate, frameSteps, nearestSlot, stepTarget, wheelLayout, wrapDeg, AUTO_SPIN, SLOT_DEG } from "./wheel-math";
 
 describe("wheelLayout", () => {
   it("sizes the ring for a 1440×900 section", () => {
@@ -82,5 +82,17 @@ describe("helpers", () => {
     expect(frameSteps(1000 / 120)).toBeCloseTo(0.5);
     expect(frameSteps(5000)).toBeCloseTo(6);
     expect(frameSteps(-3)).toBe(0);
+  });
+});
+
+describe("autoSpinRate", () => {
+  const idle = { paused: false, hovered: false, focused: false };
+  it("drifts only when nothing holds it", () => {
+    expect(autoSpinRate(idle)).toBe(AUTO_SPIN);
+  });
+  it("stops while hovered, focused or paused", () => {
+    expect(autoSpinRate({ ...idle, hovered: true })).toBe(0);
+    expect(autoSpinRate({ ...idle, focused: true })).toBe(0);
+    expect(autoSpinRate({ ...idle, paused: true })).toBe(0);
   });
 });

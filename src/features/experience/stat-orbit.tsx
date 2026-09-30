@@ -12,7 +12,8 @@ import { BEATS, orbitOpacity } from "./timeline";
  * dna-cards + stat-card merged. Positions are a parametric function of
  * progress, written straight to the DOM each frame from the shared ticker.
  * Under reduced motion the loop is skipped and CSS lays the cards out as a
- * static grid.
+ * static grid. The visual cards are aria-hidden (they are only visible during
+ * their beat); ExperienceSection renders an sr-only copy for screen readers.
  */
 
 export interface StatOrbitCard {
@@ -72,6 +73,7 @@ export const StatOrbit = ({ cards }: { cards: StatOrbitCard[] }) => {
   return (
     <div
       ref={containerRef}
+      aria-hidden="true"
       className="pointer-events-none absolute inset-0 z-[5] opacity-0 motion-reduce:static motion-reduce:grid motion-reduce:gap-4 motion-reduce:p-gutter md:motion-reduce:grid-cols-3 motion-reduce:opacity-100!"
       style={{ perspective: "1200px" }}
     >
@@ -83,15 +85,14 @@ export const StatOrbit = ({ cards }: { cards: StatOrbitCard[] }) => {
           }}
           className="absolute left-0 top-0 opacity-0 will-change-transform motion-reduce:relative motion-reduce:transform-none! motion-reduce:opacity-100!"
         >
-          <article
-            aria-label={card.title}
+          <div
             className="w-[var(--width-card)] rounded-3xl border border-line-strong bg-surface-card p-10 shadow-card backdrop-blur-lg max-sm:p-6 motion-reduce:w-auto"
           >
             {/* A stat callout, not a heading — avoids a heading-level skip. */}
             <p className="mb-8 font-display text-kicker font-semibold uppercase tracking-wider text-fg/90">{card.title}</p>
             <p className="mb-6 inline-block font-display text-stat font-semibold leading-none text-gradient-brand">{card.stat}</p>
             <p className="font-display text-lead leading-normal text-muted">{card.description}</p>
-          </article>
+          </div>
         </div>
       ))}
     </div>

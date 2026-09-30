@@ -3,19 +3,20 @@
 // Testimonial wheel — cards on the rim of a large circle whose centre sits below the
 // section, fanning across the top like a spread hand. Slow idle drift, drag to spin
 // with inertia, arrow keys step one slot. One `--rot` custom property on the wheel is
-// written per frame from the shared ticker (ADR-0015); nothing calls setState, so the
-// component never re-renders while it moves. The loop is unsubscribed while the
+// written per frame from the shared ticker (ADR-0015); nothing calls setState per frame,
+// so the component never re-renders while it moves. The loop is unsubscribed while the
 // section is off-screen or the tab is hidden.
 //
 // Phones: the stage is `touch-action: pan-y pinch-zoom`, and a drag only starts once horizontal
 // movement dominates, so vertical page scroll is never trapped.
 // Reduced motion: no drift, no inertia, keyboard steps land instantly; drag still works.
-import { useEffect, useRef } from "react";
+// WCAG 2.2.2: the drift stops while the pointer is over the stage or it has focus, and
+// for good after the first drag or arrow key; a visible toggle pauses / resumes it.
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import type { Testimonial } from "@/content/schemas";
 import { subscribeToTicker } from "@/lib/animation/ticker";
 import {
-  AUTO_SPIN,
   CARD_ASPECT,
   CARD_MAX_H,
   CARD_MIN_H,
@@ -27,6 +28,7 @@ import {
   INERTIA,
   SLOT_DEG,
   SLOTS,
+  autoSpinRate,
   easeOutCubic,
   frameSteps,
   nearestSlot,
@@ -53,6 +55,18 @@ const DEFAULT_VARS = {
   "--rot": "0deg",
 } as CSSProperties;
 
+const PauseIcon = () => (
+  <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" className="size-3">
+    <path d="M4 2h3v12H4zM9 2h3v12H9z" />
+  </svg>
+);
+
+const PlayIcon = () => (
+  <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" className="size-3">
+    <path d="M4 2l10 6-10 6z" />
+  </svg>
+);
+
 const Star = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="size-4">
     <path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z" />
@@ -71,6 +85,14 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
   const wheelRef = useRef<HTMLDivElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
   const liveRef = useRef<HTMLParagraphElement>(null);
+  // `paused` drives the toggle's label; the frame loop reads the ref so toggling never
+  // re-runs the effect. The first drag / arrow key pauses it too (stopForGood).
+  const [paused, setPaused] = useState(false);
+  const pausedRef = useRef(false);
+  const togglePaused = () => {
+    pausedRef.current = !pausedRef.current;
+    setPaused(pausedRef.current);
+  };
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -84,6 +106,13 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
     let topSlot = 0;
     let lastTime: number | null = null;
     let tween: { from: number; to: number; start: number | null } | null = null;
+    let hovered = false;
+    let focused = false;
+    const stopForGood = () => {
+      if (pausedRef.current) return;
+      pausedRef.current = true;
+      setPaused(true);
+    };
 
     const apply = () => {
       wheel.style.setProperty("--rot", `${rot}deg`);
@@ -114,12 +143,14 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
 
     const onPointerDown = (e: PointerEvent) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (pending || dragging) return; // one pointer drives the wheel at a time
       pending = { id: e.pointerId, x: e.clientX, y: e.clientY };
       suppressClick = false;
     };
 
     const onPointerMove = (e: PointerEvent) => {
       if (dragging) {
+        if (!pending || e.pointerId !== pending.id) return;
         const d = (e.clientX - lastX) * DRAG;
         lastX = e.clientX;
         lastMove = performance.now();
@@ -139,6 +170,7 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
         tween = null;
         stage.setPointerCapture(e.pointerId);
         stage.setAttribute("data-dragging", "");
+        stopForGood();
       } else if (dy > DRAG_THRESHOLD) {
         pending = null; // vertical intent: leave it to the page scroll
       }
@@ -168,6 +200,7 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
       if (!delta) return;
       e.preventDefault();
       vel = 0;
+      stopForGood();
       const to = stepTarget(tween ? tween.to : rot, delta);
       if (reducedMotion.matches) {
         tween = null;
@@ -195,9 +228,22 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
         return;
       }
       if (dragging || reducedMotion.matches) return;
-      rot += (vel + AUTO_SPIN) * k;
+      const spin = autoSpinRate({ paused: pausedRef.current, hovered, focused });
+      if (spin === 0 && Math.abs(vel) < 1e-3) {
+        vel = 0; // fling has coasted to a stop and the drift is held: nothing to draw
+        return;
+      }
+      rot += (vel + spin) * k;
       vel *= INERTIA ** k;
       apply();
+    };
+
+    // ── Drift holds (hover / focus) ─────────────────────────────────────────
+    const onPointerEnter = () => { hovered = true; };
+    const onPointerLeave = () => { hovered = false; };
+    const onFocusIn = () => { focused = true; };
+    const onFocusOut = (e: FocusEvent) => {
+      if (!(e.relatedTarget instanceof Node && stage.contains(e.relatedTarget))) focused = false;
     };
 
     let inView = false;
@@ -229,6 +275,10 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
     stage.addEventListener("pointercancel", onPointerEnd);
     stage.addEventListener("click", onClickCapture, true);
     stage.addEventListener("keydown", onKeyDown);
+    stage.addEventListener("pointerenter", onPointerEnter);
+    stage.addEventListener("pointerleave", onPointerLeave);
+    stage.addEventListener("focusin", onFocusIn);
+    stage.addEventListener("focusout", onFocusOut);
 
     return () => {
       unsubscribe?.();
@@ -241,6 +291,10 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
       stage.removeEventListener("pointercancel", onPointerEnd);
       stage.removeEventListener("click", onClickCapture, true);
       stage.removeEventListener("keydown", onKeyDown);
+      stage.removeEventListener("pointerenter", onPointerEnter);
+      stage.removeEventListener("pointerleave", onPointerLeave);
+      stage.removeEventListener("focusin", onFocusIn);
+      stage.removeEventListener("focusout", onFocusOut);
     };
   }, [count, items]);
 
@@ -298,12 +352,23 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
       {/* Top-left UI — source label, live counter, summary. In front of the fan. */}
       <div className="pointer-events-none absolute left-gutter top-[calc(4.5rem+clamp(0.625rem,2.5vh,2.5rem))] z-[4] flex flex-col gap-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
         <span className="text-fg">Upwork · Clutch</span>
-        <span aria-hidden="true" className="flex items-center gap-3 tabular-nums">
-          <span ref={counterRef} className="font-bold text-fg">
-            {pad2(1)}
+        <span className="flex items-center gap-3">
+          <span aria-hidden="true" className="flex items-center gap-3 tabular-nums">
+            <span ref={counterRef} className="font-bold text-fg">
+              {pad2(1)}
+            </span>
+            <span className="h-px w-[1.375rem] bg-line-strong" />
+            <span>{pad2(count)}</span>
           </span>
-          <span className="h-px w-[1.375rem] bg-line-strong" />
-          <span>{pad2(count)}</span>
+          <button
+            type="button"
+            onClick={togglePaused}
+            aria-pressed={paused}
+            aria-label={paused ? "Play testimonials" : "Pause testimonials"}
+            className="pointer-events-auto -my-2 flex size-8 items-center justify-center rounded-full text-muted transition-colors duration-200 hover:text-fg"
+          >
+            {paused ? <PlayIcon /> : <PauseIcon />}
+          </button>
         </span>
         <span className="font-normal normal-case tracking-normal">
           {`${count} verified reviews · Upwork & Clutch`}

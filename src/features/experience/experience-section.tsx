@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { subscribeToTicker } from "@/lib/animation/ticker";
@@ -81,6 +82,24 @@ export const ExperienceSection = ({ copy }: { copy: ExperienceCopy }) => {
         <div aria-hidden="true" className="absolute inset-0 bg-bg/80" />
         {tier !== "off" && <ParticleCanvas tier={tier} active={active} onContextLost={() => setTier("off")} />}
         <HeroOverlay {...copy.hero} />
+        {/* Screen-reader copy of the beats that are only visible mid-scroll (the
+            visual stat cards and wave text are aria-hidden). */}
+        <div className="sr-only">
+          <ul>
+            {copy.cards.map((card) => (
+              <li key={card.id}>
+                <p>
+                  {card.stat} {card.title}
+                </p>
+                <p>{card.description}</p>
+              </li>
+            ))}
+          </ul>
+          <p>{copy.wave.eyebrow}</p>
+          <h2>{copy.wave.title}</h2>
+          <p>{copy.wave.body}</p>
+          <Link href="/services">Explore services</Link>
+        </div>
         <StatOrbit cards={copy.cards} />
         <WaveOverlay {...copy.wave} />
       </div>

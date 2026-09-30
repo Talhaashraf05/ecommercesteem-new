@@ -88,6 +88,22 @@ export const stepTarget = (rot: number, delta: number, slots = SLOTS): number =>
   return (Math.round(rot / step) - delta) * step;
 };
 
+export interface SpinHolds {
+  /** User paused (toggle, or their first drag / arrow key). */
+  paused: boolean;
+  /** Pointer is over the stage. */
+  hovered: boolean;
+  /** Stage (or something in it) has keyboard focus. */
+  focused: boolean;
+}
+
+/**
+ * Idle drift in deg per 60 fps frame. WCAG 2.2.2: auto-moving content must stop
+ * while the user is reading or interacting with it, and on request.
+ */
+export const autoSpinRate = ({ paused, hovered, focused }: SpinHolds): number =>
+  paused || hovered || focused ? 0 : AUTO_SPIN;
+
 /** Ticker delta as a count of 60 fps frames, clamped so a stalled tab can't lurch. */
 export const frameSteps = (dtMs: number): number => Math.min(Math.max(dtMs, 0), 100) / (1000 / 60);
 
