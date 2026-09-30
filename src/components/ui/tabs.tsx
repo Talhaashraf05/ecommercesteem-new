@@ -29,7 +29,7 @@ export const Tabs = ({ tabs, value, onChange, idPrefix }: { tabs: TabDef[]; valu
             tabIndex={selected ? 0 : -1}
             onClick={() => onChange(t.id)}
             onKeyDown={(e) => onKey(e, i)}
-            className={`h-11 rounded-full px-5 text-sm font-medium transition-colors duration-200 ${selected ? "bg-brand text-fg" : "border border-line text-muted hover:text-fg"}`}
+            className={`h-11 rounded-full px-5 text-sm font-medium transition-colors duration-200 ${selected ? "bg-brand-strong text-fg" : "border border-line text-muted hover:text-fg"}`}
           >
             {t.label}
           </button>

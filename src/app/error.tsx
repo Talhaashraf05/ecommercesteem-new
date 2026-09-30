@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { site } from "@/content/site";
+import { buttonClasses } from "@/components/ui/button";
 
 /**
  * Route-segment error boundary. Must be a Client Component. Catches render and
@@ -26,7 +27,7 @@ export default function Error({
       <button
         type="button"
         onClick={reset}
-        className="mt-10 inline-flex h-11 items-center rounded-full bg-brand px-5 text-sm font-medium text-fg transition-colors duration-200 hover:bg-brand-hover"
+        className={`mt-10 ${buttonClasses("primary", "md")}`}
       >
         Try again
       </button>

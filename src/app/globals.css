@@ -8,8 +8,14 @@
   --line-strong: rgb(255 255 255 / 0.15);
   --fg: #f5f5f7;
   --muted: #9a9aa5;
+  /* Contrast rule (WCAG AA): `brand` (#dc3326) on the dark bg is 4.35:1, so it
+     passes AA only for large text (>=24px, or >=18.66px bold) — use it for
+     accents, icons and large display text. White/fg text on a red fill must
+     sit on `brand-strong` (5.37:1), with `brand-strong-hover` (6.58:1) on hover.
+     Never put body-size fg text on plain `brand`. */
   --brand: #dc3326;
-  --brand-hover: #c02a1f;
+  --brand-strong: #c02a1f;
+  --brand-strong-hover: #a8241a;
   --brand-glow: #ff5a3c;
 
   /* Glass surfaces used by GlassButton / Eyebrow / orbit cards. */
@@ -31,7 +37,8 @@
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-brand: var(--brand);
-  --color-brand-hover: var(--brand-hover);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-strong-hover: var(--brand-strong-hover);
   --color-brand-glow: var(--brand-glow);
   --color-surface-glass: var(--surface-glass);
   --color-surface-glass-hover: var(--surface-glass-hover);
@@ -72,7 +79,7 @@ body {
 }
 
 ::selection {
-  background: var(--brand);
+  background: var(--brand-strong);
   color: var(--fg);
 }
 
@@ -103,12 +110,12 @@ html.lenis body {
   }
   @media (max-width: 1440px) {
     html {
-      font-size: 1.111111vw;
+      font-size: clamp(14px, 1.111111vw, 16px);
     }
   }
   @media (max-width: 1024px) {
     html {
-      font-size: 1.5625vw;
+      font-size: clamp(13px, 1.5625vw, 16px);
     }
   }
   @media (max-width: 640px) {

@@ -16,6 +16,8 @@
  * Changing these values means updating the `html` media queries in
  * `globals.css` to match — the formula is:
  *   font-size: FONT_BASE * 100 / baseWidth  (vw)
+ * The 1440 and 1024 ranges are clamped to a readable floor (14px / 13px) so
+ * body text never shrinks below legibility on tablets and small laptops.
  */
 
 /** Root font-size (px) the design is measured against. */

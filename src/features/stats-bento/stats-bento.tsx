@@ -121,11 +121,11 @@ export const StatsBento = ({ content }: StatsBentoProps) => {
         <div className="flex flex-col gap-6">
           <animated.article
             style={cardStyle(2)}
-            className="flex flex-1 flex-col rounded-3xl bg-brand p-8 text-fg [will-change:transform,opacity]"
+            className="flex flex-1 flex-col rounded-3xl bg-brand-strong p-8 text-fg [will-change:transform,opacity]"
           >
-            <p className="text-sm text-fg/80">{data.label}</p>
+            <p className="text-sm text-fg">{data.label}</p>
             <div className={`mt-4 ${STAT_NUM}`}>{data.value}</div>
-            <p className="mt-auto max-w-xs pt-8 text-base leading-relaxed text-fg/80">{data.desc}</p>
+            <p className="mt-auto max-w-xs pt-8 text-base leading-relaxed text-fg">{data.desc}</p>
           </animated.article>
           <animated.article
             style={cardStyle(3)}

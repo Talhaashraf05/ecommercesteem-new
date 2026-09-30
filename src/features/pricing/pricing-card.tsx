@@ -13,7 +13,7 @@ export const PricingCard = ({ tier, serviceSlug }: { tier: PricingTier; serviceS
   return (
     <article className={`relative flex flex-col rounded-3xl border p-8 xl:p-6 ${tier.highlighted ? "border-brand bg-surface-raised" : "border-line bg-surface"}`}>
       {tier.highlighted && (
-        <span className="absolute right-6 top-6 rounded-full bg-brand px-3 py-1 text-kicker text-fg">Most popular</span>
+        <span className="absolute right-6 top-6 rounded-full bg-brand-strong px-3 py-1 text-kicker text-fg">Most popular</span>
       )}
       <h3 className={`text-kicker text-muted ${tier.highlighted ? "pr-28" : ""}`}>{tier.name}</h3>
       <p className="mt-6 text-sm text-muted">{custom ? " " : "Starting at"}</p>
