@@ -14,12 +14,22 @@ const GENERIC_ERROR = "We couldn't send your message. Please try again.";
 
 type Option = { value: string; label: string };
 
-export const ContactForm = ({ serviceOptions }: { serviceOptions: Option[] }) => {
+type ContactFormProps = { serviceOptions: Option[]; service?: string; plan?: string };
+
+/**
+ * Reads `?service=` / `?plan=` and prefills the form. Render inside <Suspense>
+ * with a plain <ContactForm> as the fallback, so the prerendered HTML already
+ * contains the full form (no layout shift when the params resolve).
+ */
+export const ContactFormFromParams = ({ serviceOptions }: { serviceOptions: Option[] }) => {
   const params = useSearchParams();
   const serviceParam = params.get("service") ?? "";
   const service = (SERVICE_SLUGS as readonly string[]).includes(serviceParam) ? serviceParam : "";
   const plan = (params.get("plan") ?? "").slice(0, 40);
+  return <ContactForm serviceOptions={serviceOptions} service={service} plan={plan} />;
+};
 
+export const ContactForm = ({ serviceOptions, service = "", plan = "" }: ContactFormProps) => {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState("");

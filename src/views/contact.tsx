@@ -3,8 +3,9 @@ import { offices, services, site } from "@/content";
 import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/ui/page-hero";
 import { Section } from "@/components/ui/section";
-import { ContactForm } from "@/features/contact-form/contact-form";
+import { ContactForm, ContactFormFromParams } from "@/features/contact-form/contact-form";
 
+const serviceOptions = services.map((s) => ({ value: s.slug, label: s.name }));
 const LINK = "text-fg transition-colors duration-200 hover:text-brand-glow";
 
 export const ContactView = () => (
@@ -18,8 +19,8 @@ export const ContactView = () => (
       <Container className="grid items-start gap-12 lg:grid-cols-[3fr_2fr]">
         <div>
           <h2 id="contact-form-title" className="sr-only">Send us a message</h2>
-          <Suspense fallback={null}>
-            <ContactForm serviceOptions={services.map((s) => ({ value: s.slug, label: s.name }))} />
+          <Suspense fallback={<ContactForm serviceOptions={serviceOptions} />}>
+            <ContactFormFromParams serviceOptions={serviceOptions} />
           </Suspense>
         </div>
         <aside aria-labelledby="contact-info-title" className="rounded-3xl border border-line bg-surface p-8 sm:p-10">
