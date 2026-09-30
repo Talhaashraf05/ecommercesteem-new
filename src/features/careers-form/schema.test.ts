@@ -15,6 +15,12 @@ describe("validateResume", () => {
     expect(validateResume({ name: "cv.exe", size: 10, type: "application/x-msdownload" })).toMatch(/PDF/);
     expect(validateResume({ name: "cv.pdf.exe", size: 10, type: "application/pdf" })).toMatch(/PDF/);
   });
+  it("rejects prototype-chain extensions and names without a dot", () => {
+    expect(validateResume({ name: "x.constructor", size: 10, type: "" })).toMatch(/PDF/);
+    expect(validateResume({ name: "x.toString", size: 10, type: "" })).toMatch(/PDF/);
+    expect(validateResume({ name: "x.__proto__", size: 10, type: "" })).toMatch(/PDF/);
+    expect(validateResume({ name: "pdf", size: 10, type: "" })).toMatch(/PDF/);
+  });
   it("rejects empty files", () => {
     expect(validateResume({ name: "cv.pdf", size: 0, type: "application/pdf" })).toMatch(/empty/);
   });

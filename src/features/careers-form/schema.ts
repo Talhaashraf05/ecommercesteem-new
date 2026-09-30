@@ -23,8 +23,9 @@ const OK_TYPES: Record<string, string> = {
 };
 
 export const validateResume = (file: { name: string; size: number; type: string }): string | null => {
-  const ext = file.name.toLowerCase().split(".").pop() ?? "";
-  if (!(ext in OK_TYPES) || (file.type && file.type !== OK_TYPES[ext])) return "Please upload a PDF, DOC or DOCX file.";
+  const parts = file.name.toLowerCase().split(".");
+  const ext = parts.length > 1 ? (parts.pop() ?? "") : "";
+  if (!Object.hasOwn(OK_TYPES, ext) || (file.type && file.type !== OK_TYPES[ext])) return "Please upload a PDF, DOC or DOCX file.";
   if (file.size > MAX_RESUME_BYTES) return "Your CV must be 4 MB or smaller.";
   if (file.size === 0) return "The selected file is empty.";
   return null;
