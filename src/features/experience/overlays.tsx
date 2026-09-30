@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { AnimatedHeading } from "@/components/ui/animated-heading";
 import { Eyebrow } from "@/components/ui/eyebrow";
@@ -76,22 +76,6 @@ export const WaveOverlay = ({ eyebrow, title, body }: { eyebrow: string; title: 
     if (wave !== "before") setSeen(true);
   }, [wave]);
   const startWhen = reduce || seen;
-  // Memoized so phase changes don't re-render the heading: react-spring v10's
-  // useSprings re-applies the hook's initial `{ p: 0 }` on every render, which
-  // would spring a revealed heading back to hidden. It re-renders only when
-  // `startWhen` flips false → true (once).
-  const heading = useMemo(
-    () => (
-      <AnimatedHeading
-        as="h2"
-        startWhen={startWhen}
-        className="font-display text-display-sm font-semibold leading-title tracking-title"
-      >
-        {title}
-      </AnimatedHeading>
-    ),
-    [title, startWhen],
-  );
   return (
     <div
       ref={ref}
@@ -100,7 +84,13 @@ export const WaveOverlay = ({ eyebrow, title, body }: { eyebrow: string; title: 
     >
       <div className="max-w-title-sm flex-1 max-lg:flex-none">
         <Eyebrow className="mb-6">{eyebrow}</Eyebrow>
-        {heading}
+        <AnimatedHeading
+          as="h2"
+          startWhen={startWhen}
+          className="font-display text-display-sm font-semibold leading-title tracking-title"
+        >
+          {title}
+        </AnimatedHeading>
       </div>
       <div className="max-w-lead-sm flex-1 max-lg:flex-none">
         <p className="mb-8 text-lead text-muted">{body}</p>

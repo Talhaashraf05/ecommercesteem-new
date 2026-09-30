@@ -9,8 +9,14 @@
 // Trigger: by default it starts when the observed `rootRef` element scrolls into view.
 // Pass `{ startWhen }` (a boolean) to instead start when that flag becomes true — used by
 // the hero, which is on-screen behind the preloader rather than scroll-triggered.
+//
+// `p` is a standalone SpringValue (useSpringValue), not `useSpring(() => ({ p: 0 }))`:
+// react-spring v10's useSprings keeps the hook's initial update and re-starts the
+// controller with it in a layout effect on EVERY render, so a parent re-render after
+// the reveal would spring `p` back to 0 (hidden). A SpringValue is created once and
+// only ever moves when we set it, so re-renders keep the last driven progress.
 import { useEffect, useMemo, useRef } from "react";
-import { useSpring, type SpringValue } from "@react-spring/web";
+import { useSpringValue, type SpringValue } from "@react-spring/web";
 import { staggerProgress } from "@/lib/animation/cascade";
 import { subscribeToTicker } from "@/lib/animation/ticker";
 
@@ -33,7 +39,7 @@ export function useRevealCascade<T extends HTMLElement = HTMLElement>(
 ): RevealCascade<T> {
   const rootRef = useRef<T>(null);
   const startedRef = useRef(false);
-  const [{ p }, api] = useSpring(() => ({ p: 0 }));
+  const p = useSpringValue(0);
   const gated = options?.startWhen !== undefined;
   const startWhen = options?.startWhen;
 
@@ -46,7 +52,7 @@ export function useRevealCascade<T extends HTMLElement = HTMLElement>(
       if (startedRef.current) return;
       startedRef.current = true;
       if (reduce) {
-        api.start({ p: 1, immediate: true });
+        p.set(1);
         return;
       }
       let t0: number | null = null;
@@ -56,7 +62,7 @@ export function useRevealCascade<T extends HTMLElement = HTMLElement>(
           if (done) return;
           if (t0 === null) t0 = time;
           const t = Math.min((time - t0) / DURATION, 1);
-          api.start({ p: t, immediate: true });
+          p.set(t);
           if (t >= 1) {
             done = true;
             unsubscribe();
@@ -89,7 +95,7 @@ export function useRevealCascade<T extends HTMLElement = HTMLElement>(
       io.disconnect();
       unsubscribe();
     };
-  }, [api, gated, startWhen]);
+  }, [p, gated, startWhen]);
 
   const localProg = useMemo(
     () => (v: number, i: number) => staggerProgress(v, i, total),
