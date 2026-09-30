@@ -7,6 +7,7 @@ import { Field } from "@/components/ui/field";
 import { buttonClasses } from "@/components/ui/button";
 import { CONTACT_EMAIL } from "@/content/site-basics";
 import { withContactEmail } from "@/lib/form-error";
+import { createSubmitGuard } from "@/lib/submit-guard";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -35,13 +36,29 @@ export const ContactForm = ({ serviceOptions, service = "", plan = "" }: Contact
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState("");
+  const [guard] = useState(createSubmitGuard); // sync in-flight flag; `status` lags a render behind
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (status === "sending") return;
-    const raw = Object.fromEntries(new FormData(e.currentTarget).entries());
-    // zod loads on first submit, keeping it out of the page's first-load JS.
-    const { ContactSchema } = await import("./schema");
+    void guard.run(() => submit(e.currentTarget));
+  };
+
+  const fail = (message: string) => {
+    setServerError(withContactEmail(message, CONTACT_EMAIL));
+    setStatus("error");
+  };
+
+  const submit = async (form: HTMLFormElement) => {
+    const raw = Object.fromEntries(new FormData(form).entries());
+    // zod loads on first submit, keeping it out of the page's first-load JS. A failed
+    // chunk fetch (offline, deploy skew) surfaces as the usual error with the email fallback.
+    let ContactSchema: typeof import("./schema").ContactSchema;
+    try {
+      ({ ContactSchema } = await import("./schema"));
+    } catch {
+      fail(GENERIC_ERROR);
+      return;
+    }
     const parsed = ContactSchema.safeParse(raw);
     if (!parsed.success) {
       const next: Record<string, string> = {};

@@ -5,6 +5,7 @@ import { Field } from "@/components/ui/field";
 import { buttonClasses } from "@/components/ui/button";
 import { CONTACT_EMAIL } from "@/content/site-basics";
 import { withContactEmail } from "@/lib/form-error";
+import { createSubmitGuard } from "@/lib/submit-guard";
 import { validateResume } from "./resume";
 
 type Status = "idle" | "sending" | "success" | "error";
@@ -16,6 +17,7 @@ export const CareersForm = ({ position }: { position: string }) => {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState("");
+  const [guard] = useState(createSubmitGuard); // sync in-flight flag; `status` lags a render behind
 
   const onChange = (e: React.FormEvent<HTMLFormElement>) => {
     const target = e.target as HTMLInputElement;
@@ -28,13 +30,28 @@ export const CareersForm = ({ position }: { position: string }) => {
     });
   };
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (status === "sending") return;
-    const fd = new FormData(e.currentTarget);
+    void guard.run(() => submit(e.currentTarget));
+  };
+
+  const fail = (message: string) => {
+    setServerError(withContactEmail(message, CONTACT_EMAIL));
+    setStatus("error");
+  };
+
+  const submit = async (form: HTMLFormElement) => {
+    const fd = new FormData(form);
     const next: Record<string, string> = {};
-    // zod loads on first submit, keeping it out of the page's first-load JS.
-    const { CareersFieldsSchema } = await import("./schema");
+    // zod loads on first submit, keeping it out of the page's first-load JS. A failed
+    // chunk fetch (offline, deploy skew) surfaces as the usual error with the email fallback.
+    let CareersFieldsSchema: typeof import("./schema").CareersFieldsSchema;
+    try {
+      ({ CareersFieldsSchema } = await import("./schema"));
+    } catch {
+      fail(GENERIC_ERROR);
+      return;
+    }
     const parsed = CareersFieldsSchema.safeParse(Object.fromEntries([...fd.entries()].filter(([, v]) => typeof v === "string")));
     if (!parsed.success) {
       for (const issue of parsed.error.issues) next[String(issue.path[0])] ??= issue.message;
