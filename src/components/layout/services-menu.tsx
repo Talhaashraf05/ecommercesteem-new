@@ -3,7 +3,7 @@
 import { animated, useSpring } from "@react-spring/web";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { ButtonLink } from "@/components/ui/button";
 
@@ -15,6 +15,8 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
   const ref = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const pointerType = useRef("");
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [shift, setShift] = useState(0);
   const pathname = usePathname();
   // Declarative: re-targeted by `open`, never self-running. Reduced motion is
   // handled globally (ReducedMotion skips every spring).
@@ -23,6 +25,26 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  // Keep the centred panel inside the viewport (16px margin) at narrow desktop widths.
+  useLayoutEffect(() => {
+    if (!open) return;
+    const place = () => {
+      const wrap = ref.current;
+      const panel = panelRef.current;
+      if (!wrap || !panel) return;
+      const edge = 16;
+      const { left, width } = wrap.getBoundingClientRect();
+      const half = panel.offsetWidth / 2;
+      const centre = left + width / 2;
+      const min = edge + half;
+      const max = window.innerWidth - edge - half;
+      setShift(Math.max(min, Math.min(max, centre)) - centre);
+    };
+    place();
+    window.addEventListener("resize", place);
+    return () => window.removeEventListener("resize", place);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -74,8 +96,10 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
       </button>
       <div
         id="services-panel"
+        ref={panelRef}
         inert={!open}
-        className="absolute left-1/2 top-full w-[min(60rem,92vw)] -translate-x-1/2 pt-3"
+        style={{ marginLeft: shift }}
+        className="absolute left-1/2 top-full w-[min(72rem,94vw)] -translate-x-1/2 pt-3"
       >
         <animated.div
           style={{
@@ -83,7 +107,7 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
             transform: spring.y.to((v) => `translateY(${v}px)`),
             visibility: spring.opacity.to((o) => (o > 0 ? "visible" : "hidden")),
           }}
-          className="grid grid-cols-[1fr_1fr_1fr_16rem] gap-2 rounded-3xl border border-line bg-surface/95 p-3 shadow-card backdrop-blur-xl"
+          className="grid grid-cols-[1fr_1fr_1fr_14rem] gap-2 rounded-3xl border border-line bg-surface/95 p-3 shadow-card backdrop-blur-xl"
         >
           {groups.map((g) => (
             <div key={g.id}>
@@ -105,7 +129,7 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
                         </span>
                         <span className="min-w-0">
                           <span className="block whitespace-nowrap text-sm font-medium text-fg">{s.shortName}</span>
-                          <span className="block text-xs text-muted">{s.tagline}</span>
+                          <span className="block truncate whitespace-nowrap text-xs text-muted">{s.tagline}</span>
                         </span>
                       </Link>
                     </li>
@@ -114,7 +138,7 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
               </ul>
             </div>
           ))}
-          <div className="flex flex-col justify-between rounded-2xl border border-line bg-[radial-gradient(ellipse_at_top_right,color-mix(in_srgb,var(--brand)_25%,transparent)_0%,transparent_65%)] p-5">
+          <div className="flex flex-col justify-between rounded-2xl border border-line bg-[radial-gradient(ellipse_at_top_right,color-mix(in_srgb,var(--brand)_25%,transparent)_0%,transparent_65%)] p-4">
             <div>
               <p className="text-kicker uppercase tracking-wider text-muted">Free audit</p>
               <p className="mt-2 font-display text-h3 text-fg">Not sure where to start?</p>
