@@ -1,14 +1,15 @@
 "use client";
 
 // 📖 Docs: obsidian/frontend/components/ui.md
-import { animated, easings, useSpring } from "@react-spring/web";
+import { animated } from "@react-spring/web";
+import { useTickerLoopValue } from "@/hooks/use-ticker-value";
 
 /**
  * Looping gradient ring drawn as an overlay element.
  *
  * The source used a CSS `@keyframes gradientBorder` animation on a `::before`
  * pseudo-element — both banned here (hard rule #1, ADR-0002). This recreates it
- * with a spring loop driving `background-position`, and the standard
+ * with a ticker-driven value driving `background-position`, and the standard
  * mask-composite trick to punch out everything but the 1px ring. Purely
  * decorative, so `aria-hidden`.
  */
@@ -30,12 +31,7 @@ export const AnimatedGradientBorder = ({
   thickness = 1,
   className,
 }: AnimatedGradientBorderProps) => {
-  const styles = useSpring({
-    from: { backgroundPosition: "0% 0%" },
-    to: { backgroundPosition: "200% 0%" },
-    loop: true,
-    config: { duration: durationMs, easing: easings.linear },
-  });
+  const v = useTickerLoopValue(durationMs);
 
   return (
     <animated.span
@@ -53,7 +49,7 @@ export const AnimatedGradientBorder = ({
         WebkitMaskComposite: "xor",
         maskComposite: "exclude",
         pointerEvents: "none",
-        ...styles,
+        backgroundPosition: v.to((x) => `${x * 200}% 0%`),
       }}
     />
   );
