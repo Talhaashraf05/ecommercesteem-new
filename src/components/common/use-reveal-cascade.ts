@@ -39,8 +39,11 @@ export function useRevealCascade<T extends HTMLElement = HTMLElement>(
 ): RevealCascade<T> {
   const rootRef = useRef<T>(null);
   const startedRef = useRef(false);
-  const p = useSpringValue(0);
   const gated = options?.startWhen !== undefined;
+  // Scroll-triggered items SSR fully visible (p = 1) so they never depend on JS to be
+  // readable; on mount the effect hides only those that are still below the fold.
+  // Flag-gated items (the experience wave heading) start hidden until their flag.
+  const p = useSpringValue(gated ? 0 : 1);
   const startWhen = options?.startWhen;
 
   useEffect(() => {
@@ -81,6 +84,14 @@ export function useRevealCascade<T extends HTMLElement = HTMLElement>(
     // Default: start when the element scrolls into view.
     const el = rootRef.current;
     if (!el) return;
+    if (reduce) return; // stays visible
+    if (startedRef.current) return; // already revealed; never re-hide on effect re-run
+    // Already in view (or scrolled past) at mount: leave visible, no flash.
+    if (el.getBoundingClientRect().top < window.innerHeight * 0.85) {
+      startedRef.current = true;
+      return;
+    }
+    p.set(0);
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {

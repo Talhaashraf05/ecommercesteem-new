@@ -11,13 +11,13 @@ export const PricingCard = ({ tier, serviceSlug }: { tier: PricingTier; serviceS
   const custom = tier.price === "Custom";
   const [amount, period] = tier.price.split("/");
   return (
-    <article className={`relative flex flex-col rounded-3xl border p-8 ${tier.highlighted ? "border-brand bg-surface-raised" : "border-line bg-surface"}`}>
+    <article className={`relative flex flex-col rounded-3xl border p-8 xl:p-6 ${tier.highlighted ? "border-brand bg-surface-raised" : "border-line bg-surface"}`}>
       {tier.highlighted && (
         <span className="absolute right-6 top-6 rounded-full bg-brand px-3 py-1 text-kicker text-fg">Most popular</span>
       )}
-      <h3 className="text-kicker text-muted">{tier.name}</h3>
+      <h3 className={`text-kicker text-muted ${tier.highlighted ? "pr-28" : ""}`}>{tier.name}</h3>
       <p className="mt-6 text-sm text-muted">{custom ? " " : "Starting at"}</p>
-      <p className="font-display text-stat text-fg">
+      <p className="whitespace-nowrap font-display text-stat leading-tight text-fg xl:text-[2.75rem]">
         {amount}
         {period && <span className="text-lead text-muted">/{period}</span>}
       </p>
