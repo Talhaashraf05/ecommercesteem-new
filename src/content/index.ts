@@ -11,3 +11,6 @@ export * from "./case-studies";
 export * from "./faq";
 export * from "./jobs";
 export * from "./privacy";
+export * from "./timeline";
+export * from "./careers";
+export * from "./team";

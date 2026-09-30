@@ -142,3 +142,26 @@ export const JobSchema = z.object({
 export type CaseStudy = z.infer<typeof CaseStudySchema>;
 export type Faq = z.infer<typeof FaqSchema>;
 export type Job = z.infer<typeof JobSchema>;
+
+export const TimelineItemSchema = z.object({
+  year: z.string(),
+  title: z.string(),
+  body: z.string().max(140),
+  verified: z.boolean(),
+});
+
+export const HiringStepSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  verified: z.boolean(),
+});
+
+export const TeamMemberSchema = z.object({
+  name: z.string(),
+  role: z.string(),
+  photo: z.string().startsWith("/images/"),
+});
+
+export type TimelineItem = z.infer<typeof TimelineItemSchema>;
+export type HiringStep = z.infer<typeof HiringStepSchema>;
+export type TeamMember = z.infer<typeof TeamMemberSchema>;

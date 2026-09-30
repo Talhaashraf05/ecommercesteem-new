@@ -1,7 +1,7 @@
 // Prebuild warning: lists content still flagged `verified: false`.
 import { readFileSync } from "node:fs";
 
-const files = ["src/content/case-studies.ts", "src/content/stats.ts"];
+const files = ["src/content/case-studies.ts", "src/content/stats.ts", "src/content/timeline.ts", "src/content/careers.ts"];
 let count = 0;
 for (const f of files) {
   const text = readFileSync(f, "utf8");

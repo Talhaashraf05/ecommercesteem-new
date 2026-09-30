@@ -78,6 +78,18 @@ describe("case studies, faq, jobs", () => {
   });
 });
 
+describe("timeline, careers, team", () => {
+  it("validates lengths", () => {
+    z.array(S.TimelineItemSchema).length(6).parse(C.timeline);
+    z.array(S.HiringStepSchema).length(4).parse(C.hiringSteps);
+    z.array(S.TeamMemberSchema).length(0).parse(C.team);
+  });
+  it("drafted timeline and hiring steps are flagged unverified", () => {
+    expect(C.timeline.every((t) => t.verified === false)).toBe(true);
+    expect(C.hiringSteps.every((h) => h.verified === false)).toBe(true);
+  });
+});
+
 describe("images", () => {
   it("every referenced image exists", () => {
     const refs = [...C.services.map((s) => s.image), ...C.caseStudies.map((c) => c.image), "/images/team.webp"];
