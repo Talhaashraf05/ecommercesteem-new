@@ -78,6 +78,10 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
       <div
         id="services-panel"
         inert={!open}
+        // Close on any link click, including a link to the current route.
+        onClick={(e) => {
+          if ((e.target as Element).closest("a")) setOpen(false);
+        }}
         className="absolute inset-x-0 top-full mx-auto w-[min(72rem,calc(100%-2*var(--spacing-gutter)))] pt-3"
       >
         <animated.div
@@ -108,7 +112,7 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
                         </span>
                         <span className="min-w-0">
                           <span className="block whitespace-nowrap text-sm font-medium text-fg">{s.shortName}</span>
-                          <span className="block truncate whitespace-nowrap text-xs text-muted">{s.tagline}</span>
+                          <span title={s.tagline} className="block truncate whitespace-nowrap text-xs text-muted">{s.tagline}</span>
                         </span>
                       </Link>
                     </li>

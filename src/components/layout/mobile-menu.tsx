@@ -79,6 +79,11 @@ export const MobileMenu = ({ groups, portal }: { groups: ServiceNavGroup[]; port
         aria-label="Menu"
         hidden={!open}
         data-lenis-prevent
+        // Close on any link tap — including one to the current route, which
+        // doesn't change the pathname and so wouldn't close the menu otherwise.
+        onClick={(e) => {
+          if ((e.target as Element).closest("a")) setOpen(false);
+        }}
         className="fixed inset-0 z-50 overflow-y-auto bg-bg px-gutter pb-10 pt-6"
       >
         <div className="flex justify-end">
