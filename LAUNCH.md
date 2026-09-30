@@ -11,12 +11,13 @@ See `.env.example`.
 | --- | --- | --- | --- |
 | `WEB3FORMS_ACCESS_KEY` | Server only | Yes | Contact form delivery (see §5). |
 | `GOOGLE_SCRIPT_URL` | Server only | Yes | Apps Script endpoint that receives careers applications + CVs. |
-| `NEXT_PUBLIC_SITE_URL` | Public | Yes | `https://ecommercesteem.com`, with no trailing slash. It is used for canonical URLs, the sitemap, OG tags and JSON-LD. |
+| `NEXT_PUBLIC_SITE_URL` | Public | Yes | `https://ecommercesteem.com`. It is used for canonical URLs, the sitemap, OG tags and JSON-LD. A trailing slash is stripped; if it is empty or unset the site falls back to `https://$VERCEL_PROJECT_PRODUCTION_URL` (set automatically by Vercel), then to `http://localhost:3000`. Set it explicitly for production. |
 | `NEXT_PUBLIC_GA_ID` | Public | **Optional** | GA4 ID (`G-XXXXXXX`). Leave empty and no analytics tag is rendered. |
 
 Contact form honeypot field name: **`hp_field`** (used by both the contact and the careers
-forms). Filled submissions get a 200 response and are dropped silently. If you configure
-spam filtering on the Web3Forms side, don't rename it.
+forms). The honeypot is handled entirely server-side, in `/api/contact` and `/api/careers`:
+filled submissions get a 200 response and are dropped silently, and `hp_field` never reaches
+Web3Forms or the Apps Script. There is nothing to configure for it on the Web3Forms side.
 
 ## 2. Verify before launch
 
@@ -75,10 +76,11 @@ Replace the following with real photos. Keep a 16:10-ish crop, about 2000px wide
 - **Case study photos:** `case-hulkfit`, `case-nfinity`, `case-sinkliners`, `case-huskey`,
   `case-revival`, `case-bluestem`. Ideally use each client's product or brand imagery.
 - **Off-brand props, replace first:**
-  - `amazon-2`: a courier handing over a parcel. It reads as shipping/freight, which isn't a service.
   - `meta-ads`: a visible Apple logo (third-party branding).
-  - `case-bluestem` and `case-sinkliners`: tax forms on the desk.
   - Minor: `google-ads` shows a Polish-language UI.
+
+  (`amazon-2`, `case-sinkliners` and `case-bluestem` were already swapped for neutral stock:
+  an analytics dashboard, an analytics close-up and a laptop in hand. They are still stock.)
 
 ## 4. Prices to confirm
 
@@ -98,33 +100,47 @@ that is intended.
 
 ## 5. Web3Forms (contact form)
 
-1. Create a **fresh** Web3Forms access key restricted to the production domain
-   (`ecommercesteem.com`). Don't reuse the key from the old site.
-2. Set it as `WEB3FORMS_ACCESS_KEY` (server-only) in Vercel.
-3. After deploy, send **one real test submission** from `/contact` and confirm it arrives at
+1. Create a **fresh** Web3Forms access key. **Don't add a domain restriction:** the form is
+   submitted server-side from `/api/contact`, so requests carry no browser `Origin` and a
+   domain-restricted key would reject every message. Confirm your Web3Forms plan accepts
+   server-side (API) submissions.
+2. **Revoke the old public key.** It was shipped in the old Vite site's JavaScript bundle, so
+   anyone can use it.
+3. Set the new key as `WEB3FORMS_ACCESS_KEY` (server-only) in Vercel.
+4. After deploy, send **one real test submission** from `/contact` and confirm it arrives at
    `info@ecommercesteem.com`. Also try `/contact?service=amazon-ppc&plan=Basic%20Support` and check
    that the service and plan arrive.
 
 ## 6. Careers (CV upload)
 
-The CV limit is **4 MB** (below Vercel's 4.5 MB request cap). After deploy:
+**Before launch: redeploy the Google Apps Script to a new URL.** The old URL was exposed in the
+old site's JavaScript bundle (`VITE_GOOGLE_SCRIPT_URL`), so anyone can post to it. Create a new
+deployment (Deploy → New deployment), disable the old one, and set the new `/exec` URL as
+`GOOGLE_SCRIPT_URL` (server-only) in Vercel.
+
+The CV limit is **4 MiB = 4,194,304 bytes** (below Vercel's 4.5 MB request cap). The upstream
+call to the Apps Script may take up to 25 s (`maxDuration` is 30 s). After deploy:
 
 - Upload a **~3.9 MB** PDF CV. It should be **accepted** and reach the Apps Script / Drive.
-- Upload a **4.2 MB** CV. The user should see the friendly message
+- Upload a CV of **at least 4.3 MB** (4.2 MB files can be under 4 MiB, depending on whether
+  your OS counts MB as 1,000,000 or 1,048,576 bytes). The user should see the friendly message
   **"Your CV must be 4 MB or smaller."** and nothing is sent.
+- Upload a `.docx` CV and check that it opens correctly from Drive.
 - Optionally try a `.exe` (rejected with "Please upload a PDF, DOC or DOCX file.").
 
 ## 7. Final Lighthouse scores
 
-Measured on 2026-09-30 against `yarn build && yarn start` on localhost with Lighthouse 12.8.2 CLI,
-headless Chrome. Mobile = Moto G emulation (slow 4G, 4× CPU); desktop = `--preset=desktop`.
+Measured against `yarn build && yarn start` on localhost, headless Chrome. Mobile = Moto G
+emulation (slow 4G, 4× CPU); desktop = `--preset=desktop`. `/` and `/contact` (mobile) were
+re-measured on 2026-10-01 after the final fixes with Lighthouse 13.5.0 CLI; the other rows and the
+desktop columns are from 2026-09-30 (Lighthouse 12.8.2) and predate the contrast fix.
 
 | Page | Mobile Perf | Mobile LCP (sim / applied) | Mobile CLS | Desktop Perf | A11y (m/d) | BP (m/d) | SEO (m/d) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `/` | 94 (98 applied) | 3.1 s / 1.6 s | 0 | 100 | 97 / 97 | 100 / 100 | 100 / 100 |
+| `/` | 93 (98 applied) | 3.2 s / 1.6 s | 0 | 100 | 100 / 97 | 100 / 100 | 100 / 100 |
 | `/services/amazon-ppc` | 94 (99 applied) | 3.1 s / 1.6 s | 0 | 100 | 96 / 96 | 100 / 100 | 100 / 100 |
 | `/work` | 92 (98 applied) | 3.4 s / 1.6 s | 0 | 100 | 100 / 100 | 100 / 100 | 100 / 100 |
-| `/contact` | 95 (99 applied) | 2.9 s / 1.7 s | 0 | 100 | 97 / 97 | 100 / 100 | 100 / 100 |
+| `/contact` | 95 (99 applied) | 2.9 s / 1.6 s | 0 | 100 | 100 / 97 | 100 / 100 | 100 / 100 |
 
 Targets: mobile Perf ≥ 90 ✅ · A11y/BP/SEO ≥ 95 ✅ · CLS < 0.05 ✅ · LCP < 2.5 s: ✅ with applied
 throttling, ❌ in the default simulated run.
@@ -137,11 +153,37 @@ pages. The LCP elements are text (the hero lead or `<h1>`) on `/`, `/services/am
 `/contact`, and the first portfolio backdrop on `/work` (now eager-loaded). Re-check with
 PageSpeed Insights on the production URL after deploy.
 
-**Known a11y item (design decision).** The only remaining a11y failure is white text (`fg #F5F5F7`)
-on `brand #DC3326`: primary buttons, the active pricing tab and the "Most popular" badge. That is
-**4.24:1**, just under the 4.5:1 AA threshold for normal-size text. Fixing it needs a design-token
-change (for example a slightly darker brand red for filled buttons, or larger/bold button text), so
-the tokens were left as specified.
+**Colour contrast (resolved).** White text on the brand red used to be 4.24:1 (under AA). It
+now sits on a darker token, `brand-strong` `#C02A1F` (5.37:1 with `fg`), with
+`brand-strong-hover` `#A8241A` on hover. This covers primary buttons, the active pricing tab, the
+"Most popular" badge, the skip link and the red stats card. **The rule** (also in `globals.css`):
+`brand` `#DC3326` on the dark background passes AA only for large text (≥ 24px, or ≥ 18.66px
+bold), so use it for accents, icons and large display text. Any white/`fg` text on a red fill
+must use `brand-strong`.
 
-First-load JS (gzip, module scripts, excluding the lazily loaded three.js chunk): `/` 194.8 KB ·
-`/contact` 197.1 KB · `/careers` 197.4 KB · other pages 183–188 KB. The budget is < 200 KB.
+First-load JS (gzip -9, KiB, module scripts, excluding the lazily loaded three.js chunk), final
+build: `/` 195.9 KB · `/contact` 194.3 KB · `/careers` 194.5 KB · other pages 183–186 KB. The
+budget is < 200 KB, so there is little headroom: check it before adding client-side code.
+
+## 8. Post-deploy checks
+
+1. **Redirects:** every legacy URL in `src/lib/redirects.ts` must return **308** to the right
+   target. Run this and check each `location:` line:
+
+   ```sh
+   for p in /career /career-details/business-developer /career/form /casestudy /projects /project \
+            /privacy-policy /services/amazon /services/ftl-shipping /services/web-development; do
+     echo "$p"; curl -sI "https://ecommercesteem.com$p" | grep -iE '^(HTTP|location)'
+   done
+   ```
+
+   Expected: `/career`, `/career/form` → `/careers`; `/career-details/<id>` → `/careers/<id>`;
+   `/casestudy`, `/projects`, `/project` → `/work`; `/privacy-policy` → `/privacy`;
+   `/services/amazon` → `/services/amazon-account-management`; `/services/ftl-shipping`,
+   `/services/web-development` → `/services`.
+2. **Security headers:** `curl -I https://ecommercesteem.com/` shows `x-content-type-options: nosniff`,
+   `referrer-policy: strict-origin-when-cross-origin`, `content-security-policy: frame-ancestors 'self'`
+   and `permissions-policy: camera=(), microphone=(), geolocation=()`.
+3. **Google Search Console:** verify the domain and submit `https://ecommercesteem.com/sitemap.xml`.
+4. **PageSpeed Insights** (mobile and desktop) on `/`, one service page (e.g.
+   `/services/amazon-ppc`), `/work` and `/contact`. Compare with §7.
