@@ -37,14 +37,15 @@ export const ServiceView = ({ service }: { service: Service }) => {
       <Section label={`About ${service.name}`} className="!pt-0">
         <Container className="grid items-center gap-12 lg:grid-cols-2">
           <p className="text-lead text-muted">{service.description}</p>
-          <Image
-            src={service.image}
-            alt={service.name}
-            width={1200}
-            height={800}
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            className="h-auto w-full rounded-3xl border border-line object-cover"
-          />
+          <div className="relative aspect-[3/2] overflow-hidden rounded-3xl border border-line">
+            <Image
+              src={service.image}
+              alt={service.name}
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+            />
+          </div>
         </Container>
       </Section>
       <Section labelledBy="included-title" tone="raised">
@@ -87,14 +88,15 @@ export const ServiceView = ({ service }: { service: Service }) => {
                     href={`/work/${c.slug}`}
                     className="flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-surface transition-colors duration-200 hover:border-line-strong"
                   >
-                    <Image
-                      src={c.image}
-                      alt={c.client}
-                      width={800}
-                      height={500}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                      className="h-auto w-full object-cover"
-                    />
+                    <div className="relative aspect-[8/5] overflow-hidden">
+                      <Image
+                        src={c.image}
+                        alt={c.client}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                        className="object-cover"
+                      />
+                    </div>
                     <div className="p-8">
                       <p className="text-kicker text-muted">{c.category}</p>
                       <h3 className="mt-2 font-display text-lead text-fg">{c.client}</h3>
