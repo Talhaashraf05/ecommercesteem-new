@@ -11,6 +11,22 @@ const nextConfig: NextConfig = {
     return redirects;
   },
 
+  // Baseline security headers on every route. Only frame-ancestors is set in the
+  // CSP (clickjacking) — a full script/style CSP would need nonces for next/script.
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Content-Security-Policy", value: "frame-ancestors 'self'" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
+    ];
+  },
+
   // Three.js ships its `examples/jsm` add-ons (EffectComposer, UnrealBloomPass…)
   // as untranspiled ESM — transpile them through the Next pipeline.
   transpilePackages: ["three"],

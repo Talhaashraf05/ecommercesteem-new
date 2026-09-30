@@ -8,6 +8,16 @@ describe("seo", () => {
     expect(m.alternates?.canonical).toBe("/about");
     expect(m.openGraph?.url).toBe("/about");
   });
+  it("suffixes OG and twitter titles on sub-pages, keeps the home title absolute", () => {
+    const m = pageMetadata({ title: "About", description: "d", path: "/about" });
+    expect(m.title).toBe("About");
+    expect(m.openGraph?.title).toBe("About | EcommerceSteem");
+    expect(m.twitter?.title).toBe("About | EcommerceSteem");
+    const home = pageMetadata({ description: "d", path: "/" });
+    expect(home.title).toEqual({ absolute: "EcommerceSteem | E-commerce Growth Agency for Amazon, Meta & Google" });
+    expect(home.openGraph?.title).toBe("EcommerceSteem | E-commerce Growth Agency for Amazon, Meta & Google");
+    expect(home.twitter?.title).toBe("EcommerceSteem | E-commerce Growth Agency for Amazon, Meta & Google");
+  });
   it("defaults OG and twitter image, allows override", () => {
     const d = pageMetadata({ description: "d", path: "/x" });
     expect(d.openGraph?.images).toEqual(["/opengraph-image"]);

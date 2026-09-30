@@ -11,7 +11,10 @@ export const generateStaticParams = () => jobs.map((j) => ({ id: j.id }));
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const job = getJob(id);
-  return job ? pageMetadata({ title: job.title, description: job.overview[0], path: `/careers/${id}` }) : {};
+  if (!job) return {};
+  const meta = pageMetadata({ title: job.title, description: job.overview[0], path: `/careers/${id}` });
+  // Closed roles stay reachable (old links) but drop out of the index.
+  return job.active ? meta : { ...meta, robots: { index: false, follow: true } };
 }
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {

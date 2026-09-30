@@ -2,13 +2,20 @@ import type { Metadata, MetadataRoute } from "next";
 import { caseStudies, jobs, services } from "@/content";
 import { siteConfig } from "@/lib/site";
 
-export const pageMetadata = ({ title, description, path, image = siteConfig.ogImage }: { title?: string; description: string; path: string; image?: string }): Metadata => ({
-  title: title ?? { absolute: "EcommerceSteem | E-commerce Growth Agency for Amazon, Meta & Google" },
-  description,
-  alternates: { canonical: path },
-  openGraph: { title: title ?? siteConfig.name, description, url: path, siteName: siteConfig.name, type: "website", locale: "en_US", images: [image] },
-  twitter: { card: "summary_large_image", title: title ?? siteConfig.name, description, images: [image] },
-});
+const HOME_TITLE = "EcommerceSteem | E-commerce Growth Agency for Amazon, Meta & Google";
+
+export const pageMetadata = ({ title, description, path, image = siteConfig.ogImage }: { title?: string; description: string; path: string; image?: string }): Metadata => {
+  // The root layout's "%s | EcommerceSteem" template covers <title> only, so the
+  // social titles get the same suffix here.
+  const socialTitle = title ? `${title} | ${siteConfig.name}` : HOME_TITLE;
+  return {
+    title: title ?? { absolute: HOME_TITLE },
+    description,
+    alternates: { canonical: path },
+    openGraph: { title: socialTitle, description, url: path, siteName: siteConfig.name, type: "website", locale: "en_US", images: [image] },
+    twitter: { card: "summary_large_image", title: socialTitle, description, images: [image] },
+  };
+};
 
 const STATIC = ["/", "/services", "/work", "/about", "/contact", "/careers", "/privacy"];
 

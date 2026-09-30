@@ -12,7 +12,8 @@
 import { z } from "zod";
 
 const publicSchema = z.object({
-  NEXT_PUBLIC_SITE_URL: z.url().optional(),
+  // Canonical origin; a trailing slash is stripped so `${url}/path` never doubles up.
+  NEXT_PUBLIC_SITE_URL: z.url().transform((u) => u.replace(/\/+$/, "")).optional(),
   NEXT_PUBLIC_GA_ID: z.string().regex(/^G-[A-Z0-9]+$/).optional(),
 });
 
@@ -23,7 +24,7 @@ const serverSchema = z.object({
 
 /** Public env — safe to read anywhere (server or client). */
 export const publicEnv = publicSchema.parse({
-  NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+  NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || undefined,
   NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID || undefined,
 });
 
