@@ -14,15 +14,30 @@ describe("wheelLayout", () => {
 
   it("holds the card-height floor on a 390×844 phone", () => {
     const l = wheelLayout(390, 844);
-    expect(l.ch).toBe(312); // 0.5 × 390 = 195 is under the 19.5rem floor
+    expect(l.ch).toBe(312); // 0.5 × 390 = 195 is under the 312px floor
     expect(l.cw).toBeCloseTo(255.84);
     expect(l.r).toBeCloseTo(1023.36);
-    expect(l.cy).toBeCloseTo(0.48 * 844 + 1023.36);
+    expect(l.cy).toBeCloseTo(0.56 * 844 + 1023.36); // portrait offset
     expect(l.quoteSize).toBeCloseTo(15.6);
     expect(l.quoteLines).toBe(6);
   });
 
-  it("caps the card height at 26rem on tall, wide screens", () => {
+  // Bottom of the top-right "What / clients / say" h2: 4.5rem header + clamp(10px, 2.5vh,
+  // 40px) inset + 3 lines at clamp(40px, min(12vw, 15.5vh), 120px) × 0.84 leading, at a
+  // 16px root (the adaptive root is never larger, so this is the worst case).
+  const headingBottom = (w: number, h: number) =>
+    72 + Math.min(40, Math.max(10, 0.025 * h)) + 3 * 0.84 * Math.min(120, Math.max(40, Math.min(0.12 * w, 0.155 * h)));
+
+  it.each([
+    [390, 844],
+    [375, 667],
+    [768, 1024],
+  ])("keeps the top card clear of the heading in %i×%i portrait", (w, h) => {
+    const l = wheelLayout(w, h);
+    expect(l.cy - l.r - l.ch / 2).toBeGreaterThan(headingBottom(w, h));
+  });
+
+  it("caps the card height at 416px on tall, wide screens", () => {
     expect(wheelLayout(3840, 2160).ch).toBe(416);
   });
 });

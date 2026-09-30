@@ -9,23 +9,29 @@ export const CARD_ASPECT = 0.82; // width / height
 export const RADIUS_VW = 0.7; // ring radius as a fraction of section width…
 export const RADIUS_MINK = 4; // …but never under this many card widths
 export const TOP_OFFSET = 0.48; // top card's centre, as a fraction of section height
+// Portrait sections sit the fan lower: 0.48 leaves a dead band under the card on tall
+// phones and pushes it into the top-right heading on short phones and tablets.
+export const TOP_OFFSET_PORTRAIT = 0.56;
 export const AUTO_SPIN = 0.05; // deg per 60 fps frame
 export const DRAG = 0.16; // deg per px of horizontal drag
 export const INERTIA = 0.94; // velocity kept per 60 fps frame
 
-const REM = 16;
-// Card height floor. The brief's 15rem gives a 12.3rem-wide card on phones, which
-// clips the longer quotes to ~4 short lines; 19.5rem (a 16rem-wide card) fits the
-// longest quote in 6 lines at 15.6px. Phones have the vertical room for it.
-export const CARD_MIN_H = 19.5 * REM;
-export const CARD_MAX_H = 26 * REM;
+// Card and quote sizes are fixed px, not rem: the site's root font-size is adaptive
+// (14–16px, see globals.css), and the pre-mount CSS defaults in testimonial-wheel.tsx
+// must resolve to exactly these numbers so nothing moves on hydration.
+// Card height floor. The brief's 15rem (240px) gives a 197px-wide card on phones, which
+// clips the longer quotes to ~4 short lines; 312px (a 256px-wide card) fits the longest
+// quote in 6 lines at 15.6px. Phones have the vertical room for it.
+export const CARD_MIN_H = 312;
+export const CARD_MAX_H = 416;
 
-// Fixed vertical chrome inside a card: p-6 (2 × 24) + stars (16) + two gap-4 (2 × 16)
-// + footer of up to three 20px lines (name, then source · location, date wrapping to two).
+// Fixed vertical chrome inside a card, budgeted at a 16px root (smaller roots leave
+// slack): p-6 (2 × 24) + stars (16) + two gap-4 (2 × 16) + a footer of up to three
+// 20px lines (name, then source · location, date wrapping to two).
 const CARD_CHROME = 48 + 16 + 32 + 60;
 const QUOTE_LEADING = 1.625; // leading-relaxed
-export const QUOTE_MIN_PX = 0.9375 * REM;
-export const QUOTE_MAX_PX = 1.25 * REM;
+export const QUOTE_MIN_PX = 15;
+export const QUOTE_MAX_PX = 20;
 
 export interface WheelLayout {
   /** Card width, px. */
@@ -48,7 +54,8 @@ export const wheelLayout = (width: number, height: number): WheelLayout => {
   const r = Math.max(width * RADIUS_VW, cw * RADIUS_MINK);
   const quoteSize = Math.min(QUOTE_MAX_PX, Math.max(QUOTE_MIN_PX, ch * 0.05));
   const quoteLines = Math.max(3, Math.floor((ch - CARD_CHROME) / (quoteSize * QUOTE_LEADING)));
-  return { cw, ch, r, cy: TOP_OFFSET * height + r, quoteSize, quoteLines };
+  const topOffset = width / height < 1 ? TOP_OFFSET_PORTRAIT : TOP_OFFSET;
+  return { cw, ch, r, cy: topOffset * height + r, quoteSize, quoteLines };
 };
 
 /** Wraps an angle into (-180, 180]. */

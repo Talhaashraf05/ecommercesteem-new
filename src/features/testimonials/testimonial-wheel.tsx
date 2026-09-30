@@ -7,7 +7,7 @@
 // component never re-renders while it moves. The loop is unsubscribed while the
 // section is off-screen or the tab is hidden.
 //
-// Phones: the stage is `touch-action: pan-y`, and a drag only starts once horizontal
+// Phones: the stage is `touch-action: pan-y pinch-zoom`, and a drag only starts once horizontal
 // movement dominates, so vertical page scroll is never trapped.
 // Reduced motion: no drift, no inertia, keyboard steps land instantly; drag still works.
 import { useEffect, useRef } from "react";
@@ -16,6 +16,13 @@ import type { Testimonial } from "@/content/schemas";
 import { subscribeToTicker } from "@/lib/animation/ticker";
 import {
   AUTO_SPIN,
+  CARD_ASPECT,
+  CARD_MAX_H,
+  CARD_MIN_H,
+  QUOTE_MAX_PX,
+  QUOTE_MIN_PX,
+  RADIUS_MINK,
+  RADIUS_VW,
   DRAG,
   INERTIA,
   SLOT_DEG,
@@ -34,13 +41,14 @@ const STEP_MS = 450; // arrow-key tween
 
 // Pre-mount defaults: the same maths as wheelLayout() in CSS, against the section's
 // box (h-lvh, min 40rem), so the fan is in place before hydration and doesn't move.
+// Card and quote bounds are px to match wheel-math (the site's rem is adaptive).
 const SECTION_H = "max(100lvh, 40rem)";
 const DEFAULT_VARS = {
-  "--ch": `max(19.5rem, min(calc(${SECTION_H} * 0.42), 50vw, 26rem))`,
-  "--cw": "calc(var(--ch) * 0.82)",
-  "--r": "max(70vw, calc(var(--cw) * 4))",
-  "--cy": `calc(${SECTION_H} * 0.48 + var(--r))`,
-  "--q-size": "clamp(0.9375rem, calc(var(--ch) * 0.05), 1.25rem)",
+  "--ch": `max(${CARD_MIN_H}px, min(calc(${SECTION_H} * 0.42), 50vw, ${CARD_MAX_H}px))`,
+  "--cw": `calc(var(--ch) * ${CARD_ASPECT})`,
+  "--r": `max(${RADIUS_VW * 100}vw, calc(var(--cw) * ${RADIUS_MINK}))`,
+  "--cy": `calc(${SECTION_H} * var(--top) + var(--r))`, // --top: 0.48, portrait 0.56 (classes)
+  "--q-size": `clamp(${QUOTE_MIN_PX}px, calc(var(--ch) * 0.05), ${QUOTE_MAX_PX}px)`,
   "--q-lines": "6",
   "--rot": "0deg",
 } as CSSProperties;
@@ -245,7 +253,7 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
         aria-roledescription="carousel"
         aria-label="Client testimonials"
         style={DEFAULT_VARS}
-        className="absolute inset-0 z-[2] cursor-grab touch-pan-y select-none focus-visible:-outline-offset-8 data-dragging:cursor-grabbing"
+        className="absolute inset-0 z-[2] cursor-grab touch-pan-y touch-pinch-zoom select-none [--top:0.48] portrait:[--top:0.56] focus-visible:-outline-offset-8 data-dragging:cursor-grabbing"
       >
         {children}
         <p ref={liveRef} aria-live="polite" className="sr-only" />
