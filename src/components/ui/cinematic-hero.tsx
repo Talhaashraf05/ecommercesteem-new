@@ -1,4 +1,5 @@
 import { Container } from "./container";
+import { CountUp } from "./count-up";
 import { Eyebrow } from "./eyebrow";
 
 export interface CinematicHeroStat {
@@ -53,7 +54,9 @@ export const CinematicHero = ({ eyebrow, title, lead, actions, stats, scene, siz
             {stats.map((stat) => (
               <div key={stat.label} className="flex flex-col-reverse gap-1">
                 <dt className="text-kicker text-muted">{stat.label}</dt>
-                <dd className="font-display text-h3 font-semibold text-fg">{stat.value}</dd>
+                <dd className="font-display text-h3 font-semibold text-fg">
+                  <CountUp value={stat.value} />
+                </dd>
               </div>
             ))}
           </dl>
