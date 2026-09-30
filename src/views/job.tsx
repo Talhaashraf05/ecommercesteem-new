@@ -56,6 +56,16 @@ export const JobView = ({ job }: { job: Job }) => (
             </li>
           ))}
         </ul>
+        {!job.active && (
+          <p className="mt-6 inline-flex flex-wrap items-center gap-x-3 gap-y-1 rounded-full border border-line-strong bg-surface-glass px-4 py-2 text-sm text-muted backdrop-blur-md">
+            <span aria-hidden="true" className="size-2 rounded-full bg-brand shadow-[0_0_0.5rem_var(--brand-glow)]" />
+            <span className="text-fg">{copy.closedNotice}</span>
+            <span aria-hidden="true">·</span>
+            <Link href="/careers" className="underline decoration-line-strong underline-offset-4 transition-colors duration-200 hover:text-fg">
+              {copy.closedCta}
+            </Link>
+          </p>
+        )}
       </Container>
     </header>
 
@@ -83,7 +93,6 @@ export const JobView = ({ job }: { job: Job }) => (
             </div>
           ) : (
             <div
-              role="status"
               className="relative overflow-hidden rounded-3xl border border-line bg-surface-glass p-8 backdrop-blur-md sm:p-10"
             >
               <span

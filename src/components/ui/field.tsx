@@ -11,6 +11,9 @@ export interface FieldProps {
   accept?: string;
 }
 
+const FILE =
+  " cursor-pointer file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-surface-glass file:px-4 file:py-2 file:text-sm file:text-fg hover:file:bg-surface-glass-hover";
+
 const CONTROL = "w-full rounded-xl border border-line bg-surface-raised px-4 py-3 text-fg placeholder:text-muted focus:border-line-strong";
 
 export const Field = ({ label, name, type = "text", required, as = "input", options = [], defaultValue, error, autoComplete, accept }: FieldProps) => {
@@ -30,7 +33,13 @@ export const Field = ({ label, name, type = "text", required, as = "input", opti
           {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
       ) : (
-        <input type={type} autoComplete={autoComplete} accept={accept} {...common} />
+        <input
+          type={type}
+          autoComplete={autoComplete}
+          accept={accept}
+          {...common}
+          className={type === "file" ? CONTROL + FILE : CONTROL}
+        />
       )}
       {error && <p id={describedBy} className="text-sm text-brand-glow">{error}</p>}
     </div>

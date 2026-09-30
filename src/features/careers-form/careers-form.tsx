@@ -5,7 +5,7 @@ import { Field } from "@/components/ui/field";
 import { buttonClasses } from "@/components/ui/button";
 import { CONTACT_EMAIL } from "@/content/site-basics";
 import { withContactEmail } from "@/lib/form-error";
-import { CareersFieldsSchema, validateResume } from "./schema";
+import { validateResume } from "./resume";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -33,6 +33,8 @@ export const CareersForm = ({ position }: { position: string }) => {
     if (status === "sending") return;
     const fd = new FormData(e.currentTarget);
     const next: Record<string, string> = {};
+    // zod loads on first submit, keeping it out of the page's first-load JS.
+    const { CareersFieldsSchema } = await import("./schema");
     const parsed = CareersFieldsSchema.safeParse(Object.fromEntries([...fd.entries()].filter(([, v]) => typeof v === "string")));
     if (!parsed.success) {
       for (const issue of parsed.error.issues) next[String(issue.path[0])] ??= issue.message;

@@ -7,7 +7,6 @@ import { Field } from "@/components/ui/field";
 import { buttonClasses } from "@/components/ui/button";
 import { CONTACT_EMAIL } from "@/content/site-basics";
 import { withContactEmail } from "@/lib/form-error";
-import { ContactSchema } from "./schema";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -41,6 +40,8 @@ export const ContactForm = ({ serviceOptions, service = "", plan = "" }: Contact
     e.preventDefault();
     if (status === "sending") return;
     const raw = Object.fromEntries(new FormData(e.currentTarget).entries());
+    // zod loads on first submit, keeping it out of the page's first-load JS.
+    const { ContactSchema } = await import("./schema");
     const parsed = ContactSchema.safeParse(raw);
     if (!parsed.success) {
       const next: Record<string, string> = {};

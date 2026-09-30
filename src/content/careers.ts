@@ -49,6 +49,7 @@ export const careersPage = {
     closedHeading: "This role is closed",
     closedBody: "We're no longer accepting applications for this position.",
     closedCta: "See all careers",
+    closedNotice: "This role is closed",
     backLabel: "All careers",
   },
 };
