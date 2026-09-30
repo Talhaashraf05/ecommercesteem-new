@@ -1,4 +1,12 @@
-import { caseStudies, clients, stats, testimonials } from "@/content";
+import { caseStudies, clients, homeFaq, pricing, processSteps, stats, testimonials } from "@/content";
+import { Container } from "@/components/ui/container";
+import { AnimatedHeading } from "@/components/ui/animated-heading";
+import { Section } from "@/components/ui/section";
+import { CtaBand } from "@/features/cta/cta-band";
+import { FaqList } from "@/features/faq/faq-list";
+import { PricingTabs } from "@/features/pricing/pricing-tabs";
+import { ProcessSteps } from "@/features/process/process-steps";
+import { Testimonials } from "@/features/testimonials/testimonials";
 import { ExperienceSection } from "@/features/experience/experience-section";
 import { LogoMarquee } from "@/features/logo-marquee/logo-marquee";
 import { PortfolioStack } from "@/features/portfolio-stack/portfolio-stack";
@@ -58,6 +66,38 @@ export const HomeView = () => (
         headline: `${c.headlineMetric.value} ${c.headlineMetric.label}`,
         image: c.image,
       }))}
+    />
+    <Section id="process" labelledBy="process-title">
+      <ProcessSteps steps={processSteps} />
+    </Section>
+    <Section id="pricing" labelledBy="pricing-title" tone="raised">
+      <Container>
+        <AnimatedHeading id="pricing-title" as="h2" className="font-display text-display-sm text-fg">
+          Simple, transparent pricing
+        </AnimatedHeading>
+        <div className="mt-12">
+          <PricingTabs groups={pricing} />
+        </div>
+      </Container>
+    </Section>
+    <Section labelledBy="testimonials-title">
+      <Testimonials items={testimonials} />
+    </Section>
+    <Section id="faq" labelledBy="faq-title">
+      <Container width="title">
+        <AnimatedHeading id="faq-title" as="h2" className="font-display text-display-sm text-fg">
+          Questions we get most
+        </AnimatedHeading>
+        <div className="mt-12">
+          <FaqList items={homeFaq} />
+        </div>
+      </Container>
+    </Section>
+    <CtaBand
+      title="Ready to grow?"
+      body="Book a free audit of your Amazon, Meta or Google account. We'll show you where the money is leaking — and what we'd do about it."
+      primary={{ label: "Book a free audit", href: "/contact" }}
+      secondary={{ label: "See our work", href: "/work" }}
     />
   </main>
 );
