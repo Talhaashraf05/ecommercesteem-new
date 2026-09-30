@@ -202,10 +202,10 @@ const PortfolioStackInner = ({ heading, items }: PortfolioStackProps) => {
             Below sm it drops under the card: client + headline span the full width,
             index and link share the line beneath. */}
         <div className="pointer-events-none absolute inset-x-4 bottom-10 z-30 grid grid-cols-[auto_1fr_auto] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] gap-y-5 text-sm tracking-wide sm:inset-x-8 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 sm:gap-6 motion-reduce:hidden">
-          <span className="row-start-2 justify-self-start tabular-nums text-fg/50 sm:row-start-1">
+          <span className="row-start-2 justify-self-start rounded-full bg-bg/90 px-3 py-1 tabular-nums text-fg sm:row-start-1">
             <span ref={indexElRef}>{pad(1)}</span> / {pad(count)}
           </span>
-          <span className="col-span-3 row-start-1 flex min-w-0 flex-col items-center gap-1 text-center sm:col-span-1 sm:col-start-2">
+          <span className="col-span-3 row-start-1 flex min-w-0 max-w-full flex-col items-center gap-1 justify-self-center rounded-2xl bg-bg/90 px-5 py-3 text-center backdrop-blur-md sm:col-span-1 sm:col-start-2">
             <span
               ref={nameElRef}
               className="max-w-full truncate font-display text-lg font-semibold leading-snug tracking-tight text-fg sm:text-2xl"
@@ -221,7 +221,7 @@ const PortfolioStackInner = ({ heading, items }: PortfolioStackProps) => {
             href={workHref(items[0].slug)}
             aria-label={linkLabel(items[0].client)}
             onClick={onViewClick}
-            className="pointer-events-auto col-start-3 row-start-2 justify-self-end whitespace-nowrap sm:row-start-1 rounded-full border border-line-strong bg-bg/40 px-4 py-2.5 text-sm font-medium text-fg/80 backdrop-blur transition-colors duration-200 hover:border-fg/60 hover:text-fg sm:px-6 sm:py-3"
+            className="pointer-events-auto col-start-3 row-start-2 justify-self-end whitespace-nowrap sm:row-start-1 rounded-full border border-line-strong bg-bg/90 px-4 py-2.5 text-sm font-medium text-fg backdrop-blur transition-colors duration-200 hover:border-fg/60 hover:text-fg sm:px-6 sm:py-3"
           >
             View case study
           </Link>
