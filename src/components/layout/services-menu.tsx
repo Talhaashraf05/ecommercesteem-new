@@ -41,6 +41,11 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
       className="relative"
       onPointerEnter={(e) => e.pointerType === "mouse" && setOpen(true)}
       onPointerLeave={(e) => e.pointerType === "mouse" && setOpen(false)}
+      onBlur={(e) => {
+        // Keyboard users tabbing past the panel shouldn't leave it covering the page.
+        const next = e.relatedTarget;
+        if (next && !e.currentTarget.contains(next)) setOpen(false);
+      }}
     >
       <button
         ref={triggerRef}
