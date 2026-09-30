@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+:root {
+  /* Deep space backdrop — from style.css `body { background-color: #030305 }`. */
+  --background: #030305;
+  --foreground: #ffffff;
+  /* Muted body copy — style.css `.hero-subtitle { color: #a0a0a0 }`. */
+  --muted: #a0a0a0;
+
+  /* Brand accent gradient stops — the orange/blue used on every gradient
+     (button border, stat numbers, particle colours). From style.css. */
+  --accent-warm: #ffa091;
+  --accent-cool: #8da9fc;
+
+  /* Frosted-glass surfaces — the rgba(255,255,255,…) fills in style.css. */
+  --surface-glass: rgba(255, 255, 255, 0.04);
+  --surface-glass-strong: rgba(255, 255, 255, 0.05);
+  --surface-glass-hover: rgba(255, 255, 255, 0.08);
+  --surface-icon: rgba(255, 255, 255, 0.02);
+  --surface-button: rgba(20, 25, 35, 0.4);
+  --surface-button-hover: rgba(30, 35, 50, 0.5);
+  /* Darker frosted fill for the stat cards so they stay legible as they orbit
+     in front of the bright, bloomed DNA particles. */
+  --surface-card: rgba(12, 14, 22, 0.55);
+
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glass-strong: rgba(255, 255, 255, 0.15);
+
+  /* Stat-card width — fluid so it widens on desktop yet fits a phone. */
+  --width-card: clamp(220px, 74vw, 400px);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-accent-warm: var(--accent-warm);
+  --color-accent-cool: var(--accent-cool);
+
+  --color-surface-glass: var(--surface-glass);
+  --color-surface-glass-strong: var(--surface-glass-strong);
+  --color-surface-glass-hover: var(--surface-glass-hover);
+  --color-surface-icon: var(--surface-icon);
+  --color-surface-card: var(--surface-card);
+  --color-surface-button: var(--surface-button);
+  --color-surface-button-hover: var(--surface-button-hover);
+  --color-border-glass: var(--border-glass);
+  --color-border-glass-strong: var(--border-glass-strong);
+
+  /* Body uses Inter, display headings use Assistant — both loaded in layout.tsx,
+     mirroring the Google Fonts links in index.html. */
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-assistant);
+
+  /* Type scale — viewport-fluid `clamp()` (min, vw, max) so the large display
+     type stays readable on tablet/mobile without overflowing. Max values are the
+     source px sizes. clamp is viewport-absolute, independent of the rem grid. */
+  --text-display: clamp(34px, 5.4vw, 80px); /* .hero-title */
+  --text-display-sm: clamp(30px, 4.6vw, 64px); /* .wave-title */
+  --text-stat: clamp(44px, 4.8vw, 72px); /* .card-stat */
+  --text-lead: clamp(15px, 1.25vw, 18px); /* .hero-subtitle / .card-desc */
+  --text-eyebrow: clamp(13px, 0.95vw, 14px); /* .top-label */
+  --text-kicker: clamp(12px, 0.9vw, 13px); /* .card-title */
+  --text-button: clamp(15px, 1.1vw, 16px); /* buttons */
+
+  /* Heading line-height / tracking — .hero-title in style.css. Slightly looser
+     than the source 1.1 so tall glyphs / the blur cascade aren't clipped. */
+  --leading-title: 1.2;
+  --tracking-title: -0.03em;
+
+  /* Max-widths for headings / copy — from style.css max-width values. */
+  --container-title: 62.5rem; /* 1000px — .hero-title */
+  --container-title-sm: 50rem; /* 800px — .wave-col-left */
+  --container-lead: 37.5rem; /* 600px — .hero-subtitle */
+  --container-lead-sm: 31.25rem; /* 500px — .wave-col-right */
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+@layer base {
+  /* Adaptive scaling grid — scales the root font-size with the viewport so a
+     rem-based layout stays proportional. Each breakpoint divides FONT_BASE
+     (16px) by the design base width its range was laid out at:
+       font-size: 16 * 100 / baseWidth  (vw)
+     Above 1920px the AdaptiveGrid component takes over (scale-up).
+     Keep in sync with src/components/common/grid/grid.config.ts. */
+  html {
+    font-size: 16px;
+  }
+
+  @media (max-width: 1920px) {
+    html {
+      font-size: 0.833333vw; /* 16 * 100 / 1920 */
+    }
+  }
+
+  @media (max-width: 1440px) {
+    html {
+      font-size: 1.111111vw; /* 16 * 100 / 1440 */
+    }
+  }
+
+  @media (max-width: 1024px) {
+    html {
+      font-size: 1.5625vw; /* 16 * 100 / 1024 */
+    }
+  }
+
+  @media (max-width: 640px) {
+    html {
+      font-size: 4.444444vw; /* 16 * 100 / 360 */
+    }
+  }
+}
+
+@layer utilities {
+}
+
+@layer components {
+}
+
+/* Accent gradient fill clipped to text — .card-stat / .gradient-text in
+   style.css. A genuine CSS exception (background-clip + transparent fill). */
+@utility text-gradient-accent {
+  background-image: linear-gradient(
+    90deg,
+    var(--accent-warm),
+    var(--accent-cool)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Horizontal trailing-edge fade on hero titles — .gradient-text mask in
+   style.css. Mask alpha is algorithmic, not a design colour. */
+@utility text-fade-trailing {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+}
+
+/* Multi-layer inset glass shadow for the primary button — .btn-primary. */
+@utility shadow-glass-btn {
+  box-shadow:
+    inset 0 2px 10px rgba(255, 255, 255, 0.35),
+    inset 0 -6px 16px rgba(0, 0, 0, 0.75),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+@utility shadow-glass-btn-hover {
+  box-shadow:
+    inset 0 3px 14px rgba(255, 255, 255, 0.45),
+    inset 0 -6px 16px rgba(0, 0, 0, 0.85),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+/* Hover lift for the secondary button — .btn-secondary:hover. */
+@utility shadow-glass-btn-secondary {
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Soft drop shadows for frosted surfaces — .top-label / .dna-card. */
+@utility shadow-glass-eyebrow {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+@utility shadow-glass-card {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
