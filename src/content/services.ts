@@ -6,6 +6,7 @@ export const services: Service[] = [
     group: "amazon",
     name: "Amazon Account Management",
     shortName: "Amazon Management",
+    tagline: "Full account & FBA management",
     summary: "End-to-end Amazon support, from product research and listings to storefront design, A+ content and account health.",
     description:
       "Maximize your success on Amazon with our end-to-end FBA services. From product research and listing creation to optimization, storefront design, and A+ content, we help brands dominate the marketplace. Our strategies are designed to increase visibility, boost conversions, and improve overall brand performance on Amazon. Whether you're launching a new product or scaling an existing catalog, we provide comprehensive solutions that handle every aspect of your Amazon business, so you can focus on growth while we manage the details.",
@@ -36,6 +37,7 @@ export const services: Service[] = [
     group: "amazon",
     name: "Amazon PPC Management",
     shortName: "Amazon PPC",
+    tagline: "Sponsored ads, managed daily",
     summary: "Sponsored Products, Brands and Display campaigns managed daily for profitable growth, not just spend.",
     description:
       "We build and manage Amazon advertising around your margins. Every campaign is structured by intent, every keyword is harvested from real search-term data, and bids are adjusted daily against your target ACoS and TACoS so ad spend compounds into organic rank.",
@@ -68,6 +70,7 @@ export const services: Service[] = [
     group: "amazon",
     name: "Amazon Listings & A+ Content",
     shortName: "Listings & A+",
+    tagline: "Listings, A+ & storefronts",
     summary: "Keyword-rich listings, A+ content and storefronts that rank higher and convert more of the traffic you pay for.",
     description:
       "Your listing is your salesperson. We research the terms shoppers actually use, write titles, bullets and descriptions that rank and persuade, and design A+ content and Brand Store pages that lift conversion across your catalog.",
@@ -100,6 +103,7 @@ export const services: Service[] = [
     group: "paid",
     name: "Meta Ads Management",
     shortName: "Meta Ads",
+    tagline: "Facebook & Instagram campaigns",
     summary: "Precision-targeted Facebook and Instagram campaigns with engaging creatives, built to maximize conversions.",
     description:
       "Reach your ideal audience across Facebook, Instagram, and the Meta network with data-driven ad campaigns designed to deliver measurable results. Our Meta Ads management focuses on precision targeting, engaging creatives, and continuous optimization to drive leads, sales, and brand awareness. From audience research and ad creation to campaign monitoring and performance reporting, we manage every aspect of your Meta Ads to ensure your marketing budget is spent efficiently and effectively.",
@@ -130,6 +134,7 @@ export const services: Service[] = [
     group: "paid",
     name: "Google Ads Management",
     shortName: "Google Ads",
+    tagline: "Search, Shopping & PMax",
     summary: "Data-driven Google Ads campaigns that attract high-intent traffic and deliver measurable business growth.",
     description:
       "Unlock the full potential of Google Ads with campaigns designed to attract high-intent customers and maximize ROI. Our team creates tailored strategies that focus on your business goals, leveraging precise targeting, persuasive ad copy, and data-driven optimization to deliver measurable results. We handle everything from keyword research and campaign setup to ongoing performance monitoring, ensuring your ad spend drives tangible growth. Whether you aim to increase leads, sales, or brand awareness, our Google Ads management services give you a competitive edge.",
@@ -160,6 +165,7 @@ export const services: Service[] = [
     group: "retention",
     name: "Email Marketing",
     shortName: "Email Marketing",
+    tagline: "Klaviyo flows & campaigns",
     summary: "Personalized email journeys and automated workflows that turn subscribers into loyal, repeat customers.",
     description:
       "Turn subscribers into loyal customers with strategic, results-driven email marketing campaigns. Our team designs personalized email journeys that deliver the right message to the right audience at the right time, increasing engagement, boosting conversions, and building long-term brand loyalty. From list segmentation and campaign creation to automation and performance analysis, we handle every step of your email marketing strategy to ensure measurable growth and maximum ROI.",
@@ -190,6 +196,7 @@ export const services: Service[] = [
     group: "retention",
     name: "SEO Optimization",
     shortName: "SEO",
+    tagline: "Organic search growth",
     summary: "Data-driven SEO that lifts organic visibility and attracts qualified traffic for long-term search growth.",
     description:
       "Increase your website's visibility and attract qualified traffic with our comprehensive SEO management services. We create data-driven strategies that improve search rankings, enhance user experience, and drive measurable results. From on-page optimization to technical SEO and link-building, we ensure your website ranks higher and reaches the right audience. Our team focuses on long-term growth, keeping up with algorithm updates and industry best practices to deliver sustainable results for your business.",

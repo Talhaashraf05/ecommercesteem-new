@@ -33,6 +33,12 @@ describe("services & pricing", () => {
     z.array(S.ServiceSchema).length(7).parse(C.services);
     z.array(S.PricingGroupSchema).length(5).parse(C.pricing);
   });
+  it("every service has a tagline of at most 40 characters", () => {
+    for (const s of C.services) {
+      expect(s.tagline.length).toBeGreaterThan(0);
+      expect(s.tagline.length).toBeLessThanOrEqual(40);
+    }
+  });
   it("every service slug is unique and resolves", () => {
     expect(new Set(C.services.map((s) => s.slug)).size).toBe(7);
     for (const s of C.services) expect(C.getService(s.slug)).toBe(s);

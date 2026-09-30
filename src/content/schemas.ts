@@ -72,6 +72,7 @@ export const ServiceSchema = z.object({
   group: z.enum(["amazon", "paid", "retention"]),
   name: z.string(),
   shortName: z.string(),
+  tagline: z.string().max(40),
   summary: z.string().max(160),
   description: z.string(),
   image: z.string().startsWith("/images/"),

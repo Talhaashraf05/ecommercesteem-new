@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { ButtonLink } from "@/components/ui/button";
 import { useScroll } from "@/hooks/smooth-scroll/use-scroll";
 
+import { serviceIcon } from "./service-icons";
 import type { ServiceNavGroup } from "./service-nav";
 
 export const MobileMenu = ({ groups, portal }: { groups: ServiceNavGroup[]; portal: string }) => {
@@ -98,13 +99,22 @@ export const MobileMenu = ({ groups, portal }: { groups: ServiceNavGroup[]; port
                 {g.label}
               </p>
               <ul className="flex flex-col gap-3">
-                {g.items.map((s) => (
+                {g.items.map((s) => {
+                  const Icon = serviceIcon[s.slug];
+                  return (
                     <li key={s.slug}>
-                      <Link href={`/services/${s.slug}`} className="text-lg">
-                        {s.name}
+                      <Link href={`/services/${s.slug}`} className="flex items-start gap-3">
+                        <span className="grid size-9 shrink-0 place-items-center rounded-xl border border-line bg-surface text-brand">
+                          <Icon />
+                        </span>
+                        <span>
+                          <span className="block text-lg">{s.name}</span>
+                          <span className="block text-sm text-muted">{s.tagline}</span>
+                        </span>
                       </Link>
                     </li>
-                  ))}
+                  );
+                })}
               </ul>
             </div>
           ))}

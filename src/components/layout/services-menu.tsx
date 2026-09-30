@@ -1,9 +1,13 @@
 "use client";
 
+import { animated, useSpring } from "@react-spring/web";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { ButtonLink } from "@/components/ui/button";
+
+import { serviceIcon } from "./service-icons";
 import type { ServiceNavGroup } from "./service-nav";
 
 export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
@@ -12,6 +16,9 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const pointerType = useRef("");
   const pathname = usePathname();
+  // Declarative: re-targeted by `open`, never self-running. Reduced motion is
+  // handled globally (ReducedMotion skips every spring).
+  const spring = useSpring({ opacity: open ? 1 : 0, y: open ? 0 : -8 });
 
   useEffect(() => {
     setOpen(false);
@@ -67,34 +74,64 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
       </button>
       <div
         id="services-panel"
-        hidden={!open}
-        className="absolute left-1/2 top-full w-[min(56rem,92vw)] -translate-x-1/2 pt-3"
+        inert={!open}
+        className="absolute left-1/2 top-full w-[min(60rem,92vw)] -translate-x-1/2 pt-3"
       >
-        <div className="grid grid-cols-3 gap-8 rounded-3xl border border-line bg-surface/95 p-8 shadow-card backdrop-blur-xl">
+        <animated.div
+          style={{
+            opacity: spring.opacity,
+            transform: spring.y.to((v) => `translateY(${v}px)`),
+            visibility: spring.opacity.to((o) => (o > 0 ? "visible" : "hidden")),
+          }}
+          className="grid grid-cols-[1fr_1fr_1fr_16rem] gap-2 rounded-3xl border border-line bg-surface/95 p-3 shadow-card backdrop-blur-xl"
+        >
           {groups.map((g) => (
             <div key={g.id}>
-              <p className="mb-4 text-kicker uppercase tracking-wider text-brand-glow">
+              <p className="flex items-center gap-2 px-3 pb-2 pt-3 text-kicker uppercase tracking-wider text-muted">
+                <span aria-hidden="true" className="size-1.5 rounded-full bg-brand" />
                 {g.label}
               </p>
-              <ul className="flex flex-col gap-4">
-                {g.items.map((s) => (
+              <ul className="flex flex-col">
+                {g.items.map((s) => {
+                  const Icon = serviceIcon[s.slug];
+                  return (
                     <li key={s.slug}>
-                      <Link href={`/services/${s.slug}`} className="block rounded-md">
-                        <span className="block text-fg">{s.name}</span>
-                        <span className="block text-sm text-muted">{s.summary}</span>
+                      <Link
+                        href={`/services/${s.slug}`}
+                        className="flex items-start gap-3 rounded-2xl px-3 py-2.5 transition-colors duration-200 hover:bg-surface-raised focus-visible:bg-surface-raised"
+                      >
+                        <span className="grid size-9 shrink-0 place-items-center rounded-xl border border-line bg-bg/60 text-brand">
+                          <Icon />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block whitespace-nowrap text-sm font-medium text-fg">{s.shortName}</span>
+                          <span className="block text-xs text-muted">{s.tagline}</span>
+                        </span>
                       </Link>
                     </li>
-                  ))}
+                  );
+                })}
               </ul>
             </div>
           ))}
-          <Link
-            href="/services"
-            className="col-span-3 rounded-md text-sm text-fg hover:text-brand-glow"
-          >
-            All services →
-          </Link>
-        </div>
+          <div className="flex flex-col justify-between rounded-2xl border border-line bg-[radial-gradient(ellipse_at_top_right,color-mix(in_srgb,var(--brand)_25%,transparent)_0%,transparent_65%)] p-5">
+            <div>
+              <p className="text-kicker uppercase tracking-wider text-muted">Free audit</p>
+              <p className="mt-2 font-display text-h3 text-fg">Not sure where to start?</p>
+              <p className="mt-2 text-sm text-muted">
+                We&apos;ll review your Amazon, Meta or Google account and show you where the money&apos;s leaking.
+              </p>
+            </div>
+            <div className="mt-4 flex flex-col items-start gap-3">
+              <ButtonLink href="/contact" size="md" withArrow>
+                Book a free audit
+              </ButtonLink>
+              <ButtonLink href="/services" variant="ghost" className="text-sm">
+                All services →
+              </ButtonLink>
+            </div>
+          </div>
+        </animated.div>
       </div>
     </div>
   );

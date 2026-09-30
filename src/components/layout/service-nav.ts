@@ -1,9 +1,10 @@
+import type { ServiceSlug } from "./service-icons";
 import { serviceGroups, services } from "@/content";
 
 export type ServiceNavGroup = {
   id: string;
   label: string;
-  items: { slug: string; name: string; summary: string }[];
+  items: { slug: ServiceSlug; name: string; shortName: string; tagline: string }[];
 };
 
 // Built on the server and passed to the client menus as props, so the full
@@ -13,5 +14,5 @@ export const serviceNav: ServiceNavGroup[] = serviceGroups.map((g) => ({
   label: g.label,
   items: services
     .filter((s) => s.group === g.id)
-    .map(({ slug, name, summary }) => ({ slug, name, summary })),
+    .map(({ slug, name, shortName, tagline }) => ({ slug, name, shortName, tagline })),
 }));
