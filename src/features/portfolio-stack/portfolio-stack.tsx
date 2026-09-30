@@ -162,7 +162,7 @@ const PortfolioStackInner = ({ heading, items }: PortfolioStackProps) => {
             <animated.div
               key={item.slug}
               suppressHydrationWarning
-              className="absolute left-1/2 top-1/2 aspect-[16/10] w-[min(90vw,46rem,calc((100lvh-22.5rem)*1.6))] overflow-hidden rounded-3xl bg-surface shadow-2xl [backface-visibility:hidden] [will-change:transform] motion-reduce:static motion-reduce:w-full motion-reduce:opacity-100! motion-reduce:transform-none! motion-reduce:shadow-none"
+              className="absolute left-1/2 top-1/2 aspect-[16/10] w-[min(90vw,46rem,max(16rem,calc((100lvh-22.5rem)*1.6)))] overflow-hidden rounded-3xl bg-surface shadow-2xl [backface-visibility:hidden] [will-change:transform] motion-reduce:static motion-reduce:w-full motion-reduce:opacity-100! motion-reduce:transform-none! motion-reduce:shadow-none"
               style={{
                 transform: f.to((v) => cardFrame(i, v).transform),
                 opacity: f.to((v) => cardFrame(i, v).opacity),
