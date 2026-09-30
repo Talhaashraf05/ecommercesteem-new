@@ -7,3 +7,7 @@ export * from "./process";
 export * from "./values";
 export * from "./services";
 export * from "./pricing";
+export * from "./case-studies";
+export * from "./faq";
+export * from "./jobs";
+export * from "./privacy";

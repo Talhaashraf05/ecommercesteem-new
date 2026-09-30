@@ -109,3 +109,40 @@ export type ServiceGroup = z.infer<typeof ServiceSchema>["group"];
 export type Service = z.infer<typeof ServiceSchema>;
 export type PricingTier = z.infer<typeof PricingTierSchema>;
 export type PricingGroup = z.infer<typeof PricingGroupSchema>;
+
+export const MetricSchema = z.object({ value: z.string(), label: z.string() });
+
+export const CaseStudySchema = z.object({
+  slug: z.string().regex(/^[a-z0-9-]+$/),
+  client: z.string(),
+  category: z.string(),
+  year: z.string().regex(/^\d{4}$/),
+  services: z.array(z.enum(SERVICE_SLUGS)).min(1),
+  headlineMetric: MetricSchema,
+  metrics: z.array(MetricSchema).length(3),
+  challenge: z.string(),
+  approach: z.array(z.string()).min(3).max(5),
+  outcome: z.string(),
+  image: z.string().startsWith("/images/"),
+  verified: z.boolean(),
+});
+
+export const FaqSchema = z.object({ q: z.string(), a: z.string() });
+
+export const JobSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  category: z.string(),
+  type: z.string(),
+  mode: z.string(),
+  experience: z.string(),
+  location: z.string(),
+  active: z.boolean(),
+  overview: z.array(z.string()),
+  whatYoullDo: z.array(z.string()),
+  whatYoullBring: z.array(z.string()),
+});
+
+export type CaseStudy = z.infer<typeof CaseStudySchema>;
+export type Faq = z.infer<typeof FaqSchema>;
+export type Job = z.infer<typeof JobSchema>;
