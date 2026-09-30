@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { subscribeToTicker } from "@/lib/animation/ticker";
+import { markerPercent } from "./project";
 
 const PERIOD = 2400; // ms per pulse loop
 const STAGGER = 800; // ms phase offset between markers
@@ -12,9 +13,8 @@ const GLOW = "0 0 0.75rem 0.125rem var(--brand-glow)";
 
 export interface PulseMarker {
   label: string;
-  /** Position as a percentage of the map box. */
-  left: number;
-  top: number;
+  lon: number;
+  lat: number;
 }
 
 const ringStyle = (t: number) => ({
@@ -66,20 +66,23 @@ export const OfficePulse = ({ markers }: { markers: PulseMarker[] }) => {
 
   return (
     <div ref={rootRef} className="pointer-events-none absolute inset-0">
-      {markers.map(({ label, left, top }) => (
-        <span
-          key={label}
-          className="absolute size-2 -translate-x-1/2 -translate-y-1/2"
-          style={{ left: `${left}%`, top: `${top}%` }}
-        >
+      {markers.map(({ label, lon, lat }) => {
+        const { left, top } = markerPercent(lon, lat);
+        return (
           <span
-            data-ring=""
-            className="absolute inset-0 rounded-full border border-brand will-change-transform"
-            style={ringStyle(0.25)}
-          />
-          <span className="absolute inset-0 rounded-full bg-brand" style={{ boxShadow: GLOW }} />
-        </span>
-      ))}
+            key={label}
+            className="absolute size-2 -translate-x-1/2 -translate-y-1/2"
+            style={{ left: `${left.toFixed(3)}%`, top: `${top.toFixed(3)}%` }}
+          >
+            <span
+              data-ring=""
+              className="absolute inset-0 rounded-full border border-brand will-change-transform"
+              style={ringStyle(0.25)}
+            />
+            <span className="absolute inset-0 rounded-full bg-brand" style={{ boxShadow: GLOW }} />
+          </span>
+        );
+      })}
     </div>
   );
 };
