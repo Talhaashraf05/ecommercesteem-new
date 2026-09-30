@@ -1,43 +1,41 @@
-import { z } from "zod";
-
+import { NextResponse } from "next/server";
 import { getServerEnv } from "@/env";
 import { ApiError, handle } from "@/lib/api";
+import { createRateLimiter } from "@/lib/rate-limit";
+import { site } from "@/content";
+import { ContactSchema } from "@/features/contact-form/schema";
 
-/**
- * Example `app/api` endpoint — a contact / lead submission.
- *
- * Demonstrates the convention: the handler owns the work — it validates input,
- * reads a secret env var, and calls an upstream service inline. Secrets are
- * safe here because `route.ts` is never bundled to the browser.
- */
-
-// Request schema — kept in the route since it isn't shared. Lift to a shared
-// module only once another route needs it.
-const contactSchema = z.object({
-  name: z.string().min(1).max(100),
-  email: z.email(),
-  message: z.string().min(1).max(2000),
-});
+const allow = createRateLimiter({ limit: 5, windowMs: 10 * 60 * 1000 });
+const FALLBACK = `We couldn't send your message. Please email us at ${site.email}.`;
 
 export const POST = handle(async (req) => {
-  const input = contactSchema.parse(await req.json());
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (!allow(ip)) throw new ApiError(429, "rate_limited", "Too many requests. Please try again in a few minutes.");
 
-  const { CONTACT_ENDPOINT } = getServerEnv();
+  const input = ContactSchema.parse(await req.json());
+  if (input.website) return NextResponse.json({ data: { received: true } });
 
-  if (CONTACT_ENDPOINT) {
-    // Forward the lead to the configured upstream (CRM, webhook, …).
-    const upstream = await fetch(CONTACT_ENDPOINT, {
+  const { WEB3FORMS_ACCESS_KEY } = getServerEnv();
+  if (!WEB3FORMS_ACCESS_KEY) throw new ApiError(502, "not_configured", FALLBACK);
+
+  const { website: _hp, ...lead } = input;
+  let ok = false;
+  try {
+    const upstream = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(input),
+      headers: { "content-type": "application/json", accept: "application/json" },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_ACCESS_KEY,
+        subject: `New enquiry from ${lead.name}${lead.service ? ` — ${lead.service}` : ""}`,
+        from_name: "EcommerceSteem website",
+        ...lead,
+      }),
     });
-    if (!upstream.ok) {
-      throw new ApiError(502, "upstream_error", "Failed to deliver the message.");
-    }
-  } else {
-    // No upstream configured — log server-side so the starter runs as-is.
-    console.log("[api/contact] submission:", input);
+    const json = (await upstream.json().catch(() => ({}))) as { success?: boolean };
+    ok = upstream.ok && json.success === true;
+  } catch {
+    ok = false;
   }
-
+  if (!ok) throw new ApiError(502, "upstream_error", FALLBACK);
   return { received: true };
 });

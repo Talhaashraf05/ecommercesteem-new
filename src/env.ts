@@ -16,8 +16,8 @@ const publicSchema = z.object({
 });
 
 const serverSchema = z.object({
-  /** Optional upstream the contact endpoint forwards leads to (CRM / webhook). */
-  CONTACT_ENDPOINT: z.url().optional(),
+  WEB3FORMS_ACCESS_KEY: z.string().min(1).optional(),
+  GOOGLE_SCRIPT_URL: z.url().optional(),
 });
 
 /** Public env — safe to read anywhere (server or client). */
@@ -33,7 +33,8 @@ let cachedServerEnv: z.infer<typeof serverSchema> | undefined;
  */
 export function getServerEnv() {
   cachedServerEnv ??= serverSchema.parse({
-    CONTACT_ENDPOINT: process.env.CONTACT_ENDPOINT,
+    WEB3FORMS_ACCESS_KEY: process.env.WEB3FORMS_ACCESS_KEY || undefined,
+    GOOGLE_SCRIPT_URL: process.env.GOOGLE_SCRIPT_URL || undefined,
   });
   return cachedServerEnv;
 }
