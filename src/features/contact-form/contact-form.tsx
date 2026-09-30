@@ -88,8 +88,8 @@ export const ContactForm = () => {
       )}
       <Field label="Message" name="message" as="textarea" required error={errors.message} />
       <div aria-hidden="true" className="absolute -left-[9999px]">
-        <label htmlFor="f-website">Website</label>
-        <input id="f-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+        <label htmlFor="f-hp_field">Leave this field empty</label>
+        <input id="f-hp_field" name="hp_field" type="text" tabIndex={-1} autoComplete="off" />
       </div>
       {status === "error" && (
         <p role="alert" className="rounded-xl border border-brand bg-surface-raised px-4 py-3 text-sm text-brand-glow">

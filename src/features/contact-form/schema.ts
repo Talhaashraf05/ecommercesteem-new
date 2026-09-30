@@ -10,6 +10,6 @@ export const ContactSchema = z.object({
   plan: z.string().trim().max(40).optional(),
   budget: z.string().trim().max(40).optional(),
   message: z.string().trim().min(10, "Tell us a little more (10+ characters)").max(3000),
-  website: z.string().optional(),
+  hp_field: z.string().max(500).optional(),
 });
 export type ContactInput = z.infer<typeof ContactSchema>;

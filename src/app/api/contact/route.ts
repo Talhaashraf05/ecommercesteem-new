@@ -13,12 +13,12 @@ export const POST = handle(async (req) => {
   if (!allow(ip)) throw new ApiError(429, "rate_limited", "Too many requests. Please try again in a few minutes.");
 
   const input = ContactSchema.parse(await req.json());
-  if (input.website) return NextResponse.json({ data: { received: true } });
+  if (input.hp_field) return NextResponse.json({ data: { received: true } });
 
   const { WEB3FORMS_ACCESS_KEY } = getServerEnv();
   if (!WEB3FORMS_ACCESS_KEY) throw new ApiError(502, "not_configured", FALLBACK);
 
-  const { website: _hp, ...lead } = input;
+  const { hp_field: _hp, ...lead } = input;
   let ok = false;
   try {
     const upstream = await fetch("https://api.web3forms.com/submit", {
@@ -30,11 +30,13 @@ export const POST = handle(async (req) => {
         from_name: "EcommerceSteem website",
         ...lead,
       }),
+      signal: AbortSignal.timeout(10_000),
     });
     const json = (await upstream.json().catch(() => ({}))) as { success?: boolean };
     ok = upstream.ok && json.success === true;
+    if (!ok) console.error("[api/contact] upstream failed", upstream.status);
   } catch {
-    ok = false;
+    console.error("[api/contact] upstream failed", "network");
   }
   if (!ok) throw new ApiError(502, "upstream_error", FALLBACK);
   return { received: true };

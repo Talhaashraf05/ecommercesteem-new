@@ -32,7 +32,7 @@ describe("POST /api/contact", () => {
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
     const { POST } = await import("./route");
-    const res = await POST(req({ ...valid, website: "http://spam" }, "2.2.2.2"), ctx);
+    const res = await POST(req({ ...valid, hp_field: "http://spam" }, "2.2.2.2"), ctx);
     expect(res.status).toBe(200);
     expect(fetchMock).not.toHaveBeenCalled();
   });
@@ -44,11 +44,34 @@ describe("POST /api/contact", () => {
   });
 
   it("returns 502 with the fallback email when upstream fails", async () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ success: false }), { status: 500 })));
     const { POST } = await import("./route");
     const res = await POST(req(valid, "4.4.4.4"), ctx);
     expect(res.status).toBe(502);
     expect((await res.json()).error.message).toContain("info@ecommercesteem.com");
+    expect(spy).toHaveBeenCalledWith("[api/contact] upstream failed", 500);
+    spy.mockRestore();
+  });
+
+  it("returns 502 with the fallback email when fetch rejects", async () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("timeout")));
+    const { POST } = await import("./route");
+    const res = await POST(req(valid, "6.6.6.6"), ctx);
+    expect(res.status).toBe(502);
+    expect((await res.json()).error.message).toContain("info@ecommercesteem.com");
+    spy.mockRestore();
+  });
+
+  it("returns 502 with the fallback email when upstream body is not JSON", async () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.stubGlobal("fetch", vi.fn().mockImplementation(async () => new Response("<html>oops</html>", { status: 200 })));
+    const { POST } = await import("./route");
+    const res = await POST(req(valid, "7.7.7.7"), ctx);
+    expect(res.status).toBe(502);
+    expect((await res.json()).error.message).toContain("info@ecommercesteem.com");
+    spy.mockRestore();
   });
 
   it("rate limits after 5 requests per IP", async () => {
