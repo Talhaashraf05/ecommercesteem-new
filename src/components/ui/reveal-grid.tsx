@@ -7,25 +7,44 @@ import { useRevealCascade } from "@/components/common/use-reveal-cascade";
 const RISE = 24; // px children rise from
 const BLUR = 12; // px soft start blur
 
+const extra = (c: RevealGridProps["itemClassName"], i: number) => {
+  const v = typeof c === "function" ? c(i) : c;
+  return v ? ` ${v}` : "";
+};
+
 export interface RevealGridProps {
   as?: ElementType;
   className?: string;
+  /** Element wrapping each child. Use "li" with `as="ul"`/`"ol"`. */
+  itemAs?: "div" | "li";
+  /** Classes for each wrapper (e.g. grid `col-span-*`), optionally per index. */
+  itemClassName?: string | ((index: number) => string);
   children: React.ReactNode;
 }
 
 /**
  * Container whose direct children cascade in on scroll (opacity, rise, blur).
- * Children are SSR-visible; each is wrapped in a plain div that carries the
- * animated style, so the container's grid/flex classes still lay them out.
+ * Children are SSR-visible; each is wrapped in an element (`itemAs`) that carries
+ * the animated style and stretches to fill its grid cell. Put grid-item classes
+ * such as `col-span-*` on the wrapper via `itemClassName`. For lists, use
+ * `as="ul"`/`"ol"` with `itemAs="li"` and put the li's content inside as children.
  */
-export const RevealGrid = ({ as: Tag = "div", className, children }: RevealGridProps) => {
+export const RevealGrid = ({
+  as: Tag = "div",
+  className,
+  itemAs = "div",
+  itemClassName,
+  children,
+}: RevealGridProps) => {
   const items = Children.toArray(children);
+  const Item = animated[itemAs];
   const { p, rootRef, localProg } = useRevealCascade<HTMLElement>(items.length);
   return (
     <Tag ref={rootRef} className={className}>
       {items.map((child, i) => (
-        <animated.div
+        <Item
           key={i}
+          className={`h-full${extra(itemClassName, i)}`}
           style={{
             opacity: p.to((v) => localProg(v, i)),
             transform: p.to((v) => `translateY(${RISE * (1 - localProg(v, i))}px)`),
@@ -34,7 +53,7 @@ export const RevealGrid = ({ as: Tag = "div", className, children }: RevealGridP
           }}
         >
           {child}
-        </animated.div>
+        </Item>
       ))}
     </Tag>
   );

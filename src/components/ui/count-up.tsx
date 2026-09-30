@@ -57,7 +57,8 @@ export const CountUp = ({ value, className }: CountUpProps) => {
   }, [parsed, value]);
 
   return (
-    <span aria-label={value} className={className}>
+    <span className={className}>
+      <span className="sr-only">{value}</span>
       <span ref={ref} aria-hidden="true">
         {value}
       </span>
