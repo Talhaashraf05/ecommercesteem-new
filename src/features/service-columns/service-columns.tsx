@@ -41,7 +41,6 @@ const Column = ({ prefix, name, image, href, index }: ServiceColumnItem & { inde
     <Link
       href={href}
       ref={ref}
-      aria-label={`${prefix} ${name}`}
       className="group relative block min-h-[38vh] overflow-hidden rounded-2xl bg-surface focus-visible:-outline-offset-4 lg:min-h-[85vh] lg:rounded-none lg:bg-transparent"
     >
       {/* Touch widths have no hover: the photo is always visible (as a card). */}
@@ -82,7 +81,7 @@ const Column = ({ prefix, name, image, href, index }: ServiceColumnItem & { inde
       />
 
       <div className="pointer-events-none absolute inset-x-5 bottom-6 lg:inset-x-6 lg:bottom-12">
-        <span className="mb-3 block text-sm font-medium tabular-nums tracking-wide text-fg/40 lg:mb-5">
+        <span aria-hidden="true" className="mb-3 block text-sm font-medium tabular-nums tracking-wide text-fg/40 lg:mb-5">
           {pad(index + 1)}
         </span>
         <span className={LABEL}>{prefix}</span>

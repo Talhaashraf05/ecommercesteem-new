@@ -5,7 +5,7 @@ import { offices, services, site } from "@/content";
 import { Logo } from "./logo";
 
 const LINK = "rounded-md text-muted transition-colors duration-200 hover:text-fg";
-const HEADING = "mb-4 text-kicker uppercase tracking-wider text-brand";
+const HEADING = "mb-4 text-kicker uppercase tracking-wider text-brand-glow";
 
 const COMPANY = [
   { href: "/about", label: "About" },

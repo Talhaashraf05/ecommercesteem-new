@@ -73,7 +73,7 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
         <div className="grid grid-cols-3 gap-8 rounded-3xl border border-line bg-surface/95 p-8 shadow-card backdrop-blur-xl">
           {groups.map((g) => (
             <div key={g.id}>
-              <p className="mb-4 text-kicker uppercase tracking-wider text-brand">
+              <p className="mb-4 text-kicker uppercase tracking-wider text-brand-glow">
                 {g.label}
               </p>
               <ul className="flex flex-col gap-4">

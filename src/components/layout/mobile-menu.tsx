@@ -94,7 +94,7 @@ export const MobileMenu = ({ groups, portal }: { groups: ServiceNavGroup[]; port
         <nav aria-label="Mobile" className="mt-6 flex flex-col gap-8">
           {groups.map((g) => (
             <div key={g.id}>
-              <p className="mb-3 text-kicker uppercase tracking-wider text-brand">
+              <p className="mb-3 text-kicker uppercase tracking-wider text-brand-glow">
                 {g.label}
               </p>
               <ul className="flex flex-col gap-3">
