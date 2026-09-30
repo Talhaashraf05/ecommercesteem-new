@@ -10,6 +10,7 @@ export const ServicesMenu = () => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const pointerType = useRef("");
   const pathname = usePathname();
 
   useEffect(() => {
@@ -46,7 +47,15 @@ export const ServicesMenu = () => {
         type="button"
         aria-expanded={open}
         aria-controls="services-panel"
-        onClick={() => setOpen((o) => !o)}
+        onPointerDown={(e) => {
+          pointerType.current = e.pointerType;
+        }}
+        onClick={() => {
+          // Mouse hover already opened the panel; a click must not toggle it shut.
+          const mouse = pointerType.current === "mouse";
+          pointerType.current = "";
+          setOpen((o) => (mouse ? true : !o));
+        }}
         className="rounded-md text-sm text-muted transition-colors duration-200 hover:text-fg"
       >
         Services

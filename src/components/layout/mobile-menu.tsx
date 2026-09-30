@@ -12,7 +12,7 @@ export const MobileMenu = () => {
   const [open, setOpen] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const wasOpen = useRef(false);
+  const panelRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -20,24 +20,37 @@ export const MobileMenu = () => {
   }, [pathname]);
 
   useEffect(() => {
-    const scroll = useScroll.getState();
-    if (open) {
-      wasOpen.current = true;
-      scroll.stop();
-      closeRef.current?.focus();
-    } else {
-      scroll.start();
-      if (wasOpen.current) {
-        wasOpen.current = false;
-        triggerRef.current?.focus();
-      }
-      return;
-    }
+    if (!open) return;
+    useScroll.getState().stop();
+    closeRef.current?.focus();
+    const trigger = triggerRef.current;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const panel = panelRef.current;
+      const nodes = panel?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])");
+      if (!panel || !nodes?.length) return;
+      const first = nodes[0];
+      const last = nodes[nodes.length - 1];
+      const active = document.activeElement;
+      const outside = !panel.contains(active);
+      if (e.shiftKey && (active === first || outside)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (active === last || outside)) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      useScroll.getState().start();
+      trigger?.focus();
+    };
   }, [open]);
 
   return (
@@ -57,7 +70,11 @@ export const MobileMenu = () => {
         </span>
       </button>
       <div
+        ref={panelRef}
         id="mobile-menu"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
         hidden={!open}
         data-lenis-prevent
         className="fixed inset-0 z-50 overflow-y-auto bg-bg px-gutter pb-10 pt-6"

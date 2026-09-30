@@ -8,12 +8,13 @@ export const Logo = ({ className = "" }: { className?: string }) => (
     className={`inline-flex items-center rounded-md ${className}`}
   >
     <Image
-      src="/brand/logo-white.png"
+      src="/brand/logo-lockup-white.png"
       alt="EcommerceSteem"
-      width={698}
-      height={458}
+      width={1566}
+      height={240}
       priority
-      className="h-10 w-auto"
+      sizes="14rem"
+      className="h-7 w-auto sm:h-8"
     />
   </Link>
 );
