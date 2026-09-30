@@ -1,1 +1,1 @@
-export const HomeView = () => <main><h1>EcommerceSteem</h1></main>;
+export const HomeView = () => <main id="main"><h1>EcommerceSteem</h1></main>;

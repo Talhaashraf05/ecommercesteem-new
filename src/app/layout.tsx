@@ -5,10 +5,11 @@ import {
   generateMetadata,
   generateViewport,
 } from "@/utils/seo/generate-page-metadata";
-import { getSiteStructuredData } from "@/utils/seo/structured-data";
 
 import { AdaptiveGrid } from "@/components/common/grid";
 import { ReducedMotion } from "@/components/common/reduced-motion";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
 import { ScrollLayout } from "@/layouts/scroll-layout";
 
 import "@/app/globals.css";
@@ -39,16 +40,18 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${assistant.variable}`}>
       <body className="bg-bg font-sans text-fg">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(getSiteStructuredData()),
-          }}
-        />
         <ScrollLayout>
           <AdaptiveGrid coef={1} />
           <ReducedMotion />
+          <a
+            href="#main"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-brand focus:px-4 focus:py-2"
+          >
+            Skip to content
+          </a>
+          <SiteHeader />
           {children}
+          <SiteFooter />
         </ScrollLayout>
       </body>
     </html>
