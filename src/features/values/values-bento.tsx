@@ -67,6 +67,9 @@ const SPARK = (
   </Glyph>
 );
 
+/** The line icon for a value title (a spark for unknown titles). */
+export const valueIcon = (title: string) => ICONS[title] ?? SPARK;
+
 const pad = (n: number) => String(n).padStart(2, "0");
 
 export interface ValuesBentoProps {
@@ -108,7 +111,7 @@ export const ValuesBento = ({ values, heading = "What we stand for" }: ValuesBen
                 )}
                 <div className="relative flex items-start justify-between gap-6">
                   <span className="flex size-12 items-center justify-center rounded-2xl border border-line-strong bg-surface-raised text-brand-glow">
-                    {ICONS[v.title] ?? SPARK}
+                    {valueIcon(v.title)}
                   </span>
                   <span aria-hidden="true" className="font-display text-kicker tabular-nums text-muted">
                     {pad(i + 1)}

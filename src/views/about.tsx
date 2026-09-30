@@ -1,4 +1,4 @@
-import { clients, offices, site, stats, team, testimonials, timeline, values } from "@/content";
+import { clients, officeMarkers as MARKERS, offices, site, stats, team, testimonials, timeline, values } from "@/content";
 import { AnimatedHeading } from "@/components/ui/animated-heading";
 import { CinematicHero } from "@/components/ui/cinematic-hero";
 import { Container } from "@/components/ui/container";
@@ -17,13 +17,6 @@ import { TimelineSection } from "@/features/timeline/timeline-section";
 import { ValuesBento } from "@/features/values/values-bento";
 
 const [brands, countries, projects] = stats;
-
-/** Map pin per office, keyed by country code. */
-const MARKERS: Record<string, { label: string; lon: number; lat: number }> = {
-  US: { label: "Dover", lon: -75.52, lat: 39.16 },
-  AL: { label: "Tiranë", lon: 19.82, lat: 41.33 },
-  PK: { label: "Lahore", lon: 74.36, lat: 31.52 },
-};
 
 const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
 
