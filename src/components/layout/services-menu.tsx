@@ -86,10 +86,10 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
             transform: spring.y.to((v) => `translateY(${v}px)`),
             visibility: spring.opacity.to((o) => (o > 0 ? "visible" : "hidden")),
           }}
-          className="grid grid-cols-[1fr_1fr_1fr_14rem] gap-2 rounded-3xl border border-line bg-surface/95 p-3 shadow-card backdrop-blur-xl"
+          className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_14rem] gap-2 rounded-3xl border border-line bg-surface/95 p-3 shadow-card backdrop-blur-xl"
         >
           {groups.map((g) => (
-            <div key={g.id}>
+            <div key={g.id} className="min-w-0">
               <p className="flex items-center gap-2 px-3 pb-2 pt-3 text-kicker uppercase tracking-wider text-muted">
                 <span aria-hidden="true" className="size-1.5 rounded-full bg-brand" />
                 {g.label}
@@ -98,7 +98,7 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
                 {g.items.map((s) => {
                   const Icon = serviceIcon[s.slug];
                   return (
-                    <li key={s.slug}>
+                    <li key={s.slug} className="min-w-0">
                       <Link
                         href={`/services/${s.slug}`}
                         className="flex items-start gap-3 rounded-2xl px-3 py-2.5 transition-colors duration-200 hover:bg-surface-raised focus-visible:bg-surface-raised"
