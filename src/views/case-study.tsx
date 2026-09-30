@@ -1,103 +1,92 @@
-import Image from "next/image";
 import Link from "next/link";
-import { caseStudies, getService } from "@/content";
+import { caseStudies, caseStudyPage as copy, getService } from "@/content";
 import type { CaseStudy } from "@/content/schemas";
 import { Container } from "@/components/ui/container";
-import { PageHero } from "@/components/ui/page-hero";
+import { CountUp } from "@/components/ui/count-up";
 import { Section } from "@/components/ui/section";
+import { NextCase } from "@/features/case-study/next-case";
+import { ParallaxHero } from "@/features/case-study/parallax-hero";
+import { StoryScroll } from "@/features/case-study/story-scroll";
 import { CtaBand } from "@/features/cta/cta-band";
 
-const H2 = "font-display text-display-sm text-fg";
+const KICKER = "text-kicker uppercase tracking-widest text-brand-glow";
 
 export const CaseStudyView = ({ study }: { study: CaseStudy }) => {
   const index = caseStudies.findIndex((c) => c.slug === study.slug);
   const next = caseStudies[(index + 1) % caseStudies.length];
   return (
     <main id="main">
-      <PageHero
+      <ParallaxHero
+        image={study.image}
+        alt={study.client}
         eyebrow={`${study.category} · ${study.year}`}
         title={study.client}
-        lead={`${study.headlineMetric.value} ${study.headlineMetric.label}`}
+        metric={study.headlineMetric}
       />
-      <Section label={`${study.client} overview`} className="!pt-0">
+
+      <Section labelledBy="metrics-title" className="!pb-0 !pt-8 md:!pt-12">
         <Container>
-          <div className="relative aspect-[8/5] overflow-hidden rounded-3xl border border-line md:aspect-[2/1]">
-            <Image
-              src={study.image}
-              alt={study.client}
-              fill
-              priority
-              sizes="(max-width: 1440px) 100vw, 1440px"
-              className="object-cover"
-            />
-          </div>
-          <ul className="mt-6 grid gap-6 md:grid-cols-3">
+          <h2 id="metrics-title" className={KICKER}>
+            {copy.metricsHeading}
+          </h2>
+          <dl className="mt-8 grid gap-px overflow-clip rounded-3xl border border-line bg-line md:grid-cols-3">
             {study.metrics.map((m) => (
-              <li key={m.label} className="rounded-3xl border border-line bg-surface p-8">
-                <p className="font-display text-stat text-brand-glow">{m.value}</p>
-                <p className="mt-2 text-muted">{m.label}</p>
-              </li>
+              <div key={m.label} className="flex flex-col-reverse justify-end gap-3 bg-bg p-8 md:p-10">
+                <dt className="text-lead text-muted">{m.label}</dt>
+                <dd className="font-display text-stat font-semibold leading-none tracking-title text-fg">
+                  <CountUp value={m.value} />
+                </dd>
+              </div>
             ))}
-          </ul>
+          </dl>
         </Container>
       </Section>
-      <Section labelledBy="challenge-title" tone="raised">
-        <Container width="title">
-          <h2 id="challenge-title" className={H2}>The challenge</h2>
-          <p className="mt-6 text-lead text-muted">{study.challenge}</p>
-        </Container>
-      </Section>
-      <Section labelledBy="approach-title">
-        <Container width="title">
-          <h2 id="approach-title" className={H2}>What we did</h2>
-          <ol className="mt-10 grid gap-4">
-            {study.approach.map((step, i) => (
-              <li key={step} className="flex gap-6 rounded-2xl border border-line bg-surface p-6">
-                <span className="font-display text-stat text-brand">{String(i + 1).padStart(2, "0")}</span>
-                <span className="text-fg">{step}</span>
-              </li>
-            ))}
-          </ol>
-        </Container>
-      </Section>
-      <Section labelledBy="outcome-title" tone="raised">
-        <Container width="title">
-          <h2 id="outcome-title" className={H2}>The outcome</h2>
-          <p className="mt-6 text-lead text-muted">{study.outcome}</p>
-        </Container>
-      </Section>
-      <Section labelledBy="services-title">
+
+      <Section label={`${study.client} story`}>
         <Container>
-          <h2 id="services-title" className={H2}>Services</h2>
-          <ul className="mt-8 flex flex-wrap gap-3">
-            {study.services.map((s) => (
-              <li key={s}>
-                <Link
-                  href={`/services/${s}`}
-                  className="inline-block rounded-full border border-line px-5 py-2 text-fg transition-colors duration-200 hover:border-line-strong"
-                >
-                  {getService(s)?.name ?? s}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          {next.slug !== study.slug && (
-            <Link
-              href={`/work/${next.slug}`}
-              className="mt-16 flex flex-col gap-2 rounded-3xl border border-line bg-surface p-8 transition-colors duration-200 hover:border-line-strong"
-            >
-              <span className="text-kicker text-muted">Next case study</span>
-              <span className="font-display text-lead text-fg">{next.client} →</span>
-            </Link>
-          )}
+          <StoryScroll
+            blocks={[
+              { label: copy.story.challenge, kind: "text", text: study.challenge },
+              { label: copy.story.approach, kind: "steps", steps: study.approach },
+              { label: copy.story.outcome, kind: "text", text: study.outcome },
+            ]}
+          />
         </Container>
       </Section>
-      <CtaBand
-        title="Want results like these?"
-        body="Book a free audit and we'll show you where your brand's next growth is hiding."
-        primary={{ label: "Book a free audit", href: "/contact" }}
-        secondary={{ label: "All case studies", href: "/work" }}
-      />
+
+      <Section labelledBy="services-title" className="!pt-0 !pb-16 md:!pb-20">
+        <Container>
+          <div className="flex flex-col gap-6 border-t border-line pt-16 md:flex-row md:items-center md:justify-between md:pt-20">
+            <h2 id="services-title" className={KICKER}>
+              {copy.services}
+            </h2>
+            <ul className="flex flex-wrap gap-3">
+              {study.services.map((s) => (
+                <li key={s}>
+                  <Link
+                    href={`/services/${s}`}
+                    className="inline-block rounded-full border border-line-strong bg-surface-glass px-5 py-2.5 text-fg transition-colors duration-200 hover:border-fg/60 hover:bg-surface-glass-hover"
+                  >
+                    {getService(s)?.name ?? s}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Container>
+      </Section>
+
+      {next.slug !== study.slug && (
+        <NextCase
+          slug={next.slug}
+          client={next.client}
+          metric={next.headlineMetric}
+          image={next.image}
+          label={copy.next}
+        />
+      )}
+
+      <CtaBand title={copy.cta.title} body={copy.cta.body} primary={copy.cta.primary} secondary={copy.cta.secondary} />
     </main>
   );
 };

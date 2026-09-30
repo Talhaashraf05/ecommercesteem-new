@@ -23,3 +23,21 @@ export const workPage = {
     secondary: { label: "Explore services", href: "/services" },
   },
 };
+
+/** Labels for /work/[slug]. Figures and story text come from each `caseStudies` entry (unverified). */
+export const caseStudyPage = {
+  metricsHeading: "Results",
+  story: {
+    challenge: "The challenge",
+    approach: "What we did",
+    outcome: "The outcome",
+  },
+  services: "Services used",
+  next: "Next case study",
+  cta: {
+    title: "Want results like these?",
+    body: "Book a free audit and we'll show you where your brand's next growth is hiding.",
+    primary: { label: "Book a free audit", href: "/contact" },
+    secondary: { label: "All case studies", href: "/work" },
+  },
+};
