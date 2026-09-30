@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { site } from "@/content";
+import { site } from "@/content/site";
 
 /**
  * Route-segment error boundary. Must be a Client Component. Catches render and

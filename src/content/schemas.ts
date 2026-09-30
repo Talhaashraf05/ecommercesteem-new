@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { SERVICE_SLUGS } from "./service-slugs";
+
 export const SiteSchema = z.object({
   name: z.string(),
   tagline: z.string(),
@@ -62,15 +64,7 @@ export type Testimonial = z.infer<typeof TestimonialSchema>;
 export type ProcessStep = z.infer<typeof ProcessStepSchema>;
 export type Value = z.infer<typeof ValueSchema>;
 
-export const SERVICE_SLUGS = [
-  "amazon-account-management",
-  "amazon-ppc",
-  "amazon-listings-a-plus",
-  "meta-ads",
-  "google-ads",
-  "email-marketing",
-  "seo",
-] as const;
+export { SERVICE_SLUGS };
 export const PRICING_GROUPS = ["amazon", "meta-ads", "google-ads", "email-marketing", "seo"] as const;
 
 export const ServiceSchema = z.object({

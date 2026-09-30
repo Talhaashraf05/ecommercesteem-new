@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { offices, site } from "@/content";
+import { offices, services, site } from "@/content";
 import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/ui/page-hero";
 import { Section } from "@/components/ui/section";
@@ -19,7 +19,7 @@ export const ContactView = () => (
         <div>
           <h2 id="contact-form-title" className="sr-only">Send us a message</h2>
           <Suspense fallback={null}>
-            <ContactForm />
+            <ContactForm serviceOptions={services.map((s) => ({ value: s.slug, label: s.name }))} />
           </Suspense>
         </div>
         <aside aria-labelledby="contact-info-title" className="rounded-3xl border border-line bg-surface p-8 sm:p-10">

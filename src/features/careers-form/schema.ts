@@ -1,18 +1,21 @@
-import { z } from "zod";
+// zod/mini: same parse/safeParse/issues API as zod, a fraction of the client bundle.
+import * as z from "zod/mini";
 
-const optionalUrl = z.union([z.url("Please enter a valid URL"), z.literal("")]).optional();
+const optionalUrl = z.optional(z.union([z.url("Please enter a valid URL"), z.literal("")]));
+const required = (max: number, message?: string) =>
+  z.string().check(z.trim(), z.minLength(1, message), z.maxLength(max));
 
 export const CareersFieldsSchema = z.object({
-  firstName: z.string().trim().min(1, "Please enter your first name").max(60),
-  lastName: z.string().trim().min(1, "Please enter your last name").max(60),
+  firstName: required(60, "Please enter your first name"),
+  lastName: required(60, "Please enter your last name"),
   email: z.email("Please enter a valid email"),
-  phone: z.string().trim().min(5, "Please enter a valid phone number").max(40),
+  phone: z.string().check(z.trim(), z.minLength(5, "Please enter a valid phone number"), z.maxLength(40)),
   linkedin: optionalUrl,
   github: optionalUrl,
-  experience: z.string().trim().min(1, "Please tell us your experience").max(40),
-  expectedSalary: z.string().trim().max(40).optional(),
-  position: z.string().trim().min(1).max(120),
-  hp_field: z.string().max(500).optional(),
+  experience: required(40, "Please tell us your experience"),
+  expectedSalary: z.optional(z.string().check(z.trim(), z.maxLength(40))),
+  position: required(120),
+  hp_field: z.optional(z.string().check(z.maxLength(500))),
 });
 
 export const MAX_RESUME_BYTES = 4 * 1024 * 1024; // Vercel caps request bodies at 4.5 MB

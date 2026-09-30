@@ -5,6 +5,7 @@ import { site } from "@/content";
 
 import { Logo } from "./logo";
 import { MobileMenu } from "./mobile-menu";
+import { serviceNav } from "./service-nav";
 import { ServicesMenu } from "./services-menu";
 
 const LINK = "rounded-md text-sm text-muted transition-colors duration-200 hover:text-fg";
@@ -20,7 +21,7 @@ export const SiteHeader = () => (
     <div className="mx-auto flex h-18 max-w-page items-center justify-between px-gutter">
       <Logo />
       <nav aria-label="Primary" className="hidden items-center gap-8 lg:flex">
-        <ServicesMenu />
+        <ServicesMenu groups={serviceNav} />
         <Link href="/work" className={LINK}>Work</Link>
         <Link href="/about" className={LINK}>About</Link>
         <Link href="/careers" className={LINK}>Careers</Link>
@@ -32,7 +33,7 @@ export const SiteHeader = () => (
         <ButtonLink href="/contact" className="hidden sm:inline-flex">
           Book a free audit
         </ButtonLink>
-        <MobileMenu />
+        <MobileMenu groups={serviceNav} portal={site.portal} />
       </div>
     </div>
   </header>

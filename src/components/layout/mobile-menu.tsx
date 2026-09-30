@@ -5,10 +5,11 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { ButtonLink } from "@/components/ui/button";
-import { serviceGroups, services, site } from "@/content";
 import { useScroll } from "@/hooks/smooth-scroll/use-scroll";
 
-export const MobileMenu = () => {
+import type { ServiceNavGroup } from "./service-nav";
+
+export const MobileMenu = ({ groups, portal }: { groups: ServiceNavGroup[]; portal: string }) => {
   const [open, setOpen] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -91,15 +92,13 @@ export const MobileMenu = () => {
           </button>
         </div>
         <nav aria-label="Mobile" className="mt-6 flex flex-col gap-8">
-          {serviceGroups.map((g) => (
+          {groups.map((g) => (
             <div key={g.id}>
               <p className="mb-3 text-kicker uppercase tracking-wider text-brand">
                 {g.label}
               </p>
               <ul className="flex flex-col gap-3">
-                {services
-                  .filter((s) => s.group === g.id)
-                  .map((s) => (
+                {g.items.map((s) => (
                     <li key={s.slug}>
                       <Link href={`/services/${s.slug}`} className="text-lg">
                         {s.name}
@@ -115,7 +114,7 @@ export const MobileMenu = () => {
             <li><Link href="/careers">Careers</Link></li>
             <li><Link href="/contact">Contact</Link></li>
             <li>
-              <a href={site.portal} target="_blank" rel="noopener noreferrer">
+              <a href={portal} target="_blank" rel="noopener noreferrer">
                 Client portal ↗
               </a>
             </li>

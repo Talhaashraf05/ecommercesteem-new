@@ -1,15 +1,18 @@
-import { z } from "zod";
-import { SERVICE_SLUGS } from "@/content/schemas";
+// zod/mini: same parse/safeParse/issues API as zod, a fraction of the client bundle.
+import * as z from "zod/mini";
+import { SERVICE_SLUGS } from "@/content/service-slugs";
+
+const text = (max: number) => z.string().check(z.trim(), z.maxLength(max));
 
 export const ContactSchema = z.object({
-  name: z.string().trim().min(1, "Please enter your name").max(100),
+  name: z.string().check(z.trim(), z.minLength(1, "Please enter your name"), z.maxLength(100)),
   email: z.email("Please enter a valid email"),
-  phone: z.string().trim().max(40).optional(),
-  company: z.string().trim().max(120).optional(),
-  service: z.union([z.enum(SERVICE_SLUGS), z.literal("")]).optional(),
-  plan: z.string().trim().max(40).optional(),
-  budget: z.string().trim().max(40).optional(),
-  message: z.string().trim().min(10, "Tell us a little more (10+ characters)").max(3000),
-  hp_field: z.string().max(500).optional(),
+  phone: z.optional(text(40)),
+  company: z.optional(text(120)),
+  service: z.optional(z.union([z.enum(SERVICE_SLUGS), z.literal("")])),
+  plan: z.optional(text(40)),
+  budget: z.optional(text(40)),
+  message: z.string().check(z.trim(), z.minLength(10, "Tell us a little more (10+ characters)"), z.maxLength(3000)),
+  hp_field: z.optional(z.string().check(z.maxLength(500))),
 });
 export type ContactInput = z.infer<typeof ContactSchema>;

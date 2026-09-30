@@ -10,7 +10,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { ZodError } from "zod";
+import { $ZodError } from "zod/v4/core";
 
 /** Throw inside a route handler to return a specific error response. */
 export class ApiError extends Error {
@@ -30,7 +30,7 @@ type RouteContext = { params: Promise<Record<string, string>> };
  * Wraps an `app/api` route handler. The handler returns its payload (wrapped
  * as `{ data }`, 200) or a `NextResponse` (passed through). Thrown errors are
  * mapped to the error envelope:
- * - `ZodError` / malformed JSON → 400
+ * - `$ZodError` (zod + zod/mini) / malformed JSON → 400
  * - `ApiError` → its own status/code
  * - anything else → 500 (logged server-side, no internals leaked)
  */
@@ -43,7 +43,7 @@ export function handle<C extends RouteContext = RouteContext>(
       if (result instanceof NextResponse) return result;
       return NextResponse.json({ data: result }, { status: 200 });
     } catch (error) {
-      if (error instanceof ZodError) {
+      if (error instanceof $ZodError) {
         return NextResponse.json(
           {
             error: {

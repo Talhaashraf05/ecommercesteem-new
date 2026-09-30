@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-import { serviceGroups, services } from "@/content";
+import type { ServiceNavGroup } from "./service-nav";
 
-export const ServicesMenu = () => {
+export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -66,15 +66,13 @@ export const ServicesMenu = () => {
         className="absolute left-1/2 top-full w-[min(56rem,92vw)] -translate-x-1/2 pt-3"
       >
         <div className="grid grid-cols-3 gap-8 rounded-3xl border border-line bg-surface/95 p-8 shadow-card backdrop-blur-xl">
-          {serviceGroups.map((g) => (
+          {groups.map((g) => (
             <div key={g.id}>
               <p className="mb-4 text-kicker uppercase tracking-wider text-brand">
                 {g.label}
               </p>
               <ul className="flex flex-col gap-4">
-                {services
-                  .filter((s) => s.group === g.id)
-                  .map((s) => (
+                {g.items.map((s) => (
                     <li key={s.slug}>
                       <Link href={`/services/${s.slug}`} className="block rounded-md">
                         <span className="block text-fg">{s.name}</span>

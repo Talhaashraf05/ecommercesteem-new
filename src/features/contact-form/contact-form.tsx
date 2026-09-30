@@ -2,19 +2,19 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { services } from "@/content";
-import { SERVICE_SLUGS } from "@/content/schemas";
+import { SERVICE_SLUGS } from "@/content/service-slugs";
 import { Field } from "@/components/ui/field";
 import { ContactSchema } from "./schema";
 
 type Status = "idle" | "sending" | "success" | "error";
 
 const BUDGETS = ["Under $1k/mo", "$1k–5k/mo", "$5k–20k/mo", "$20k+/mo"].map((b) => ({ value: b, label: b }));
-const SERVICE_OPTIONS = services.map((s) => ({ value: s.slug, label: s.name }));
 const FIELD_ORDER = ["name", "email", "phone", "company", "service", "budget", "message"];
 const GENERIC_ERROR = "We couldn't send your message. Please try again.";
 
-export const ContactForm = () => {
+type Option = { value: string; label: string };
+
+export const ContactForm = ({ serviceOptions }: { serviceOptions: Option[] }) => {
   const params = useSearchParams();
   const serviceParam = params.get("service") ?? "";
   const service = (SERVICE_SLUGS as readonly string[]).includes(serviceParam) ? serviceParam : "";
@@ -77,7 +77,7 @@ export const ContactForm = () => {
         <Field label="Email" name="email" type="email" required autoComplete="email" error={errors.email} />
         <Field label="Phone" name="phone" type="tel" autoComplete="tel" error={errors.phone} />
         <Field label="Company" name="company" autoComplete="organization" error={errors.company} />
-        <Field label="Service" name="service" as="select" options={SERVICE_OPTIONS} defaultValue={service} error={errors.service} />
+        <Field label="Service" name="service" as="select" options={serviceOptions} defaultValue={service} error={errors.service} />
         <Field label="Monthly budget" name="budget" as="select" options={BUDGETS} error={errors.budget} />
       </div>
       {plan && (
