@@ -16,7 +16,7 @@ const SHIMMER_RING =
 
 export const Eyebrow = ({ children, className }: EyebrowProps) => (
   <span
-    className={`relative inline-flex items-center gap-2 rounded-full bg-surface-glass px-5 py-2.5 text-eyebrow font-medium text-foreground shadow-glass-eyebrow backdrop-blur-md${
+    className={`relative inline-flex items-center gap-2 rounded-full bg-surface-glass px-5 py-2.5 text-eyebrow font-medium text-fg shadow-card backdrop-blur-md${
       className ? ` ${className}` : ""
     }`}
   >

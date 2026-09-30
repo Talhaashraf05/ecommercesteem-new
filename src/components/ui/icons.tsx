@@ -5,12 +5,10 @@
  * text colour; decorative by default (`aria-hidden`).
  */
 
-export interface IconProps {
-  className?: string;
-}
+export type IconProps = React.SVGProps<SVGSVGElement>;
 
 /** Stacked-layers glyph shown in every eyebrow label. */
-export const LayersIcon = ({ className }: IconProps) => (
+export const LayersIcon = ({ className, ...props }: IconProps) => (
   <svg
     className={className}
     viewBox="0 0 24 24"
@@ -18,13 +16,14 @@ export const LayersIcon = ({ className }: IconProps) => (
     stroke="currentColor"
     strokeWidth={2.5}
     aria-hidden="true"
+    {...props}
   >
     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
   </svg>
 );
 
 /** Diagonal arrow inside the primary button's circular badge. */
-export const ArrowIcon = ({ className }: IconProps) => (
+export const ArrowIcon = ({ className, ...props }: IconProps) => (
   <svg
     className={className}
     viewBox="0 0 24 24"
@@ -32,6 +31,7 @@ export const ArrowIcon = ({ className }: IconProps) => (
     stroke="currentColor"
     strokeWidth={2.5}
     aria-hidden="true"
+    {...props}
   >
     <path d="M7 17L17 7M17 7H7M17 7v10" />
   </svg>

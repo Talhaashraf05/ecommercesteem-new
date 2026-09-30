@@ -1,6 +1,7 @@
 "use client";
 
 // 📖 Docs: obsidian/frontend/components/ui.md
+import Link from "next/link";
 import { Hover } from "@/components/animation/springs/hover";
 import { AnimatedGradientBorder } from "./animated-gradient-border";
 import { ArrowIcon } from "./icons";
@@ -16,8 +17,8 @@ import { ArrowIcon } from "./icons";
  * animation-system.md).
  */
 
-const SURFACE_BUTTON = "rgba(20, 25, 35, 0.4)";
-const SURFACE_BUTTON_HOVER = "rgba(30, 35, 50, 0.5)";
+const SURFACE_BUTTON = "rgba(30, 12, 12, 0.45)";
+const SURFACE_BUTTON_HOVER = "rgba(50, 16, 16, 0.55)";
 const SURFACE_GLASS = "rgba(255, 255, 255, 0.04)";
 const SURFACE_GLASS_HOVER = "rgba(255, 255, 255, 0.08)";
 const BORDER_GLASS = "rgba(255, 255, 255, 0.08)";
@@ -26,7 +27,7 @@ const TEXT_DIM = "rgba(255, 255, 255, 0.75)";
 const TEXT_FULL = "rgba(255, 255, 255, 1)";
 
 const ACCENT_RING =
-  "linear-gradient(90deg, var(--accent-warm), var(--accent-cool), var(--accent-warm))";
+  "linear-gradient(90deg, var(--brand), var(--brand-glow), var(--brand))";
 
 const HOVER_CONFIG = { tension: 300, friction: 22 };
 
@@ -34,11 +35,13 @@ export interface GlassButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary";
   withArrow?: boolean;
+  href?: string;
 }
 
 export const GlassButton = ({
   variant = "primary",
   withArrow = false,
+  href,
   children,
   ...props
 }: GlassButtonProps) => {
@@ -48,15 +51,25 @@ export const GlassButton = ({
   // (backgroundColor/borderColor expand to longhands) differently on server vs
   // client; the values converge on mount, so suppress the cosmetic mismatch.
   const buttonProps = {
-    type: "button" as const,
+    ...(href ? {} : { type: "button" as const }),
     suppressHydrationWarning: true,
     ...props,
   } as React.HTMLAttributes<HTMLElement>;
+  // In link mode the Hover renders a span inside a Link (no nested interactives).
+  const tag = href ? "span" : "button";
+  const wrap = (node: React.ReactElement) =>
+    href ? (
+      <Link href={href} className="pointer-events-auto inline-flex">
+        {node}
+      </Link>
+    ) : (
+      node
+    );
 
   if (variant === "secondary") {
-    return (
+    return wrap(
       <Hover
-        tag="button"
+        tag={tag}
         from={{
           y: 0,
           backgroundColor: SURFACE_GLASS,
@@ -78,13 +91,13 @@ export const GlassButton = ({
     );
   }
 
-  return (
+  return wrap(
     <Hover
-      tag="button"
+      tag={tag}
       from={{ y: 0, backgroundColor: SURFACE_BUTTON }}
       to={{ y: -2, backgroundColor: SURFACE_BUTTON_HOVER }}
       config={HOVER_CONFIG}
-      className="pointer-events-auto relative inline-flex h-14 cursor-pointer items-center justify-center gap-3 rounded-full pl-8 pr-4 text-button font-medium text-foreground shadow-glass-btn backdrop-blur-2xl backdrop-saturate-150"
+      className="pointer-events-auto relative inline-flex h-14 cursor-pointer items-center justify-center gap-3 rounded-full pl-8 pr-4 text-button font-medium text-fg shadow-glass-btn backdrop-blur-2xl backdrop-saturate-150"
       {...buttonProps}
     >
       <AnimatedGradientBorder
@@ -94,14 +107,14 @@ export const GlassButton = ({
       />
       <span className="relative">{children}</span>
       {withArrow && (
-        <span className="relative flex size-8 items-center justify-center rounded-full bg-surface-icon">
+        <span className="relative flex size-8 items-center justify-center rounded-full bg-surface-glass">
           <span
             aria-hidden="true"
             className="absolute inset-0 rounded-full"
             style={{
               padding: 1,
               backgroundImage:
-                "linear-gradient(135deg, var(--accent-warm), var(--accent-cool))",
+                "linear-gradient(135deg, var(--brand-glow), var(--brand))",
               WebkitMask:
                 "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
               WebkitMaskComposite: "xor",
