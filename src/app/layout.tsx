@@ -1,16 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import { Assistant, Inter } from "next/font/google";
 
-import {
-  generateMetadata,
-  generateViewport,
-} from "@/utils/seo/generate-page-metadata";
-
+import { Analytics } from "@/components/common/analytics";
 import { AdaptiveGrid } from "@/components/common/grid";
 import { ReducedMotion } from "@/components/common/reduced-motion";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ScrollLayout } from "@/layouts/scroll-layout";
+import { siteConfig } from "@/lib/site";
+import { organizationLd } from "@/lib/structured-data";
+import { JsonLd } from "@/components/common/json-ld";
 
 import "@/app/globals.css";
 
@@ -29,8 +28,14 @@ const assistant = Assistant({
   display: "swap",
 });
 
-export const metadata: Metadata = generateMetadata();
-export const viewport: Viewport = generateViewport();
+export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
+  title: { default: "EcommerceSteem | E-commerce Growth Agency for Amazon, Meta & Google", template: "%s | EcommerceSteem" },
+  description: siteConfig.description,
+  icons: { icon: "/icon.png", apple: "/apple-icon-180x180.png" },
+  manifest: "/manifest.json",
+};
+export const viewport: Viewport = { themeColor: siteConfig.themeColor, width: "device-width", initialScale: 1 };
 
 export default function RootLayout({
   children,
@@ -53,6 +58,8 @@ export default function RootLayout({
           {children}
           <SiteFooter />
         </ScrollLayout>
+        <JsonLd data={organizationLd()} />
+        <Analytics />
       </body>
     </html>
   );

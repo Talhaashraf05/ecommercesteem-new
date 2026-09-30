@@ -1,9 +1,7 @@
+import { pageMetadata } from "@/lib/seo";
 import { ContactView } from "@/views/contact";
 
-export const metadata = {
-  title: "Contact",
-  description: "Tell EcommerceSteem about your store and goals. We reply within one business day.",
-};
+export const metadata = pageMetadata({ title: "Contact", description: "Book a free audit of your Amazon, Meta or Google account.", path: "/contact" });
 
 export default function Page() {
   return <ContactView />;

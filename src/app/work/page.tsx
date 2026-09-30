@@ -1,9 +1,7 @@
+import { pageMetadata } from "@/lib/seo";
 import { WorkView } from "@/views/work";
 
-export const metadata = {
-  title: "Work",
-  description: "Case studies from the e-commerce brands we've helped grow on Amazon, Meta and Google.",
-};
+export const metadata = pageMetadata({ title: "Work", description: "Case studies from e-commerce brands we've grown on Amazon, Meta and Google.", path: "/work" });
 
 export default function Page() {
   return <WorkView />;

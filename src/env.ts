@@ -13,6 +13,7 @@ import { z } from "zod";
 
 const publicSchema = z.object({
   NEXT_PUBLIC_SITE_URL: z.url().optional(),
+  NEXT_PUBLIC_GA_ID: z.string().regex(/^G-[A-Z0-9]+$/).optional(),
 });
 
 const serverSchema = z.object({
@@ -23,6 +24,7 @@ const serverSchema = z.object({
 /** Public env — safe to read anywhere (server or client). */
 export const publicEnv = publicSchema.parse({
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+  NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID || undefined,
 });
 
 let cachedServerEnv: z.infer<typeof serverSchema> | undefined;

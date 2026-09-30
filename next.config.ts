@@ -1,8 +1,15 @@
 import type { NextConfig } from "next";
 
+import { redirects } from "./src/lib/redirects";
+
 const nextConfig: NextConfig = {
   // Drop the `X-Powered-By: Next.js` response header.
   poweredByHeader: false,
+
+  // Legacy route redirects (permanent).
+  async redirects() {
+    return redirects;
+  },
 
   // Three.js ships its `examples/jsm` add-ons (EffectComposer, UnrealBloomPass…)
   // as untranspiled ESM — transpile them through the Next pipeline.
