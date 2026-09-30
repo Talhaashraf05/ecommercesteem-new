@@ -18,7 +18,7 @@ export const SiteHeader = () => (
       aria-hidden="true"
       className="absolute inset-0 -z-10 border-b border-line bg-bg/70 backdrop-blur-xl"
     />
-    <div className="mx-auto flex h-18 max-w-page items-center justify-between px-gutter">
+    <div className="relative mx-auto flex h-18 max-w-page items-center justify-between px-gutter">
       <Logo />
       <nav aria-label="Primary" className="hidden items-center gap-8 lg:flex">
         <ServicesMenu groups={serviceNav} />

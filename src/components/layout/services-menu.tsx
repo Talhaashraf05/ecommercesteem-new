@@ -3,7 +3,7 @@
 import { animated, useSpring } from "@react-spring/web";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ButtonLink } from "@/components/ui/button";
 
@@ -15,8 +15,6 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
   const ref = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const pointerType = useRef("");
-  const panelRef = useRef<HTMLDivElement>(null);
-  const [shift, setShift] = useState(0);
   const pathname = usePathname();
   // Declarative: re-targeted by `open`, never self-running. Reduced motion is
   // handled globally (ReducedMotion skips every spring).
@@ -25,26 +23,6 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
-
-  // Keep the centred panel inside the viewport (16px margin) at narrow desktop widths.
-  useLayoutEffect(() => {
-    if (!open) return;
-    const place = () => {
-      const wrap = ref.current;
-      const panel = panelRef.current;
-      if (!wrap || !panel) return;
-      const edge = 16;
-      const { left, width } = wrap.getBoundingClientRect();
-      const half = panel.offsetWidth / 2;
-      const centre = left + width / 2;
-      const min = edge + half;
-      const max = window.innerWidth - edge - half;
-      setShift(Math.max(min, Math.min(max, centre)) - centre);
-    };
-    place();
-    window.addEventListener("resize", place);
-    return () => window.removeEventListener("resize", place);
-  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -67,7 +45,6 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
   return (
     <div
       ref={ref}
-      className="relative"
       onPointerEnter={(e) => e.pointerType === "mouse" && setOpen(true)}
       onPointerLeave={(e) => e.pointerType === "mouse" && setOpen(false)}
       onBlur={(e) => {
@@ -90,16 +67,18 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
           pointerType.current = "";
           setOpen((o) => (mouse ? true : !o));
         }}
-        className="rounded-md text-sm text-muted transition-colors duration-200 hover:text-fg"
+        // The panel is positioned against the header container, so while open an
+        // invisible strip under the trigger bridges the gap down to the panel.
+        className={`relative rounded-md text-sm text-muted transition-colors duration-200 hover:text-fg ${
+          open ? "after:absolute after:inset-x-0 after:top-full after:h-10" : ""
+        }`}
       >
         Services
       </button>
       <div
         id="services-panel"
-        ref={panelRef}
         inert={!open}
-        style={{ marginLeft: shift }}
-        className="absolute left-1/2 top-full w-[min(72rem,94vw)] -translate-x-1/2 pt-3"
+        className="absolute inset-x-0 top-full mx-auto w-[min(72rem,calc(100%-2*var(--spacing-gutter)))] pt-3"
       >
         <animated.div
           style={{
