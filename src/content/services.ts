@@ -1,0 +1,226 @@
+import type { Service } from "./schemas";
+
+export const services: Service[] = [
+  {
+    slug: "amazon-account-management",
+    group: "amazon",
+    name: "Amazon Account Management",
+    shortName: "Amazon Management",
+    summary: "End-to-end Amazon support, from product research and listings to storefront design, A+ content and account health.",
+    description:
+      "Maximize your success on Amazon with our end-to-end FBA services. From product research and listing creation to optimization, storefront design, and A+ content, we help brands dominate the marketplace. Our strategies are designed to increase visibility, boost conversions, and improve overall brand performance on Amazon. Whether you're launching a new product or scaling an existing catalog, we provide comprehensive solutions that handle every aspect of your Amazon business, so you can focus on growth while we manage the details.",
+    image: "/images/amazon-1.webp",
+    included: [
+      "End-to-end product launch strategy and listing optimization",
+      "Optimized listings with SEO-driven copy and A+ content",
+      "Storefront creation and brand-enhancing design",
+      "Continuous optimization to improve sales, visibility, and ROI",
+    ],
+    steps: [
+      { title: "Product Research & Strategy", description: "Define winning product strategies and craft a clear roadmap for marketplace success." },
+      { title: "Listing Creation & Optimization", description: "Craft SEO-optimized titles, bullet points, descriptions, and enhanced content to maximize visibility." },
+      { title: "Storefront & A+ Content Design", description: "Develop engaging storefronts and A+ content that elevate your brand image and boost conversions." },
+      { title: "Account Health Consulting", description: "Review account performance with you, optimize listings and campaigns, and refine strategies for long-term success." },
+    ],
+    tags: ["Product Hunting", "PPC", "Listing Optimization", "Sourcing", "Brand Registry", "A+ Content"],
+    faq: [
+      { q: "Can you manage an account that already exists?", a: "Yes. We start with a review of your account health, listings and advertising, then agree a plan that fits the hours and support level you choose." },
+      { q: "Do you help with product research for a new launch?", a: "Yes. We assess demand, competition and margin before you commit to inventory, then map out the launch strategy and listings." },
+      { q: "Do I keep ownership of my account and listings?", a: "Always. We work inside your own Seller Central account through user permissions you control, and you can change or remove access at any time." },
+    ],
+    pricingGroup: "amazon",
+    pdf: "/files/amazon-pricing.pdf",
+  },
+  {
+    slug: "amazon-ppc",
+    group: "amazon",
+    name: "Amazon PPC Management",
+    shortName: "Amazon PPC",
+    summary: "Sponsored Products, Brands and Display campaigns managed daily for profitable growth, not just spend.",
+    description:
+      "We build and manage Amazon advertising around your margins. Every campaign is structured by intent, every keyword is harvested from real search-term data, and bids are adjusted daily against your target ACoS and TACoS so ad spend compounds into organic rank.",
+    image: "/images/amazon-2.webp",
+    included: [
+      "Account and campaign structure audit",
+      "Sponsored Products, Brands and Display management",
+      "Search-term harvesting and negative keyword control",
+      "Daily bid and budget optimization against target ACoS",
+      "Dayparting and placement optimization",
+      "Weekly performance reporting with TACoS tracking",
+    ],
+    steps: [
+      { title: "Audit", description: "We review your current campaigns, wasted spend and keyword coverage." },
+      { title: "Restructure", description: "Campaigns are rebuilt by match type and intent with clear budgets." },
+      { title: "Optimize", description: "Bids, negatives and placements are tuned daily from live data." },
+      { title: "Scale", description: "Winning keywords move to exact match and budgets scale where profitable." },
+    ],
+    tags: ["Sponsored Products", "Sponsored Brands", "Sponsored Display", "ACoS", "TACoS", "Keyword Harvesting"],
+    faq: [
+      { q: "Do you need access to my Seller Central account?", a: "Yes. We work inside your own account with user permissions you control, and we never combine data across seller accounts." },
+      { q: "How soon will I see results?", a: "Most accounts see wasted spend drop within the first two weeks; efficiency and rank gains build over 60–90 days." },
+      { q: "Is ad spend included in the fee?", a: "No. The management fee is separate from your Amazon ad spend, which is billed directly by Amazon." },
+    ],
+    pricingGroup: "amazon",
+    pdf: "/files/amazon-pricing.pdf",
+  },
+  {
+    slug: "amazon-listings-a-plus",
+    group: "amazon",
+    name: "Amazon Listings & A+ Content",
+    shortName: "Listings & A+",
+    summary: "Keyword-rich listings, A+ content and storefronts that rank higher and convert more of the traffic you pay for.",
+    description:
+      "Your listing is your salesperson. We research the terms shoppers actually use, write titles, bullets and descriptions that rank and persuade, and design A+ content and Brand Store pages that lift conversion across your catalog.",
+    image: "/images/ecommerce.webp",
+    included: [
+      "Keyword research from search-volume data",
+      "Title, bullet point and description copywriting",
+      "Backend search terms and attribute completion",
+      "A+ and Premium A+ content design",
+      "Brand Store design and structure",
+      "Main image and infographic direction",
+    ],
+    steps: [
+      { title: "Research", description: "We map the search terms and competitor listings in your niche." },
+      { title: "Write", description: "Copy is written for both ranking and conversion, then reviewed with you." },
+      { title: "Design", description: "A+ modules and storefront pages are designed to match your brand." },
+      { title: "Publish & measure", description: "We publish, then track rank and conversion rate to iterate." },
+    ],
+    tags: ["Listing Optimization", "A+ Content", "Brand Store", "Keyword Research", "Brand Registry"],
+    faq: [
+      { q: "Do I need Brand Registry for A+ content?", a: "Yes. A+ content and Brand Stores require Amazon Brand Registry; we can help you through enrollment." },
+      { q: "Can you optimize existing listings?", a: "Yes. Most projects start with existing listings, prioritized by revenue and traffic." },
+      { q: "Do you provide product photography?", a: "We direct images and infographics and can coordinate photography through partners." },
+    ],
+    pricingGroup: "amazon",
+    pdf: "/files/amazon-pricing.pdf",
+  },
+  {
+    slug: "meta-ads",
+    group: "paid",
+    name: "Meta Ads Management",
+    shortName: "Meta Ads",
+    summary: "Precision-targeted Facebook and Instagram campaigns with engaging creatives, built to maximize conversions.",
+    description:
+      "Reach your ideal audience across Facebook, Instagram, and the Meta network with data-driven ad campaigns designed to deliver measurable results. Our Meta Ads management focuses on precision targeting, engaging creatives, and continuous optimization to drive leads, sales, and brand awareness. From audience research and ad creation to campaign monitoring and performance reporting, we manage every aspect of your Meta Ads to ensure your marketing budget is spent efficiently and effectively.",
+    image: "/images/meta-ads.webp",
+    included: [
+      "Advanced targeting to reach the right audience at the right time",
+      "Creative ad designs optimized for engagement and conversions",
+      "Continuous monitoring and optimization for maximum ROI",
+      "Transparent reporting with actionable insights",
+    ],
+    steps: [
+      { title: "Audit & Research", description: "Analyze your current Meta Ads performance and identify high-value audience segments." },
+      { title: "Strategy & Targeting", description: "Define objectives, select audiences, and plan campaigns for optimal engagement and conversions." },
+      { title: "Campaign Setup & Launch", description: "Create compelling ad creatives, configure tracking, and launch campaigns effectively." },
+      { title: "Optimization & Reporting", description: "Monitor performance, test variations, adjust budgets and bids, and provide actionable insights to maximize ROI." },
+    ],
+    tags: ["Facebook Ads", "Instagram Ads", "Retargeting", "Lookalike Audiences", "Pixel Setup", "UGC Strategy"],
+    faq: [
+      { q: "Do you create the ad creatives?", a: "Yes. Image, carousel and video ad design is part of our packages, and we test several variations so the best performers get the budget." },
+      { q: "Can you retarget people who visited my store?", a: "Yes. We set up the Meta pixel and Conversion API, then build retargeting audiences from visitors, add-to-carts and past customers." },
+      { q: "Is my ad budget included in your fee?", a: "No. Our fee covers management and creative work; your ad spend is paid directly to Meta." },
+    ],
+    pricingGroup: "meta-ads",
+    pdf: "/files/meta-ads-pricing.pdf",
+  },
+  {
+    slug: "google-ads",
+    group: "paid",
+    name: "Google Ads Management",
+    shortName: "Google Ads",
+    summary: "Data-driven Google Ads campaigns that attract high-intent traffic and deliver measurable business growth.",
+    description:
+      "Unlock the full potential of Google Ads with campaigns designed to attract high-intent customers and maximize ROI. Our team creates tailored strategies that focus on your business goals, leveraging precise targeting, persuasive ad copy, and data-driven optimization to deliver measurable results. We handle everything from keyword research and campaign setup to ongoing performance monitoring, ensuring your ad spend drives tangible growth. Whether you aim to increase leads, sales, or brand awareness, our Google Ads management services give you a competitive edge.",
+    image: "/images/google-ads.webp",
+    included: [
+      "Customized campaigns aligned with your business objectives",
+      "Advanced audience targeting for maximum reach and relevance",
+      "Continuous optimization to reduce costs and increase ROI",
+      "Transparent reporting and actionable insights",
+    ],
+    steps: [
+      { title: "Audit & Research", description: "Analyze current campaigns, competitor strategies, and keyword opportunities to identify gaps and growth potential." },
+      { title: "Strategy & Targeting", description: "Define campaign goals, select high-performing keywords, and create audience segments for precise targeting." },
+      { title: "Campaign Setup & Launch", description: "Develop compelling ad copies, configure tracking, and launch campaigns optimized for conversions." },
+      { title: "Optimization & Reporting", description: "Continuously monitor performance, adjust bids, test creatives, and provide actionable insights to maximize ROI." },
+    ],
+    tags: ["Search Ads", "Display Network", "YouTube Ads", "Google Shopping", "Keyword Research", "ROAS Scaling"],
+    faq: [
+      { q: "Which Google campaign types do you manage?", a: "Search, Display, Shopping and Video, depending on your package and goals." },
+      { q: "Do you set up conversion tracking?", a: "Yes. We configure Google Tag Manager and GA4 so every lead and sale is tied back to the campaign that produced it." },
+      { q: "Is ad spend included in your fee?", a: "No. Our fee covers management; your ad spend is paid directly to Google." },
+    ],
+    pricingGroup: "google-ads",
+    pdf: "/files/google-ads-pricing.pdf",
+  },
+  {
+    slug: "email-marketing",
+    group: "retention",
+    name: "Email Marketing",
+    shortName: "Email Marketing",
+    summary: "Personalized email journeys and automated workflows that turn subscribers into loyal, repeat customers.",
+    description:
+      "Turn subscribers into loyal customers with strategic, results-driven email marketing campaigns. Our team designs personalized email journeys that deliver the right message to the right audience at the right time, increasing engagement, boosting conversions, and building long-term brand loyalty. From list segmentation and campaign creation to automation and performance analysis, we handle every step of your email marketing strategy to ensure measurable growth and maximum ROI.",
+    image: "/images/email-marketing.webp",
+    included: [
+      "Targeted campaigns to reach the right audience with personalized messaging",
+      "Automated workflows for timely and consistent engagement",
+      "Performance tracking and optimization for maximum impact",
+      "Clear reporting and actionable insights to inform strategy",
+    ],
+    steps: [
+      { title: "Audit & Analysis", description: "Review current email campaigns, analyze performance metrics, and identify opportunities for improvement." },
+      { title: "Strategy & Segmentation", description: "Define objectives, segment audiences, and plan targeted campaigns for maximum engagement." },
+      { title: "Campaign Creation & Launch", description: "Design compelling emails, set up automation workflows, and deploy campaigns effectively." },
+      { title: "Optimization & Reporting", description: "Monitor open rates, click-throughs, and conversions; test variations and refine strategies for continuous improvement." },
+    ],
+    tags: ["Klaviyo", "Mailchimp", "Automation Flows", "List Segmentation", "Copywriting", "SMS Marketing"],
+    faq: [
+      { q: "Which email platforms do you work with?", a: "We work in Klaviyo and Mailchimp, and can advise on which fits your store and list size." },
+      { q: "What automated flows do you build?", a: "Typically welcome series, abandoned cart, post-purchase and win-back flows, tailored to your customers and products." },
+      { q: "Do you write and design the emails?", a: "Yes. Template design and copywriting are included, and plans scale from basic templates to fully custom designs." },
+    ],
+    pricingGroup: "email-marketing",
+    pdf: "/files/email-marketing-pricing.pdf",
+  },
+  {
+    slug: "seo",
+    group: "retention",
+    name: "SEO Optimization",
+    shortName: "SEO",
+    summary: "Data-driven SEO that lifts organic visibility and attracts qualified traffic for long-term search growth.",
+    description:
+      "Increase your website's visibility and attract qualified traffic with our comprehensive SEO management services. We create data-driven strategies that improve search rankings, enhance user experience, and drive measurable results. From on-page optimization to technical SEO and link-building, we ensure your website ranks higher and reaches the right audience. Our team focuses on long-term growth, keeping up with algorithm updates and industry best practices to deliver sustainable results for your business.",
+    image: "/images/seo.webp",
+    included: [
+      "Improve search engine rankings and website traffic",
+      "Optimize on-page content, technical structure, and backlinks",
+      "Continuous monitoring and strategy adjustments for maximum ROI",
+      "Transparent reporting with actionable insights",
+    ],
+    steps: [
+      { title: "Audit & Analysis", description: "Evaluate your website and identify opportunities to improve search visibility." },
+      { title: "Keyword & Strategy Planning", description: "Select high-value keywords, define target audiences, and plan content and optimization strategies." },
+      { title: "Optimization & Implementation", description: "Optimize website content, metadata, technical SEO elements, and internal linking structure." },
+      { title: "Monitoring & Reporting", description: "Track rankings, analyze traffic and engagement, and adjust strategies for ongoing growth." },
+    ],
+    tags: ["Technical SEO", "Content Strategy", "Backlink Building", "Site Audit", "Local SEO", "Rank Tracking"],
+    faq: [
+      { q: "How long does SEO take to work?", a: "SEO is a long-term channel. Technical fixes can show early movement, but meaningful ranking and traffic gains usually build over several months." },
+      { q: "What does a monthly SEO plan include?", a: "Keyword research, technical and on-page optimization, content analysis and link building, with reporting scaled to the plan you choose." },
+      { q: "Do you guarantee a number one ranking?", a: "No. Nobody can honestly promise a specific position. We commit to a clear strategy, consistent work and transparent reporting." },
+    ],
+    pricingGroup: "seo",
+    pdf: "/files/seo-pricing.pdf",
+  },
+];
+
+export const serviceGroups = [
+  { id: "amazon", label: "Amazon" },
+  { id: "paid", label: "Paid Social & Search" },
+  { id: "retention", label: "Retention & Organic" },
+] as const;
+
+export const getService = (slug: string): Service | undefined => services.find((s) => s.slug === slug);

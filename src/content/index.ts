@@ -5,3 +5,5 @@ export * from "./clients";
 export * from "./testimonials";
 export * from "./process";
 export * from "./values";
+export * from "./services";
+export * from "./pricing";

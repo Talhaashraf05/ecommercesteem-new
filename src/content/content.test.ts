@@ -27,3 +27,29 @@ describe("core content", () => {
     }
   });
 });
+
+describe("services & pricing", () => {
+  it("validates", () => {
+    z.array(S.ServiceSchema).length(7).parse(C.services);
+    z.array(S.PricingGroupSchema).length(5).parse(C.pricing);
+  });
+  it("every service slug is unique and resolves", () => {
+    expect(new Set(C.services.map((s) => s.slug)).size).toBe(7);
+    for (const s of C.services) expect(C.getService(s.slug)).toBe(s);
+    expect(C.getService("ftl-shipping")).toBeUndefined();
+  });
+  it("every service pricing group exists; pdfs exist", () => {
+    for (const s of C.services) {
+      expect(C.getPricing(s.pricingGroup).id).toBe(s.pricingGroup);
+      if (s.pdf) expect(existsSync(pub(s.pdf)), s.pdf).toBe(true);
+    }
+  });
+  it("uses the agreed starting prices", () => {
+    const first = (id: S.PricingGroupId) => C.getPricing(id).tiers[0].price;
+    expect(first("amazon")).toBe("$500/mo");
+    expect(first("meta-ads")).toBe("$449/mo");
+    expect(first("google-ads")).toBe("$349/mo");
+    expect(first("email-marketing")).toBe("$749/mo");
+    expect(first("seo")).toBe("$700/mo");
+  });
+});
