@@ -24,6 +24,7 @@ const inter = Inter({
 const assistant = Assistant({
   variable: "--font-assistant",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -36,10 +37,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${inter.variable} ${assistant.variable}`}
-      >
+    <html lang="en" className={`${inter.variable} ${assistant.variable}`}>
+      <body className="bg-bg font-sans text-fg">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -47,7 +46,7 @@ export default function RootLayout({
           }}
         />
         <ScrollLayout>
-          <AdaptiveGrid />
+          <AdaptiveGrid coef={1} />
           <ReducedMotion />
           {children}
         </ScrollLayout>

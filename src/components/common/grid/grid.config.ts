@@ -30,7 +30,6 @@ export interface GridBreakpoint {
 
 /** Breakpoints, largest first. */
 export const GRID_BREAKPOINTS: readonly GridBreakpoint[] = [
-  { maxWidth: 1920, baseWidth: 1920 },
   { maxWidth: 1440, baseWidth: 1440 },
   { maxWidth: 1024, baseWidth: 1024 },
   { maxWidth: 640, baseWidth: 360 },

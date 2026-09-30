@@ -33,11 +33,8 @@ function ScrollController() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    window.scrollTo(0, 0);
-    const lenis = new Lenis({
-      smoothWheel: true,
-      // syncTouch: true,
-    });
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const lenis = new Lenis({ lerp: 0.08, smoothWheel: !reduce });
     (window as typeof window & { lenis: Lenis }).lenis = lenis;
     setLenis(lenis);
 
