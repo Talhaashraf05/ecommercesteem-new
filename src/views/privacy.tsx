@@ -1,9 +1,11 @@
-import { privacy, site } from "@/content";
+import { privacy } from "@/content";
 import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/ui/page-hero";
 import { Section } from "@/components/ui/section";
 
-type Block = { kind: "p"; text: string } | { kind: "ul"; items: string[] };
+type Block = { kind: "p"; text: string } | { kind: "email"; address: string } | { kind: "ul"; items: string[] };
+
+const EMAIL = /^\S+@\S+\.\S+$/;
 
 const MAX_ITEM = 140;
 
@@ -13,13 +15,19 @@ const MAX_ITEM = 140;
  */
 export const toBlocks = (paragraphs: string[]): Block[] => {
   const blocks: Block[] = [];
+  const pushPlain = (text: string) =>
+    blocks.push(EMAIL.test(text) ? { kind: "email", address: text } : { kind: "p", text });
   for (let i = 0; i < paragraphs.length; i++) {
     const text = paragraphs[i];
-    blocks.push({ kind: "p", text });
+    pushPlain(text);
     if (!text.endsWith(":")) continue;
-    const items: string[] = [];
-    while (i + 1 < paragraphs.length && paragraphs[i + 1].length <= MAX_ITEM) items.push(paragraphs[++i]);
-    if (items.length) blocks.push({ kind: "ul", items });
+    let end = i + 1;
+    while (end < paragraphs.length && paragraphs[end].length <= MAX_ITEM) end++;
+    const items = paragraphs.slice(i + 1, end);
+    if (items.length >= 2 && !items.some((it) => EMAIL.test(it))) {
+      blocks.push({ kind: "ul", items });
+      i = end - 1;
+    }
   }
   return blocks;
 };
@@ -34,24 +42,23 @@ export const PrivacyView = () => (
             <h2 id={`privacy-${i}`} className="font-display text-lead text-fg">{s.heading}</h2>
             <div className="mt-4 space-y-4 text-muted">
               {toBlocks(s.paragraphs).map((b, j) =>
-                b.kind === "p" ? (
-                  <p key={j}>{b.text}</p>
-                ) : (
+                b.kind === "ul" ? (
                   <ul key={j} className="list-disc space-y-2 pl-6 marker:text-brand">
-                    {b.items.map((it) => <li key={it}>{it}</li>)}
+                    {b.items.map((it, k) => <li key={k}>{it}</li>)}
                   </ul>
+                ) : b.kind === "email" ? (
+                  <p key={j}>
+                    <a href={`mailto:${b.address}`} className="text-fg underline underline-offset-4 transition-colors duration-200 hover:text-brand-glow">
+                      {b.address}
+                    </a>
+                  </p>
+                ) : (
+                  <p key={j}>{b.text}</p>
                 ),
               )}
             </div>
           </section>
         ))}
-        <p className="text-muted">
-          Questions about this policy? Email{" "}
-          <a href={`mailto:${site.privacyEmail}`} className="text-fg underline underline-offset-4 transition-colors duration-200 hover:text-brand-glow">
-            {site.privacyEmail}
-          </a>
-          .
-        </p>
       </Container>
     </Section>
   </main>

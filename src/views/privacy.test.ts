@@ -13,4 +13,16 @@ describe("toBlocks", () => {
   it("leaves paragraphs without a lead-in alone", () => {
     expect(toBlocks(["A.", "B."])).toHaveLength(2);
   });
+  it("does not make a list from a single item", () => {
+    expect(toBlocks(["Contact us at:", "Only one."])).toEqual([
+      { kind: "p", text: "Contact us at:" },
+      { kind: "p", text: "Only one." },
+    ]);
+  });
+  it("marks a paragraph that is an email address", () => {
+    expect(toBlocks(["Write to us at:", "privacy@ecommercesteem.com"])).toEqual([
+      { kind: "p", text: "Write to us at:" },
+      { kind: "email", address: "privacy@ecommercesteem.com" },
+    ]);
+  });
 });
