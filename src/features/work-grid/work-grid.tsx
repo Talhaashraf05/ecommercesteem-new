@@ -30,7 +30,7 @@ export interface WorkGridItem {
 
 export interface WorkGridCopy {
   filterLabel: string;
-  /** `{n}` is replaced with the visible count. */
+  /** `{n}` is the visible count; `{group}` the chip label (removed for "All"). */
   count: string;
   countOne: string;
   empty: string;
@@ -122,7 +122,13 @@ export const WorkGrid = ({ items, copy }: WorkGridProps) => {
   const stopRun = useRef<() => void>(() => {});
 
   const visible = items.filter((item) => inGroup(item.services, group));
-  const countText = visible.length === 1 ? copy.countOne : copy.count.replace("{n}", String(visible.length));
+  // Naming the group makes the live region change (and re-announce) even when two
+  // groups have the same count.
+  const groupLabel = group === "all" ? "" : (WORK_GROUPS.find((g) => g.id === group)?.label ?? "");
+  const countText = (visible.length === 1 ? copy.countOne : copy.count)
+    .replace("{n}", String(visible.length))
+    .replace("{group}", groupLabel)
+    .replace(/\s+/g, " ");
 
   const select = (next: WorkGroup) => {
     if (next === group) return;

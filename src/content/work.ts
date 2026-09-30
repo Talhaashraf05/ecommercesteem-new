@@ -11,9 +11,9 @@ export const workPage = {
     heading: "All case studies",
     lead: "Filter by the channel we grew. Every study links to the full story: the challenge, what we did and the numbers.",
     filterLabel: "Filter case studies",
-    /** `{n}` is replaced with the visible count. */
-    count: "Showing {n} case studies",
-    countOne: "Showing 1 case study",
+    /** `{n}` is the visible count; `{group}` the chip label, dropped for "All" so each change is re-announced. */
+    count: "Showing {n} {group} case studies",
+    countOne: "Showing 1 {group} case study",
     empty: "No case studies in this category yet.",
   },
   cta: {
