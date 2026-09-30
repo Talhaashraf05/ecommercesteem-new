@@ -71,3 +71,10 @@ describe("case studies, faq, jobs", () => {
     expect(C.activeJobs.every((j) => j.active)).toBe(true);
   });
 });
+
+describe("images", () => {
+  it("every referenced image exists", () => {
+    const refs = [...C.services.map((s) => s.image), ...C.caseStudies.map((c) => c.image), "/images/team.webp"];
+    for (const r of refs) expect(existsSync(pub(r)), r).toBe(true);
+  });
+});
