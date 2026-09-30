@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { SERVICE_SLUGS } from "@/content/service-slugs";
 import { Field } from "@/components/ui/field";
+import { buttonClasses } from "@/components/ui/button";
+import { site } from "@/content/site";
+import { withContactEmail } from "@/lib/form-error";
 import { ContactSchema } from "./schema";
 
 type Status = "idle" | "sending" | "success" | "error";
@@ -65,9 +68,9 @@ export const ContactForm = ({ serviceOptions, service = "", plan = "" }: Contact
         return;
       }
       const json = (await res.json().catch(() => null)) as { error?: { message?: string } } | null;
-      setServerError(json?.error?.message ?? GENERIC_ERROR);
+      setServerError(withContactEmail(json?.error?.message ?? GENERIC_ERROR, site.email));
     } catch {
-      setServerError(GENERIC_ERROR);
+      setServerError(withContactEmail(GENERIC_ERROR, site.email));
     }
     setStatus("error");
   };
@@ -97,7 +100,7 @@ export const ContactForm = ({ serviceOptions, service = "", plan = "" }: Contact
         </>
       )}
       <Field label="Message" name="message" as="textarea" required error={errors.message} />
-      <div aria-hidden="true" className="absolute -left-[9999px]">
+      <div aria-hidden="true" className="sr-only">
         <label htmlFor="f-hp_field">Leave this field empty</label>
         <input id="f-hp_field" name="hp_field" type="text" tabIndex={-1} autoComplete="off" />
       </div>
@@ -109,7 +112,7 @@ export const ContactForm = ({ serviceOptions, service = "", plan = "" }: Contact
       <button
         type="submit"
         disabled={status === "sending"}
-        className="inline-flex h-14 items-center justify-center rounded-full bg-brand px-7 text-button font-medium text-fg transition-colors duration-200 hover:bg-brand-hover disabled:opacity-60"
+        className={`${buttonClasses("primary", "lg")} disabled:opacity-60`}
       >
         {status === "sending" ? "Sending…" : "Send message"}
       </button>

@@ -7,6 +7,10 @@ describe("validateResume", () => {
     expect(validateResume({ name: "cv.docx", size: 1000, type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" })).toBeNull();
     expect(validateResume({ name: "cv.doc", size: 1000, type: "" })).toBeNull();
   });
+  it("accepts an unknown (octet-stream) type when the extension is allowed", () => {
+    expect(validateResume({ name: "cv.docx", size: 1000, type: "application/octet-stream" })).toBeNull();
+    expect(validateResume({ name: "cv.exe", size: 1000, type: "application/octet-stream" })).toMatch(/PDF/);
+  });
   it("rejects big files", () => {
     expect(validateResume({ name: "cv.pdf", size: 4 * 1024 * 1024 + 1, type: "application/pdf" })).toMatch(/4 ?MB/);
     expect(validateResume({ name: "cv.pdf", size: 4 * 1024 * 1024, type: "application/pdf" })).toBeNull();

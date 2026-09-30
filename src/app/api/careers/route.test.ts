@@ -28,6 +28,35 @@ describe("POST /api/careers", () => {
     expect(sent.position).toBe("PPC Specialist");
     expect(sent.hp_field).toBeUndefined();
   });
+  it("derives the MIME type from the extension when the browser sends none", async () => {
+    const fetchMock = vi.fn().mockImplementation(async () => new Response("ok"));
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("./route");
+    const res = await POST(form(new File(["PK"], "cv.docx", { type: "" })), ctx);
+    expect(res.status).toBe(200);
+    const sent = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(sent.resume.startsWith("data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,")).toBe(true);
+  });
+  it("returns the invalid_input envelope for a bad email", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const { POST } = await import("./route");
+    const res = await POST(form(pdf(), { email: "x" }), ctx);
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error.code).toBe("invalid_input");
+    expect(body.error.issues.some((i: { path: string }) => i.path === "email")).toBe(true);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+  it("allows up to 25s for the upstream Apps Script", async () => {
+    const spy = vi.spyOn(AbortSignal, "timeout");
+    vi.stubGlobal("fetch", vi.fn().mockImplementation(async () => new Response("ok")));
+    const mod = await import("./route");
+    await mod.POST(form(pdf()), ctx);
+    expect(spy).toHaveBeenCalledWith(25_000);
+    expect(mod.maxDuration).toBe(30);
+    spy.mockRestore();
+  });
   it("rejects oversized resumes with 400 before forwarding", async () => {
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);

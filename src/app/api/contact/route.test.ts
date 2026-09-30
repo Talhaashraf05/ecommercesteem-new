@@ -41,6 +41,9 @@ describe("POST /api/contact", () => {
     const { POST } = await import("./route");
     const res = await POST(req({ ...valid, email: "x" }, "3.3.3.3"), ctx);
     expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error.code).toBe("invalid_input");
+    expect(body.error.issues.some((i: { path: string }) => i.path === "email")).toBe(true);
   });
 
   it("returns 502 with the fallback email when upstream fails", async () => {

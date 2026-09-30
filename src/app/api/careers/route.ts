@@ -2,7 +2,10 @@ import { getServerEnv } from "@/env";
 import { ApiError, handle } from "@/lib/api";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { site } from "@/content";
-import { CareersFieldsSchema, validateResume } from "@/features/careers-form/schema";
+import { CareersFieldsSchema, OK_TYPES, resumeExtension, validateResume } from "@/features/careers-form/schema";
+
+// Apps Script cold starts + Drive upload of a 4 MB CV can take well over 10s.
+export const maxDuration = 30;
 
 const allow = createRateLimiter({ limit: 3, windowMs: 10 * 60 * 1000 });
 const FALLBACK = `We couldn't submit your application. Email your CV to ${site.email}.`;
@@ -30,7 +33,9 @@ export const POST = handle(async (req) => {
     linkedin: fields.linkedin ?? "",
     github: fields.github ?? "",
     expectedSalary: fields.expectedSalary ?? "",
-    resume: `data:${file.type || "application/pdf"};base64,${base64}`,
+    // validateResume guarantees an allowed extension; derive the MIME from it
+    // (browsers often send "" or application/octet-stream for .doc/.docx).
+    resume: `data:${OK_TYPES[resumeExtension(file.name)]};base64,${base64}`,
   };
   try {
     const res = await fetch(GOOGLE_SCRIPT_URL, {
@@ -38,7 +43,7 @@ export const POST = handle(async (req) => {
       headers: { "content-type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload),
       redirect: "follow",
-      signal: AbortSignal.timeout(10_000),
+      signal: AbortSignal.timeout(25_000),
     });
     if (!res.ok) {
       console.error("[api/careers] upstream failed", res.status);
