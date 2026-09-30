@@ -80,9 +80,7 @@ export const HomeView = () => (
         </div>
       </Container>
     </Section>
-    <Section labelledBy="testimonials-title">
-      <Testimonials items={testimonials} />
-    </Section>
+    <Testimonials items={testimonials} />
     <Section id="faq" labelledBy="faq-title">
       <Container width="title">
         <AnimatedHeading id="faq-title" as="h2" className="font-display text-display-sm text-fg">
