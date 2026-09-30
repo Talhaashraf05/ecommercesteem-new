@@ -28,8 +28,10 @@ export interface PortfolioStackItem {
 export interface PortfolioStackProps {
   heading: string;
   items: PortfolioStackItem[];
-  /** Eager-load the first card + backdrop when the stack is above the fold (/work). */
+  /** Eager-load the first card image when the stack is above the fold (/work). The blurred backdrop stays lazy so it does not compete with the LCP image. */
   priority?: boolean;
+  /** "h1" when the stack is the page hero (/work); home keeps the default "h2". */
+  headingAs?: "h1" | "h2";
 }
 
 const SCROLL_PER_CARD = 60; // vh of scroll per card
@@ -67,7 +69,7 @@ const cardFrame = (i: number, v: number) => {
 
 const scrimOpacity = (i: number, v: number) => Math.min(0.45, Math.abs(i - v) * 0.25);
 
-const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStackProps) => {
+const PortfolioStackInner = ({ heading, items, priority = false, headingAs = "h2" }: PortfolioStackProps) => {
   const count = items.length;
   const router = useRouter();
   const sectionRef = useRef<HTMLElement>(null);
@@ -145,14 +147,14 @@ const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStac
                 transform: f.to((v) => backdropFrame(i, v).transform),
               }}
             >
-              <Image src={item.image} alt="" fill sizes="60vw" quality={30} priority={priority && i === 0} className="object-cover blur-2xl" />
+              <Image src={item.image} alt="" fill sizes="60vw" quality={30} className="object-cover blur-2xl" />
             </animated.div>
           ))}
           <div className="absolute inset-0 bg-bg/60" />
         </div>
 
         <AnimatedHeading
-          as="h2"
+          as={headingAs}
           className="absolute inset-x-0 top-24 z-30 px-gutter text-center font-display text-display-sm font-semibold leading-title tracking-title motion-reduce:static motion-reduce:mb-12 motion-reduce:px-0 motion-reduce:text-left"
         >
           {heading}

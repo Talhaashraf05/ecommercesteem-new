@@ -99,7 +99,7 @@ export const PricingGroupSchema = z.object({
   tiers: z.array(PricingTierSchema).length(4),
 });
 
-export type ServiceSlug = (typeof SERVICE_SLUGS)[number];
+export type { ServiceSlug } from "./service-slugs";
 export type PricingGroupId = (typeof PRICING_GROUPS)[number];
 export type ServiceGroup = z.infer<typeof ServiceSchema>["group"];
 export type Service = z.infer<typeof ServiceSchema>;

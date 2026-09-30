@@ -9,3 +9,5 @@ export const SERVICE_SLUGS = [
   "email-marketing",
   "seo",
 ] as const;
+
+export type ServiceSlug = (typeof SERVICE_SLUGS)[number];

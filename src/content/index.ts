@@ -14,3 +14,4 @@ export * from "./privacy";
 export * from "./timeline";
 export * from "./careers";
 export * from "./team";
+export * from "./work";
