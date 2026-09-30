@@ -12,6 +12,7 @@ export const WorkView = () => (
     <PageHero eyebrow="Work" title="Brands we've helped grow" />
     <PortfolioStack
       heading="Selected work"
+      priority
       items={caseStudies.map((c) => ({
         slug: c.slug,
         client: c.client,

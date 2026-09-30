@@ -28,6 +28,8 @@ export interface PortfolioStackItem {
 export interface PortfolioStackProps {
   heading: string;
   items: PortfolioStackItem[];
+  /** Eager-load the first card + backdrop when the stack is above the fold (/work). */
+  priority?: boolean;
 }
 
 const SCROLL_PER_CARD = 60; // vh of scroll per card
@@ -65,7 +67,7 @@ const cardFrame = (i: number, v: number) => {
 
 const scrimOpacity = (i: number, v: number) => Math.min(0.45, Math.abs(i - v) * 0.25);
 
-const PortfolioStackInner = ({ heading, items }: PortfolioStackProps) => {
+const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStackProps) => {
   const count = items.length;
   const router = useRouter();
   const sectionRef = useRef<HTMLElement>(null);
@@ -143,7 +145,7 @@ const PortfolioStackInner = ({ heading, items }: PortfolioStackProps) => {
                 transform: f.to((v) => backdropFrame(i, v).transform),
               }}
             >
-              <Image src={item.image} alt="" fill sizes="60vw" quality={30} className="object-cover blur-2xl" />
+              <Image src={item.image} alt="" fill sizes="60vw" quality={30} priority={priority && i === 0} className="object-cover blur-2xl" />
             </animated.div>
           ))}
           <div className="absolute inset-0 bg-bg/60" />
@@ -179,6 +181,7 @@ const PortfolioStackInner = ({ heading, items }: PortfolioStackProps) => {
                   alt={item.client}
                   fill
                   sizes="(max-width: 768px) 90vw, 736px"
+                  priority={priority && i === 0}
                   className="object-cover"
                 />
                 {/* Scrim only on off-focus cards; the focused card stays clear. */}
@@ -231,5 +234,5 @@ const PortfolioStackInner = ({ heading, items }: PortfolioStackProps) => {
   );
 };
 
-export const PortfolioStack = ({ heading, items }: PortfolioStackProps) =>
-  items.length === 0 ? null : <PortfolioStackInner heading={heading} items={items} />;
+export const PortfolioStack = (props: PortfolioStackProps) =>
+  props.items.length === 0 ? null : <PortfolioStackInner {...props} />;
