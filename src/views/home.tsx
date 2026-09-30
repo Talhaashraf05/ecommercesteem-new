@@ -1,5 +1,9 @@
-import { stats } from "@/content";
+import { caseStudies, clients, stats, testimonials } from "@/content";
 import { ExperienceSection } from "@/features/experience/experience-section";
+import { LogoMarquee } from "@/features/logo-marquee/logo-marquee";
+import { PortfolioStack } from "@/features/portfolio-stack/portfolio-stack";
+import { ServiceColumns } from "@/features/service-columns/service-columns";
+import { StatsBento } from "@/features/stats-bento/stats-bento";
 
 const copy = {
   hero: {
@@ -18,6 +22,42 @@ const copy = {
 export const HomeView = () => (
   <main id="main">
     <ExperienceSection copy={copy} />
-    <div className="h-lvh" />
+    <LogoMarquee clients={clients} label="Brands we've grown" />
+    <StatsBento
+      content={{
+        heading: "Results that compound",
+        lead: "We run the channels that move e-commerce revenue — and connect them so every dollar works harder.",
+        photo: { src: "/images/team.webp", alt: "EcommerceSteem team at work" },
+        collab: { value: stats[0].value, desc: "brands trust us with their Amazon, Meta and Google growth." },
+        commitment: {
+          eyebrow: "Client rating",
+          value: "5.0★",
+          quote: testimonials[6].quote,
+          author: testimonials[6].name,
+          initials: ["BI", "AE", "MD", "MS"],
+        },
+        data: { label: "Projects delivered", value: stats[2].value, desc: "Launches, audits and campaigns shipped end to end." },
+        reach: { label: "Countries served", value: stats[1].value },
+      }}
+    />
+    <ServiceColumns
+      heading="What we run"
+      cta={{ label: "All services", href: "/services" }}
+      items={[
+        { prefix: "Amazon", name: "Marketplace", image: "/images/amazon-1.webp", href: "/services/amazon-account-management" },
+        { prefix: "Meta", name: "Ads", image: "/images/meta-ads.webp", href: "/services/meta-ads" },
+        { prefix: "Google", name: "Ads", image: "/images/google-ads.webp", href: "/services/google-ads" },
+        { prefix: "Retention", name: "& SEO", image: "/images/email-marketing.webp", href: "/services/email-marketing" },
+      ]}
+    />
+    <PortfolioStack
+      heading="Selected work"
+      items={caseStudies.map((c) => ({
+        slug: c.slug,
+        client: c.client,
+        headline: `${c.headlineMetric.value} ${c.headlineMetric.label}`,
+        image: c.image,
+      }))}
+    />
   </main>
 );
