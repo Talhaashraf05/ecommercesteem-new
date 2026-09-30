@@ -13,4 +13,11 @@ export const site: Site = {
   parentCompany: { name: "Dev Steem LTD", address: "82a James Carter Road, IP28 7DE, United Kingdom" },
   disclaimer:
     "EcommerceSteem is an independent service provider and is not affiliated with or endorsed by Amazon. We access Amazon seller data solely on behalf of individual sellers with their explicit consent, for the purpose of providing account management services. We do not aggregate, combine, or share data across multiple seller accounts.",
+  about: {
+    story:
+      "EcommerceSteem was founded with one vision: to make e-commerce growth simple, effective, and accessible for businesses of all sizes. What started as a small, passionate team of marketers has evolved into a full-service digital solutions provider, serving clients worldwide.",
+    missionTitle: "Driving growth, building trust, creating impact",
+    mission:
+      "At EcommerceSteem, our mission is simple yet powerful: to empower businesses with end-to-end digital solutions that deliver measurable growth. We combine creativity, technology, and strategy to help our clients achieve their goals, enhance their brand presence, and maximize ROI.",
+  },
 };

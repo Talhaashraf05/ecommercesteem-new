@@ -12,6 +12,7 @@ export const SiteSchema = z.object({
   portal: z.url(),
   parentCompany: z.object({ name: z.string(), address: z.string() }),
   disclaimer: z.string(),
+  about: z.object({ story: z.string(), missionTitle: z.string(), mission: z.string() }),
 });
 
 export const OfficeSchema = z.object({
