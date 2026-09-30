@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 import * as C from "@/content";
@@ -82,5 +82,10 @@ describe("images", () => {
   it("every referenced image exists", () => {
     const refs = [...C.services.map((s) => s.image), ...C.caseStudies.map((c) => c.image), "/images/team.webp"];
     for (const r of refs) expect(existsSync(pub(r)), r).toBe(true);
+  });
+  it("every optimised photo is at most 400 KB", () => {
+    const files = readdirSync(pub("/images")).filter((f) => f.endsWith(".webp"));
+    expect(files.length).toBeGreaterThan(0);
+    for (const f of files) expect(statSync(pub(`/images/${f}`)).size, f).toBeLessThanOrEqual(400_000);
   });
 });
