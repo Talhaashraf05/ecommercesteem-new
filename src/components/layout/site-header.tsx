@@ -30,7 +30,7 @@ export const SiteHeader = () => (
         </a>
       </nav>
       <div className="flex items-center gap-3">
-        <ButtonLink href="/contact" className="hidden sm:inline-flex">
+        <ButtonLink href="/contact" className="max-sm:hidden">
           Book a free audit
         </ButtonLink>
         <MobileMenu groups={serviceNav} portal={site.portal} />
