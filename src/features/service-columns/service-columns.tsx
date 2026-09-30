@@ -6,7 +6,8 @@
 // brand line draws in along the bottom — all springs via <Hover> (ADR-0002). The whole
 // column is the hover trigger and the link (a clip-collapsed element has no hit area).
 // The heading + CTA sit over the top-right on lg without blocking column hover. On
-// touch widths the photo is always visible as a card with a fixed dark scrim.
+// touch widths — and under reduced motion at every width — the photo is always
+// visible with a fixed dark scrim, and the spring layers are hidden.
 import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -49,14 +50,14 @@ const Column = ({ prefix, name, image, href, index }: ServiceColumnItem & { inde
         alt=""
         fill
         sizes="(max-width: 1024px) 50vw, 25vw"
-        className="object-cover lg:hidden"
+        className="object-cover lg:hidden lg:motion-reduce:block!"
       />
 
       {/* lg+: photo revealed bottom-to-top through a clip-path mask on hover. */}
       <Hover
         trigger={ref}
         tag="div"
-        className="absolute inset-0 hidden will-change-[clip-path] lg:block"
+        className="absolute inset-0 hidden will-change-[clip-path] lg:block motion-reduce:hidden!"
         from={{ clipPath: "inset(100% 0% 0% 0%)" }}
         to={{ clipPath: "inset(0% 0% 0% 0%)" }}
         config={REVEAL_CONFIG}
@@ -68,13 +69,13 @@ const Column = ({ prefix, name, image, href, index }: ServiceColumnItem & { inde
           scales up from the base on hover. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-bg via-bg/60 to-transparent lg:hidden"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-bg via-bg/60 to-transparent lg:hidden lg:motion-reduce:block!"
       />
       <Hover
         trigger={ref}
         tag="div"
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-1/2 origin-bottom bg-gradient-to-t from-bg via-bg/70 to-transparent will-change-transform lg:block"
+        className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-1/2 origin-bottom bg-gradient-to-t from-bg via-bg/70 to-transparent will-change-transform lg:block motion-reduce:hidden!"
         from={{ transform: "scaleY(0)" }}
         to={{ transform: "scaleY(1)" }}
         config={REVEAL_CONFIG}
@@ -93,10 +94,15 @@ const Column = ({ prefix, name, image, href, index }: ServiceColumnItem & { inde
         trigger={ref}
         tag="div"
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-6 bottom-6 hidden h-px origin-left bg-brand will-change-transform lg:block"
+        className="pointer-events-none absolute inset-x-6 bottom-6 hidden h-px origin-left bg-brand will-change-transform lg:block motion-reduce:hidden!"
         from={{ transform: "scaleX(0)" }}
         to={{ transform: "scaleX(1)" }}
         config={REVEAL_CONFIG}
+      />
+      {/* Reduced motion: the brand line appears statically on hover/focus (no spring). */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-6 bottom-6 hidden h-px bg-brand opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 lg:motion-reduce:block"
       />
     </Link>
   );
