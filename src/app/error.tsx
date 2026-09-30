@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { site } from "@/content/site";
+import { CONTACT_EMAIL } from "@/content/site-basics";
 import { buttonClasses } from "@/components/ui/button";
 
 /**
@@ -33,8 +33,8 @@ export default function Error({
       </button>
       <p className="mt-6 text-muted">
         Still stuck?{" "}
-        <a href={`mailto:${site.email}`} className="text-fg underline underline-offset-4">
-          {site.email}
+        <a href={`mailto:${CONTACT_EMAIL}`} className="text-fg underline underline-offset-4">
+          {CONTACT_EMAIL}
         </a>
       </p>
     </main>

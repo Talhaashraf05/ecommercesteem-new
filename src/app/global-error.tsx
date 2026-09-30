@@ -3,7 +3,7 @@
 import "./globals.css";
 import { useEffect } from "react";
 import { buttonClasses } from "@/components/ui/button";
-import { site } from "@/content/site";
+import { CONTACT_EMAIL, SITE_NAME } from "@/content/site-basics";
 
 /**
  * Last-resort boundary for errors in the root layout itself. It replaces the
@@ -25,7 +25,7 @@ export default function GlobalError({
     <html lang="en">
       <body className="bg-bg text-fg">
         <main id="main" className="flex min-h-screen flex-col items-center justify-center px-gutter py-24 text-center">
-          <p className="font-display text-xl font-semibold text-fg">{site.name}</p>
+          <p className="font-display text-xl font-semibold text-fg">{SITE_NAME}</p>
           <h1 className="mt-8 font-display text-display-sm font-semibold text-fg">Something went wrong</h1>
           <p className="mt-4 text-lead text-muted">An unexpected error occurred. Please try again.</p>
           <button type="button" onClick={reset} className={`mt-10 ${buttonClasses("primary", "md")}`}>
@@ -33,8 +33,8 @@ export default function GlobalError({
           </button>
           <p className="mt-6 text-muted">
             Still stuck?{" "}
-            <a href={`mailto:${site.email}`} className="text-fg underline underline-offset-4">
-              {site.email}
+            <a href={`mailto:${CONTACT_EMAIL}`} className="text-fg underline underline-offset-4">
+              {CONTACT_EMAIL}
             </a>
           </p>
         </main>

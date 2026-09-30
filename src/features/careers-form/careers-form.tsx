@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Field } from "@/components/ui/field";
 import { buttonClasses } from "@/components/ui/button";
-import { site } from "@/content/site";
+import { CONTACT_EMAIL } from "@/content/site-basics";
 import { withContactEmail } from "@/lib/form-error";
 import { CareersFieldsSchema, validateResume } from "./schema";
 
@@ -60,9 +60,9 @@ export const CareersForm = ({ position }: { position: string }) => {
         return;
       }
       const json = (await res.json().catch(() => null)) as { error?: { message?: string } } | null;
-      setServerError(withContactEmail(json?.error?.message ?? GENERIC_ERROR, site.email));
+      setServerError(withContactEmail(json?.error?.message ?? GENERIC_ERROR, CONTACT_EMAIL));
     } catch {
-      setServerError(withContactEmail(GENERIC_ERROR, site.email));
+      setServerError(withContactEmail(GENERIC_ERROR, CONTACT_EMAIL));
     }
     setStatus("error");
   };

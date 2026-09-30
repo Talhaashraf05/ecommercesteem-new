@@ -1,9 +1,10 @@
 import type { Site } from "./schemas";
+import { CONTACT_EMAIL, SITE_NAME } from "./site-basics";
 
 export const site: Site = {
-  name: "EcommerceSteem",
+  name: SITE_NAME,
   tagline: "Build. Grow. Scale.",
-  email: "info@ecommercesteem.com",
+  email: CONTACT_EMAIL,
   privacyEmail: "privacy@ecommercesteem.com",
   phone: "+1 (307) 243-8623",
   phoneHref: "tel:+13072438623",
