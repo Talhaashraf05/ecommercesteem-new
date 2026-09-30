@@ -47,7 +47,8 @@ export interface ParticleRigOptions {
 /**
  * The particle sphere's setup, sizing and teardown, shared by every scene that
  * shows it: renderer, scene, camera, the dense SphereGeometry drawn as Points,
- * the particle shader and the composer (plus UnrealBloom on the high tier).
+ * the particle shader and the composer (plus UnrealBloom on the high tier,
+ * opaque canvases only).
  * Per-frame logic (uniforms, camera path) stays with the caller.
  */
 export const createParticleRig = ({ container, tier, transparent, onContextLost }: ParticleRigOptions): ParticleRig => {
@@ -109,7 +110,9 @@ export const createParticleRig = ({ container, tier, transparent, onContextLost 
 
   // Bloom (high tier only) runs at half resolution. The composer resizes
   // every pass to full size, so re-apply the half size after each resize.
-  const bloomPass = config.bloom ? new UnrealBloomPass(new THREE.Vector2(w / 2, h / 2), 1.2, 0.5, 0.05) : null;
+  // Skipped on transparent canvases: UnrealBloom writes its glow into the
+  // alpha channel, which paints a grey haze over the whole canvas box.
+  const bloomPass = config.bloom && !transparent ? new UnrealBloomPass(new THREE.Vector2(w / 2, h / 2), 1.2, 0.5, 0.05) : null;
   const sizeBloom = () => {
     const dpr = renderer.getPixelRatio();
     bloomPass?.setSize((w * dpr) / 2, (h * dpr) / 2);
