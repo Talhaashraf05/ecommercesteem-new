@@ -1,71 +1,123 @@
-import { clients, offices, site, stats, values } from "@/content";
+import { clients, offices, site, stats, team, testimonials, timeline, values } from "@/content";
+import { AnimatedHeading } from "@/components/ui/animated-heading";
+import { CinematicHero } from "@/components/ui/cinematic-hero";
 import { Container } from "@/components/ui/container";
-import { PageHero } from "@/components/ui/page-hero";
+import { GlassButton } from "@/components/ui/glass-button";
+import { HoverRing } from "@/components/ui/hover-ring";
+import { RevealGrid } from "@/components/ui/reveal-grid";
 import { Section } from "@/components/ui/section";
 import { CtaBand } from "@/features/cta/cta-band";
+import { HeroScene } from "@/features/hero-scene/hero-scene";
 import { LogoMarquee } from "@/features/logo-marquee/logo-marquee";
+import { OfficeMap } from "@/features/office-map/office-map";
+import { StatsBento } from "@/features/stats-bento/stats-bento";
+import { Team } from "@/features/team/team";
+import { Testimonials } from "@/features/testimonials/testimonials";
+import { TimelineSection } from "@/features/timeline/timeline-section";
+import { ValuesBento } from "@/features/values/values-bento";
 
-const H2 = "font-display text-display-sm text-fg";
+const [brands, countries, projects] = stats;
+
+/** Map pin per office, keyed by country code. */
+const MARKERS: Record<string, { label: string; lon: number; lat: number }> = {
+  US: { label: "Dover", lon: -75.52, lat: 39.16 },
+  AL: { label: "Tiranë", lon: 19.82, lat: 41.33 },
+  PK: { label: "Lahore", lon: 74.36, lat: 31.52 },
+};
+
+const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
 
 export const AboutView = () => (
   <main id="main">
-    <PageHero eyebrow="About" title="From vision to digital leadership" lead={site.about.story} />
-    <Section labelledBy="mission-title" className="!pt-0">
-      <Container className="grid items-start gap-12 lg:grid-cols-2">
-        <div>
-          <h2 id="mission-title" className={H2}>{site.about.missionTitle}</h2>
-          <p className="mt-6 text-lead text-muted">{site.about.mission}</p>
-        </div>
-        <ul className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-          {stats.map((s) => (
-            <li key={s.id} className="rounded-3xl border border-line bg-surface p-8">
-              <p className="font-display text-stat text-fg">{s.value}</p>
-              <p className="mt-2 text-kicker text-muted">{s.label}</p>
-            </li>
-          ))}
-        </ul>
-      </Container>
-    </Section>
-    <Section labelledBy="values-title" tone="raised">
-      <Container>
-        <h2 id="values-title" className={H2}>What we stand for</h2>
-        <ul className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {values.map((v) => (
-            <li key={v.title} className="rounded-3xl border border-line bg-surface-raised p-8">
-              <h3 className="font-display text-lead text-fg">{v.title}</h3>
-              <p className="mt-3 text-muted">{v.description}</p>
-            </li>
-          ))}
-        </ul>
-      </Container>
-    </Section>
+    <CinematicHero
+      eyebrow="About"
+      title="From vision to digital leadership"
+      lead={site.about.story}
+      scene={<HeroScene shape="helix" />}
+      stats={stats.map((s) => ({ value: s.value, label: s.label }))}
+      actions={
+        <>
+          <GlassButton href="/contact" withArrow>
+            Book a free audit
+          </GlassButton>
+          <GlassButton href="/work" variant="secondary">
+            See our work
+          </GlassButton>
+        </>
+      }
+    />
+
+    <TimelineSection items={timeline} />
+
+    <StatsBento
+      content={{
+        heading: site.about.missionTitle,
+        lead: site.about.mission,
+        photo: { src: "/images/team.webp", alt: "EcommerceSteem team at work" },
+        collab: { value: brands.value, desc: "brands trust us with their Amazon, Meta and Google growth." },
+        commitment: {
+          eyebrow: "Client rating",
+          value: "5.0★",
+          quote: testimonials[6].quote,
+          author: testimonials[6].name,
+          initials: ["BI", "AE", "MD", "MS"],
+        },
+        data: { label: projects.label, value: projects.value, desc: projects.description },
+        reach: { label: "Countries served", value: countries.value },
+      }}
+    />
+
+    <ValuesBento values={values} />
+
     <Section labelledBy="offices-title">
       <Container>
-        <h2 id="offices-title" className={H2}>Where to find us</h2>
-        <ul className="mt-12 grid gap-6 md:grid-cols-3">
+        <AnimatedHeading
+          as="h2"
+          id="offices-title"
+          className="font-display text-display-sm font-semibold leading-title tracking-title text-fg"
+        >
+          Where we work
+        </AnimatedHeading>
+        <p className="mt-6 max-w-lead text-lead text-muted">
+          Three hubs across three continents, one team running your growth around the clock.
+        </p>
+        <OfficeMap
+          className="mx-auto mt-12 max-w-5xl"
+          markers={offices.flatMap((o) => (MARKERS[o.countryCode] ? [MARKERS[o.countryCode]] : []))}
+        />
+        <RevealGrid as="ul" itemAs="li" className="mt-12 grid gap-6 md:grid-cols-3">
           {offices.map((o) => (
-            <li key={o.countryCode} className="rounded-3xl border border-line bg-surface p-8">
-              <h3 className="font-display text-lead text-fg">{o.country}</h3>
-              <address className="mt-3 not-italic text-muted">{o.address}</address>
-              {o.phone && (
-                <p className="mt-2">
-                  <a
-                    href={`tel:${o.phone.replace(/[^\d+]/g, "")}`}
-                    className="text-fg transition-colors duration-200 hover:text-brand-glow"
-                  >
-                    {o.phone}
-                  </a>
+            <HoverRing key={o.countryCode} className="h-full rounded-3xl">
+              <article className="flex h-full flex-col rounded-3xl border border-line bg-surface-glass p-8 backdrop-blur-md">
+                <p className="flex items-center gap-3 text-kicker text-muted">
+                  <span aria-hidden="true" className="size-2 rounded-full bg-brand shadow-[0_0_0.5rem_var(--brand-glow)]" />
+                  {MARKERS[o.countryCode]?.label ?? o.countryCode}
                 </p>
-              )}
-            </li>
+                <h3 className="mt-4 font-display text-h3 font-semibold text-fg">{o.country}</h3>
+                <address className="mt-3 not-italic text-muted">{o.address}</address>
+                {o.phone && (
+                  <p className="mt-auto pt-6">
+                    <a
+                      href={telHref(o.phone)}
+                      className="text-fg transition-colors duration-200 hover:text-brand-glow"
+                    >
+                      {o.phone}
+                    </a>
+                  </p>
+                )}
+              </article>
+            </HoverRing>
           ))}
-        </ul>
+        </RevealGrid>
         <p className="mt-10 text-muted">
           EcommerceSteem is part of {site.parentCompany.name}, {site.parentCompany.address}.
         </p>
       </Container>
     </Section>
+
     <LogoMarquee clients={clients} label="Brands we've grown" />
+    <Testimonials items={testimonials} />
+    <Team members={team} />
     <CtaBand
       title="Let's grow your brand"
       body="Book a free audit and we'll show you where your next stage of growth is hiding."
