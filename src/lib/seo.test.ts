@@ -8,6 +8,14 @@ describe("seo", () => {
     expect(m.alternates?.canonical).toBe("/about");
     expect(m.openGraph?.url).toBe("/about");
   });
+  it("defaults OG and twitter image, allows override", () => {
+    const d = pageMetadata({ description: "d", path: "/x" });
+    expect(d.openGraph?.images).toEqual(["/opengraph-image"]);
+    expect(d.twitter?.images).toEqual(["/opengraph-image"]);
+    const o = pageMetadata({ description: "d", path: "/x", image: "/a.png" });
+    expect(o.openGraph?.images).toEqual(["/a.png"]);
+    expect(o.twitter?.images).toEqual(["/a.png"]);
+  });
   it("sitemap lists every static and dynamic page once", () => {
     const urls = sitemapEntries().map((e) => new URL(e.url).pathname);
     for (const p of ["/", "/services", "/services/amazon-ppc", "/work", "/work/hulkfit", "/about", "/contact", "/careers", "/privacy"]) {
