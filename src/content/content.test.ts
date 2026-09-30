@@ -90,6 +90,14 @@ describe("timeline, careers, team", () => {
   });
 });
 
+describe("contact page", () => {
+  it("has three next steps, drafted ones flagged unverified", () => {
+    const steps = C.contactPage.nextSteps.steps;
+    expect(steps.map((s) => s.title)).toEqual(["We reply within one business day", "Free audit call", "Your growth plan"]);
+    expect(steps.filter((s) => s.detail).every((s) => s.verified === false)).toBe(true);
+  });
+});
+
 describe("images", () => {
   it("every referenced image exists", () => {
     const refs = [...C.services.map((s) => s.image), ...C.caseStudies.map((c) => c.image), "/images/team.webp"];

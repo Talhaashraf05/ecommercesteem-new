@@ -95,14 +95,14 @@ export const ContactForm = ({ serviceOptions, service = "", plan = "" }: Contact
 
   if (status === "success") {
     return (
-      <div role="status" className="rounded-3xl border border-line bg-surface p-8 sm:p-10">
+      <div role="status">
         <h2 className="font-display text-display-sm text-fg">Thanks — we&apos;ll reply within one business day.</h2>
       </div>
     );
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className="flex flex-col gap-6 rounded-3xl border border-line bg-surface p-8 sm:p-10">
+    <form onSubmit={onSubmit} noValidate className="flex flex-col gap-6">
       <div className="grid gap-6 sm:grid-cols-2">
         <Field label="Name" name="name" required autoComplete="name" error={errors.name} />
         <Field label="Email" name="email" type="email" required autoComplete="email" error={errors.email} />
