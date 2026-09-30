@@ -124,6 +124,11 @@ export const ParticleCanvas = ({ tier, active, onContextLost }: ParticleCanvasPr
     }
 
     let time = 0;
+    let lastNow: number | null = null;
+    // Shader time advances 0.005 per 60 fps frame, scaled by the real frame delta
+    // so 120 Hz screens don't run twice as fast. Clamped so a stall can't lurch.
+    const FRAME_MS = 1000 / 60;
+    const TIME_PER_FRAME = 0.005;
 
     // On-load intro: the sphere appears filled and close, then dollies back to
     // its resting position while the centre hollows into the ring. Time-driven
@@ -144,8 +149,13 @@ export const ParticleCanvas = ({ tier, active, onContextLost }: ParticleCanvasPr
     resizeObserver.observe(container);
 
     const render = (now: number) => {
-      if (!active.current || document.hidden) return;
-      time += 0.005;
+      if (!active.current || document.hidden) {
+        lastNow = null;
+        return;
+      }
+      const dt = lastNow === null ? FRAME_MS : Math.min(Math.max(now - lastNow, 0), 100);
+      lastNow = now;
+      time += TIME_PER_FRAME * (dt / FRAME_MS);
 
       if (introStart === 0) introStart = now;
       const introRaw = Math.min((now - introStart) / INTRO_MS, 1);
@@ -182,6 +192,9 @@ export const ParticleCanvas = ({ tier, active, onContextLost }: ParticleCanvasPr
       material.dispose();
       bloomPass?.dispose();
       composer.dispose();
+      // Release the GPU context now rather than waiting for GC (the listener
+      // above is already gone, so this doesn't trigger the "off" fallback).
+      renderer.forceContextLoss();
       renderer.dispose();
     };
   }, [tier, active]);

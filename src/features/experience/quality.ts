@@ -11,11 +11,20 @@ export const pickTier = (i: { reducedMotion: boolean; webgl: boolean; width: num
   return "high";
 };
 
-/** Browser probe; returns false if a WebGL context can't be created. */
+/**
+ * Browser probe; false if a WebGL context can't be created, or only with a
+ * major performance caveat (software rendering) — those devices get "off".
+ * The probe context is released straight away so it doesn't count against the
+ * browser's live-context limit.
+ */
 export const hasWebGL = (): boolean => {
   try {
     const c = document.createElement("canvas");
-    return Boolean(c.getContext("webgl2") ?? c.getContext("webgl"));
+    const opts: WebGLContextAttributes = { failIfMajorPerformanceCaveat: true };
+    const gl = c.getContext("webgl2", opts) ?? c.getContext("webgl", opts);
+    if (!gl) return false;
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
+    return true;
   } catch {
     return false;
   }
