@@ -26,6 +26,9 @@ Web3Forms or the Apps Script. There is nothing to configure for it on the Web3Fo
 ```
 ⚠  src/content/case-studies.ts: 6 unverified entries — verify before launch
 ⚠  src/content/stats.ts: 3 unverified entries — verify before launch
+⚠  src/content/timeline.ts: 6 unverified entries — verify before launch
+⚠  src/content/careers.ts: 4 unverified entries — verify before launch
+⚠  src/content/contact.ts: 2 unverified entries — verify before launch
 ```
 
 Every entry is `verified: false`. Confirm each number with the client or replace it, then set
@@ -66,6 +69,54 @@ and that each client agrees to be named.
 - **Testimonials** (`src/content/testimonials.ts`): confirm names and quotes are real and
   approved. Amine El Aini's quote mentions "high-quality designs". Design isn't an offered
   service, so consider replacing it.
+
+### About timeline (`src/content/timeline.ts`, the "How we got here" section on `/about`)
+
+Drafted from the spec. Every milestone is `verified: false`; confirm the years and wording.
+
+| Year | Milestone | Text |
+| --- | --- | --- |
+| 2018 | Founded | EcommerceSteem starts with a small team and its first e-commerce clients on Upwork. |
+| 2020 | Amazon, end to end | First Amazon brands under full account management — PPC, listings and account health. |
+| 2022 | Albania office | A second hub opens in Tiranë. |
+| 2023 | Paid social & search | The Lahore team expands and Meta & Google Ads join the Amazon practice. |
+| 2024 | Dev Steem LTD | The UK parent company is registered. |
+| Today | 500+ brands | Brands grown across 70+ countries. |
+
+### Hiring steps (`src/content/careers.ts` → `hiringSteps`, "How we hire" on `/careers`)
+
+All four are `verified: false`. Confirm that this is the real process.
+
+1. **Apply:** "Send your CV and a few lines about what you'd like to work on."
+2. **Intro call:** "A 20-minute chat with the team about your experience and goals."
+3. **Short task:** "A small, paid-time-respecting task close to the real work."
+4. **Offer:** "We move quickly — most candidates hear back within a week."
+
+### Inner-page copy (drafted, not flagged by the script)
+
+- **`careersPage`** (`src/content/careers.ts`): all of its copy was drafted for the redesign.
+  Confirm the hero ("Help ambitious brands grow"), "Life at EcommerceSteem" ("One team across
+  three continents…", "Hubs on three continents, so someone is always moving a brand forward."),
+  the roles copy and the empty state ("No open roles right now — but we're always meeting great
+  people…"), "Four steps, no endless rounds." and the closing CTA.
+- **`contactPage`** (`src/content/contact.ts`):
+  - "What happens next" steps 2–3 are `verified: false`: **"Free audit call — 30 minutes on your
+    account"** and **"Your growth plan — priorities, budget and timeline"**. Confirm that the audit
+    call really is 30 minutes and free.
+  - The trust line **"5.0 ★ · 7 verified reviews on Upwork & Clutch"** must match the live
+    Upwork/Clutch profiles and `src/content/testimonials.ts`.
+  - The closing CTA body ("Browse the brands we've grown on Amazon, Meta and Google…").
+- **`workPage`** (`src/content/work.ts`):
+  - The hero lead: "Selected case studies across Amazon, Meta, Google and retention, with the
+    numbers behind each one."
+  - The **featured study** is `huskey-parts` (`featured.slug`). Confirm Huskey Parts agrees to
+    be the spotlight case, or change the slug.
+
+### Team section (`/about`)
+
+`src/content/team.ts` is empty on purpose, so the team section is hidden. **It appears
+automatically** once `team` has entries (`{ name, role, photo }`). `photo` must be a path under
+`public/images/` (for example `/images/team-jane.webp`). No code change is needed.
 
 ## 3. Images to replace with real ones
 
@@ -133,7 +184,8 @@ call to the Apps Script may take up to 25 s (`maxDuration` is 30 s). After deplo
 Measured against `yarn build && yarn start` on localhost, headless Chrome. Mobile = Moto G
 emulation (slow 4G, 4× CPU); desktop = `--preset=desktop`. `/` and `/contact` (mobile) were
 re-measured on 2026-10-01 after the final fixes with Lighthouse 13.5.0 CLI; the other rows and the
-desktop columns are from 2026-09-30 (Lighthouse 12.8.2) and predate the contrast fix.
+desktop columns are from 2026-09-30 (Lighthouse 12.8.2) and predate the contrast fix. The `/work` row
+below predates the inner-pages redesign; see "Inner pages after the redesign" for current numbers.
 
 | Page | Mobile Perf | Mobile LCP (sim / applied) | Mobile CLS | Desktop Perf | A11y (m/d) | BP (m/d) | SEO (m/d) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -161,9 +213,45 @@ now sits on a darker token, `brand-strong` `#C02A1F` (5.37:1 with `fg`), with
 bold), so use it for accents, icons and large display text. Any white/`fg` text on a red fill
 must use `brand-strong`.
 
-First-load JS (gzip -9, KiB, module scripts, excluding the lazily loaded three.js chunk), final
-build: `/` 195.9 KB · `/contact` 194.3 KB · `/careers` 194.5 KB · other pages 183–186 KB. The
-budget is < 200 KB, so there is little headroom: check it before adding client-side code.
+### Inner pages after the redesign (2026-10-01)
+
+Mobile, Lighthouse 12.8.2 CLI (default simulated throttling), `yarn build && yarn start`. Each
+page was loaded once to warm the server, then measured 3 times with the host load average
+below 5. The table shows the median of the 3 runs.
+
+| Page | Mobile Perf (runs) | LCP (sim) | CLS | TBT | A11y | BP | SEO |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `/about` | **93** (93 / 93 / 93) | 3.3 s | 0 | 19 ms | 100 | 100 | 100 |
+| `/careers` | **93** (92 / 93 / 93) | 3.2 s | 0 | 65 ms | 100 | 100 | 100 |
+| `/careers/full-stack-developer` | **94** (92 / 94 / 94) | 3.1 s | 0 | 7 ms | 100 | 100 | 69¹ |
+| `/work` | **91** (91 / 91 / 92) | 3.4 s | 0 | 13 ms | 100 | 96² | 100 |
+| `/work/hulkfit` | **94** (94 / 94 / 94) | 3.1 s | 0 | 9 ms | 100 | 96² | 100 |
+| `/contact` | **90** (90 / 87 / 91); re-run at load < 3: **91** (92 / 91 / 90) | 3.5 s | 0 | 72 ms | 100 | 100 | 100 |
+
+Targets: mobile Perf ≥ 90 ✅ · A11y/BP/SEO ≥ 95 ✅ on the five target pages · CLS < 0.05 ✅.
+`/contact` scores at the edge of the target, so check it on PageSpeed Insights after deploy.
+
+1. SEO 69 is intentional. Closed roles render `robots: noindex, follow`
+   (`src/app/careers/[id]/page.tsx`), and every role is currently closed. Open roles are indexable.
+2. BP 96 comes from the "legible font sizes" audit. `text-xs` renders at about 11.1px, which
+   affects the work-index meta lines and the footer.
+
+First-load JS (gzip -9 over the module `<script src>` chunks in `.next/server/app/<route>.html`,
+excluding the noModule polyfill and the lazily loaded three.js chunk), after the inner-pages
+redesign (2026-10-01):
+
+| Route | Bytes | KiB |
+| --- | --- | --- |
+| `/` | 199,366 | 194.69 |
+| `/about` | 197,079 | 192.46 |
+| `/careers` | 193,266 | 188.74 |
+| `/careers/[id]` (full-stack-developer) | 189,312 | 184.88 |
+| `/work` | 193,496 | 188.96 |
+| `/work/[slug]` (hulkfit) | 189,683 | 185.24 |
+| `/contact` | 193,633 | 189.09 |
+
+The budget is < 200 KiB per route, and home must not exceed 200,660 B. `/about` has only about
+7.7 KiB of headroom, so check the budget before adding client-side code.
 
 ## 8. Post-deploy checks
 
