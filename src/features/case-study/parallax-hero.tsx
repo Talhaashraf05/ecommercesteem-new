@@ -64,10 +64,12 @@ export const ParallaxHero = ({ image, alt, eyebrow, title, metric }: ParallaxHer
         <Image src={image} alt={alt} fill priority sizes="100vw" className="object-cover" />
       </div>
       {/* Scrim: page background rising from the base (copy contrast), plus a light
-          veil at the top so the fixed header stays legible over the photo. */}
+          veil at the top so the fixed header stays legible over the photo. The bottom half
+          stays >= 85% bg so the red metric (text-brand) holds >= 3:1 even over a white
+          photo (needs >= 84.5%); the copy block never rises above it, even at min-h. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 bg-linear-to-t from-bg via-bg/65 via-35% to-bg/25"
+        className="pointer-events-none absolute inset-0 -z-10 bg-linear-to-t from-bg via-bg/85 via-50% to-bg/25"
       />
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-40 bg-linear-to-b from-bg/70 to-transparent" />
 

@@ -94,7 +94,7 @@ const Row = ({ item, index, current, dimmed, onHover }: RowProps) => {
     <Link
       href={`/work/${item.slug}`}
       onPointerEnter={(e) => onHover(item.slug, e.pointerType)}
-      className="group block border-t border-line py-7 outline-offset-4 md:py-9"
+      className={`group block border-t border-line py-7 outline-offset-4 md:py-9${current ? " text-halo" : ""}`}
     >
       <animated.div
         style={{ opacity: o }}
@@ -198,8 +198,11 @@ const Preview = ({
         className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-line-strong bg-surface shadow-card"
       >
         {loaded && items.map((item) => <PreviewImage key={item.slug} src={item.image} on={item.slug === shown} />)}
-        {/* Legibility scrim: the photo sits behind the rows, so darken it under their text. */}
-        <div className="absolute inset-0 bg-bg/80" />
+        {/* Legibility scrim: the photo sits behind the rows. It's uniform because the frame
+            follows the cursor (and flips sides), so text can land on any part of it. 60% keeps
+            white row text >= 4.5:1 over a white photo on its own; the hovered row's
+            text-halo (a dark outline that inherits to all its text) covers the red metric. */}
+        <div className="absolute inset-0 bg-bg/60" />
       </animated.div>
     </div>
   );

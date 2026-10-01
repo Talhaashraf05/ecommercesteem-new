@@ -39,6 +39,7 @@ export const RevealGrid = ({
   const items = Children.toArray(children);
   const Item = animated[itemAs];
   const { p, rootRef, localProg } = useRevealCascade<HTMLElement>(items.length);
+  const done = (v: number, i: number) => localProg(v, i) >= 1;
   return (
     <Tag ref={rootRef} className={className}>
       {items.map((child, i) => (
@@ -47,9 +48,11 @@ export const RevealGrid = ({
           className={`h-full${extra(itemClassName, i)}`}
           style={{
             opacity: p.to((v) => localProg(v, i)),
-            transform: p.to((v) => `translateY(${RISE * (1 - localProg(v, i))}px)`),
-            filter: p.to((v) => `blur(${BLUR * (1 - localProg(v, i))}px)`),
-            willChange: "transform, opacity",
+            // Once revealed, drop transform/filter/will-change entirely: any of them makes
+            // the wrapper a backdrop root, which breaks backdrop-blur on glass cards inside.
+            transform: p.to((v) => (done(v, i) ? "none" : `translateY(${RISE * (1 - localProg(v, i))}px)`)),
+            filter: p.to((v) => (done(v, i) ? "none" : `blur(${BLUR * (1 - localProg(v, i))}px)`)),
+            willChange: p.to((v) => (done(v, i) ? "auto" : "transform, opacity, filter")),
           }}
         >
           {child}

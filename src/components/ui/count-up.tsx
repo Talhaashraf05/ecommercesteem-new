@@ -59,7 +59,7 @@ export const CountUp = ({ value, className }: CountUpProps) => {
   return (
     <span className={className}>
       <span className="sr-only">{value}</span>
-      <span ref={ref} aria-hidden="true">
+      <span ref={ref} aria-hidden="true" className="tabular-nums">
         {value}
       </span>
     </span>

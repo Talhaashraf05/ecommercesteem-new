@@ -4,7 +4,7 @@
 // markup is identical everywhere:
 // - lg+ with motion: a pinned section (100lvh + 50lvh per extra milestone). Scroll
 //   progress slides the card track horizontally, fills the rail, lights the focused
-//   card and dims the rest.
+//   card and dims the year and title of the rest (body copy stays at full contrast).
 // - otherwise: a vertical list with a left line and year markers; the line fills as the
 //   list scrolls through the viewport (static under reduced motion).
 // All per-frame writes go through refs from the shared ticker (no React state), and the
@@ -16,7 +16,7 @@ import { Container } from "@/components/ui/container";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { sectionProgress } from "@/features/experience/timeline";
 import { subscribeToTicker } from "@/lib/animation/ticker";
-import { focusIndex, trackOffset } from "./timeline-math";
+import { focusIndex, focusOpacity, followFactor, trackOffset } from "./timeline-math";
 
 export interface TimelineSectionProps {
   items: TimelineItem[];
@@ -27,8 +27,13 @@ export interface TimelineSectionProps {
 const HEADING_ID = "timeline-title";
 const PINNED_QUERY = "(min-width: 64rem) and (prefers-reduced-motion: no-preference)";
 const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
-const FOLLOW = 0.14; // per-frame low-pass of the scroll read
-const DIM = 0.45; // opacity of unfocused cards
+const FOLLOW = 0.14; // low-pass of the scroll read per 60fps frame (scaled by real frame time)
+const SETTLED = 1e-4; // progress delta below which the pose counts as settled (no writes)
+// Opacity floors for unfocused cards, measured against bg-surface: the year (large text,
+// darker gradient end #DC3326) stays >= 3:1 at 0.85, the title (fg) >= 4.5:1 at 0.5.
+// Body copy (text-muted) is never dimmed, so it keeps its full 6.8:1.
+const YEAR_DIM = 0.85;
+const TITLE_DIM = 0.5;
 const FOCUS_BORDER = "border-brand/60";
 const REST_BORDER = "border-line";
 // Vertical mode: the line is full once the list's end reaches this share of the viewport.
@@ -47,6 +52,8 @@ export const TimelineSection = ({
   const railFillRef = useRef<HTMLSpanElement>(null);
   const lineFillRef = useRef<HTMLSpanElement>(null);
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
+  const yearRefs = useRef<(HTMLElement | null)[]>([]);
+  const titleRefs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -58,6 +65,8 @@ export const TimelineSection = ({
     let cardW = 0; // measured card width (px)
     let gap = 0; // measured gap between cards (px)
     let current: number | null = null; // low-passed progress
+    let written: number | null = null; // progress last written to the DOM
+    let lastTime: number | null = null; // ticker timestamp of the previous frame
     let focused = -1;
     let unsubscribe: (() => void) | null = null;
     let visible = false;
@@ -81,40 +90,57 @@ export const TimelineSection = ({
       });
     };
 
+    const setDim = (els: (HTMLElement | null)[], value: (i: number) => string) =>
+      els.forEach((el, i) => {
+        if (el) el.style.opacity = value(i);
+      });
+
+    // Low-pass toward `target`, frame-rate independent. Returns null once settled, so
+    // callers skip DOM writes while scroll is idle. `time` is absent on the synchronous
+    // first frame, which snaps.
+    const follow = (target: number, time?: number) => {
+      const dt = time !== undefined && lastTime !== null ? time - lastTime : 0;
+      if (time !== undefined) lastTime = time;
+      current = current === null || time === undefined ? target : current + (target - current) * followFactor(FOLLOW, dt);
+      if (Math.abs(target - current) < SETTLED) current = target;
+      if (written !== null && Math.abs(current - written) < SETTLED) return null;
+      written = current;
+      return current;
+    };
+
     const reset = () => {
       focused = -1;
       track.style.transform = "";
       if (railFillRef.current) railFillRef.current.style.transform = "";
       if (lineFillRef.current) lineFillRef.current.style.transform = "";
+      setDim(yearRefs.current, () => "");
+      setDim(titleRefs.current, () => "");
       cardRefs.current.forEach((card) => {
         if (!card) return;
-        card.style.opacity = "";
         card.classList.remove(FOCUS_BORDER);
         card.classList.add(REST_BORDER);
       });
     };
 
-    const pinnedFrame = () => {
+    const pinnedFrame = (time?: number) => {
       const rect = section.getBoundingClientRect();
-      const target = sectionProgress(rect.top, rect.height, window.innerHeight);
       // First frame snaps (deep link / restored scroll), then follows smoothly.
-      current = current === null ? target : current + (target - current) * FOLLOW;
-      const p = current;
+      const p = follow(sectionProgress(rect.top, rect.height, window.innerHeight), time);
+      if (p === null) return;
       track.style.transform = `translate3d(${trackOffset(p, n, cardW, gap).toFixed(2)}px,0,0)`;
       if (railFillRef.current) railFillRef.current.style.transform = `scaleX(${p.toFixed(4)})`;
       const f = p * (n - 1);
-      cardRefs.current.forEach((card, i) => {
-        if (card) card.style.opacity = Math.max(DIM, 1 - Math.abs(i - f) * (1 - DIM)).toFixed(3);
-      });
+      setDim(yearRefs.current, (i) => focusOpacity(i, f, YEAR_DIM).toFixed(3));
+      setDim(titleRefs.current, (i) => focusOpacity(i, f, TITLE_DIM).toFixed(3));
       setFocus(focusIndex(p, n));
     };
 
-    const verticalFrame = () => {
+    const verticalFrame = (time?: number) => {
       const rect = track.getBoundingClientRect();
       const anchor = window.innerHeight * FILL_ANCHOR;
-      const target = clamp01((anchor - rect.top) / Math.max(1, rect.height));
-      current = current === null ? target : current + (target - current) * FOLLOW;
-      if (lineFillRef.current) lineFillRef.current.style.transform = `scaleY(${current.toFixed(4)})`;
+      const p = follow(clamp01((anchor - rect.top) / Math.max(1, rect.height)), time);
+      if (p === null) return;
+      if (lineFillRef.current) lineFillRef.current.style.transform = `scaleY(${p.toFixed(4)})`;
     };
 
     const stop = () => {
@@ -131,6 +157,8 @@ export const TimelineSection = ({
       if (pinned) measure();
       const frame = pinned ? pinnedFrame : verticalFrame;
       current = null;
+      written = null;
+      lastTime = null;
       frame();
       unsubscribe = subscribeToTicker(frame, () => 0);
     };
@@ -152,7 +180,9 @@ export const TimelineSection = ({
     io.observe(section);
 
     const onResize = () => {
-      if (pinnedMq.matches) measure();
+      if (!pinnedMq.matches) return;
+      measure();
+      written = null; // card pitch changed: rewrite the pose even if progress is settled
     };
     pinnedMq.addEventListener("change", onModeChange);
     reducedMq.addEventListener("change", onModeChange);
@@ -222,10 +252,22 @@ export const TimelineSection = ({
                     }}
                     className="rounded-3xl border border-line bg-surface p-8 transition-colors duration-300 lg:motion-safe:flex-1"
                   >
-                    <p className="font-display text-stat font-semibold leading-none tracking-title text-gradient-brand">
+                    <p
+                      ref={(el) => {
+                        yearRefs.current[i] = el;
+                      }}
+                      className="font-display text-stat font-semibold leading-none tracking-title text-gradient-brand"
+                    >
                       {item.year}
                     </p>
-                    <h3 className="mt-6 font-display text-h3 font-semibold text-fg">{item.title}</h3>
+                    <h3
+                      ref={(el) => {
+                        titleRefs.current[i] = el;
+                      }}
+                      className="mt-6 font-display text-h3 font-semibold text-fg"
+                    >
+                      {item.title}
+                    </h3>
                     <p className="mt-3 text-muted">{item.body}</p>
                   </article>
                 </li>

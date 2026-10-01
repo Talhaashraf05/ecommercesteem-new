@@ -22,15 +22,25 @@ export interface HoverRingProps {
 /**
  * Wraps a card and fades in an animated gradient ring on mouse hover or
  * keyboard focus within. Opacity is a declarative spring toggled by state;
- * touch pointers never trigger it, and reduced motion swaps instantly.
+ * touch pointers never trigger it, and reduced motion swaps instantly. The ring
+ * (and its ticker loop) mounts on first use and unmounts again once it has faded
+ * back to 0, so idle cards cost nothing.
  */
 export const HoverRing = ({ className, children }: HoverRingProps) => {
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
-  const [armed, setArmed] = useState(false); // mount the ring (and its ticker loop) only after first use
+  const [armed, setArmed] = useState(false); // ring (and its ticker loop) mounted
   const reduced = useSyncExternalStore(subscribeReduced, getReduced, () => false);
   const active = hovered || focused;
-  const style = useSpring({ opacity: active ? 1 : 0, immediate: reduced });
+  const style = useSpring({
+    opacity: active ? 1 : 0,
+    immediate: reduced,
+    // Faded fully out (a re-hover mid-fade interrupts before 0, so this never fires
+    // while active): unmount the ring so its gradient ticker loop stops.
+    onRest: (result) => {
+      if (result.value.opacity === 0) setArmed(false);
+    },
+  });
 
   return (
     <div

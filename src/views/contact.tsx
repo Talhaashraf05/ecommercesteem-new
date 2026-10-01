@@ -16,6 +16,10 @@ const serviceOptions = services.map((s) => ({ value: s.slug, label: s.name }));
 const LINK = "text-fg transition-colors duration-200 hover:text-brand-glow";
 const CARD = "rounded-3xl border border-line bg-surface-glass p-6 backdrop-blur-md md:p-8";
 const H2 = "font-display text-display-sm font-semibold leading-title tracking-title text-fg";
+// Stick the form beside the aside only when the whole card (with validation errors,
+// about 51rem at lg) fits below the top-28 offset; shorter viewports scroll it normally
+// so the submit button is always reachable.
+const STICKY_FORM = "[@media(min-width:64rem)_and_(min-height:60rem)]:sticky [@media(min-width:64rem)_and_(min-height:60rem)]:top-28";
 const H3 = "font-display text-h3 font-semibold leading-title tracking-title text-fg";
 
 /** "Reply within 1 business day": an Eyebrow-style pill with a glowing brand dot. */
@@ -42,7 +46,7 @@ export const ContactView = () => (
       <Container className="grid items-start gap-8 lg:grid-cols-[3fr_2fr] lg:gap-10">
         <section
           aria-labelledby="contact-form-title"
-          className="relative isolate overflow-clip rounded-[2rem] lg:sticky lg:top-28 border border-line bg-surface/80 p-6 shadow-card backdrop-blur-xl md:p-10"
+          className={`relative isolate overflow-clip rounded-[2rem] border border-line bg-surface/80 p-6 shadow-card backdrop-blur-xl md:p-10 ${STICKY_FORM}`}
         >
           <span
             aria-hidden="true"

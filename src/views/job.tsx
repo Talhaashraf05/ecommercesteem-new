@@ -9,6 +9,9 @@ import { CareersForm } from "@/features/careers-form/careers-form";
 import { CtaBand } from "@/features/cta/cta-band";
 
 const copy = careersPage.job;
+// The apply form is about 61rem tall at lg with every field error showing, so it only
+// sticks on viewports tall enough to keep the submit button in view below top-28.
+const STICKY_APPLY = "[@media(min-width:64rem)_and_(min-height:72rem)]:sticky [@media(min-width:64rem)_and_(min-height:72rem)]:top-28";
 const H2 = "font-display text-h3 font-semibold leading-title tracking-title text-fg";
 
 const List = ({ id, title, items }: { id: string; title: string; items: string[] }) => (
@@ -85,7 +88,7 @@ export const JobView = ({ job }: { job: Job }) => (
           <List id="job-do" title={copy.doHeading} items={job.whatYoullDo} />
           <List id="job-bring" title={copy.bringHeading} items={job.whatYoullBring} />
         </div>
-        <aside aria-label={job.active ? copy.applyHeading : copy.closedHeading} className="lg:sticky lg:top-28 lg:col-span-5">
+        <aside aria-label={job.active ? copy.applyHeading : copy.closedHeading} className={`lg:col-span-5 ${STICKY_APPLY}`}>
           {job.active ? (
             <div id="apply" className="scroll-mt-28">
               <h2 className="sr-only">{copy.applyHeading}</h2>
