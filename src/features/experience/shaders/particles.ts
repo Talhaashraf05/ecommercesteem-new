@@ -3,7 +3,8 @@
  * `SphereGeometry` rendered as points morphs through the scroll phases we keep:
  * sphere → funnel → DNA → wave, driven by the `uScroll` (legacy units) and
  * `uTime` uniforms. The tunnel, black-hole and galaxy phases were removed;
- * `uFade` fades the whole cloud out at the end of the section.
+ * `uFade` fades the whole cloud out at the end of the section. `uChart` (0 on
+ * home) blends the cloud into a rising bar chart for the /work hero.
  */
 
 export const particleVertexShader = /* glsl */ `
@@ -11,6 +12,7 @@ export const particleVertexShader = /* glsl */ `
     uniform float uScroll;
     uniform float uIntro; // 0 = on-load filled/appearing, 1 = settled
     uniform float uFade;  // 1 = visible, 0 = released (end of section)
+    uniform float uChart; // 1 = growth chart (inner-page hero), 0 = home morph
     varying float vEdgeFade;
     varying vec3 vColor;
 
@@ -140,6 +142,32 @@ export const particleVertexShader = /* glsl */ `
 
         vec3 finalPos = mix(step2Pos, targetWavePos, localMelt);
 
+        // --- GROWTH CHART ---
+        // 80% of particles fill nine rising bars, the rest trace the trend
+        // curve above them. uIntro grows the bars left to right on load.
+        if (uChart > 0.0) {
+            float rb = random(position + vec3(3.0));
+            float rx = random(position + vec3(4.0));
+            float ry = random(position + vec3(5.0));
+            float rz = random(position + vec3(6.0));
+            vec3 chartPos;
+            if (rb < 0.8) {
+                float bar = floor(rb * 11.25); // 0..8
+                float grow = smoothstep(bar * 0.07, bar * 0.07 + 0.4, uIntro);
+                float h = (0.6 + 7.4 * pow((bar + 1.0) / 9.0, 1.7)) * grow;
+                h *= 1.0 + 0.03 * sin(uTime * 6.0 + bar);
+                chartPos = vec3(-5.0 + (bar + 0.5) * 1.1111 + (rx - 0.5) * 0.7, -4.0 + ry * h, (rz - 0.5) * 0.7);
+            } else {
+                float s = (rb - 0.8) * 5.0; // 0..1 across the chart
+                float k = clamp(s + 0.0556, 0.0, 1.0);
+                float grow = smoothstep(s * 0.56, s * 0.56 + 0.4, uIntro);
+                float y = -4.0 + (0.6 + 7.4 * pow(k, 1.7)) * grow + 0.8;
+                chartPos = vec3(-5.0 + s * 10.0, y, 0.0) + (vec3(rx, ry, rz) - 0.5) * 0.14;
+            }
+            chartPos += normalVec * snoise(chartPos * 0.4 + uTime * 1.5) * 0.08;
+            finalPos = mix(finalPos, chartPos, uChart);
+        }
+
         vec4 mvPosition = modelViewMatrix * vec4(finalPos, 1.0);
 
         // Fresnel / Edge fade
@@ -177,6 +205,8 @@ export const particleVertexShader = /* glsl */ `
         // (smoothstep) brings the whole cloud up from nothing on load.
         float introSphere = mix(1.0, edgeFadeSphere, uIntro);
         vEdgeFade = mix(introSphere, edgeFadeDNA, morph) * opacityMultiplier;
+        vEdgeFade = mix(vEdgeFade, 0.3, uChart);
+        sizeMultiplier = mix(sizeMultiplier, 2.5, uChart);
         vEdgeFade *= smoothstep(0.0, 0.2, uIntro);
         vEdgeFade *= uFade;
 
@@ -185,6 +215,7 @@ export const particleVertexShader = /* glsl */ `
         vec3 cTop = vec3(1.0, 0.80, 0.68);     // warm white
         float baseColorMix = smoothstep(-3.0, 3.0, position.y + position.x * 0.5);
         vColor = mix(cBottom, cTop, clamp(baseColorMix, 0.0, 1.0));
+        vColor = mix(vColor, mix(cBottom, cTop, smoothstep(-4.0, 4.5, finalPos.y)), uChart);
 
         // Use the dynamically calculated sizeMultiplier
         gl_PointSize = sizeMultiplier * (10.0 / -mvPosition.z);

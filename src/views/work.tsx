@@ -23,7 +23,7 @@ export const WorkView = () => (
       eyebrow={copy.hero.eyebrow}
       title={copy.hero.title}
       lead={copy.hero.lead}
-      scene={<HeroScene shape="funnel" />}
+      scene={<HeroScene shape="chart" />}
       stats={heroStats}
       actions={
         <>

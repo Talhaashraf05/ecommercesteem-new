@@ -23,7 +23,7 @@ export interface HeroSceneCanvasProps {
 const FRAME_MS = 1000 / 60;
 /** Shader time per 60 fps frame, as on home. */
 const TIME_PER_FRAME = 0.005;
-/** Sphere-only on-load intro: the filled disc hollows into the ring. */
+/** On-load intro: the sphere's filled disc hollows into the ring; the chart's bars grow. */
 const INTRO_MS = 2600;
 /** Ambient spin, radians per second. */
 const SPIN_PER_S = 0.05;
@@ -32,16 +32,18 @@ const TILT_LERP = 0.06;
 /**
  * Extra distance the camera backs away along its view line. At home's rest
  * distance the sphere fills the frame; a hero needs it whole with margin.
- * The funnel is ~49 units tall, so the camera backs far out to hold all of it.
+ * The chart is ~11 units wide, so it backs out a little further than the sphere.
  */
-const DOLLY: Record<HeroShape, number> = { sphere: 7, funnel: 58, helix: 0, wave: 0 };
+const DOLLY: Record<HeroShape, number> = { sphere: 7, chart: 11, helix: 0, wave: 0 };
 /**
  * Extra camera pitch in radians (negative looks down). Home's wave camera
  * looks up the scroll path, leaving the plane in the bottom third of a still
- * frame; pitching down lifts its horizon toward the middle. The funnel's
- * mouth sits above the camera, so a slight upward pitch centres it vertically.
+ * frame; pitching down lifts its horizon toward the middle.
  */
-const PITCH: Record<HeroShape, number> = { sphere: 0, funnel: 0.07, helix: 0, wave: -0.35 };
+const PITCH: Record<HeroShape, number> = { sphere: 0, chart: 0, helix: 0, wave: -0.35 };
+/** The chart sways around a three-quarter view instead of spinning edge-on. */
+const CHART_YAW = -0.45;
+const CHART_SWAY = 0.3;
 /** Distance ahead of the camera the tilt pivots around (the sphere's centre at rest). */
 const PIVOT_DISTANCE = 8;
 
@@ -89,10 +91,12 @@ export const HeroSceneCanvas = ({ shape, interactive, tier, active, onContextLos
 
     material.uniforms.uScroll.value = progress;
     material.uniforms.uFade.value = 1;
-    material.uniforms.uIntro.value = shape === "sphere" ? 0 : 1;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const hasIntro = shape === "sphere" || (shape === "chart" && !reducedMotion);
+    material.uniforms.uIntro.value = hasIntro ? 0 : 1;
+    material.uniforms.uChart.value = shape === "chart" ? 1 : 0;
     particles.rotation.x = cam.rotX;
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const canTilt = interactive && !reducedMotion && window.matchMedia("(pointer: fine)").matches;
     const tilt = { x: 0, y: 0 };
     const target = { x: 0, y: 0 };
@@ -123,14 +127,15 @@ export const HeroSceneCanvas = ({ shape, interactive, tier, active, onContextLos
       time += TIME_PER_FRAME * (dt / FRAME_MS);
       material.uniforms.uTime.value = time;
 
-      if (shape === "sphere") {
+      if (hasIntro) {
         if (introStart === 0) introStart = now;
         const introRaw = Math.min((now - introStart) / INTRO_MS, 1);
         material.uniforms.uIntro.value = 1 - Math.pow(1 - introRaw, 3); // easeOutCubic
       }
 
       if (!reducedMotion) spin += SPIN_PER_S * (dt / 1000);
-      particles.rotation.y = cam.rotY + spin;
+      particles.rotation.y =
+        shape === "chart" ? cam.rotY + CHART_YAW + Math.sin(spin * 4) * CHART_SWAY : cam.rotY + spin;
 
       const k = Math.min(TILT_LERP * (dt / FRAME_MS), 1);
       tilt.x += (target.x - tilt.x) * k;

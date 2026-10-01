@@ -89,6 +89,7 @@ export const createParticleRig = ({ container, tier, transparent, onContextLost 
       uScroll: { value: 0.0 },
       uIntro: { value: 0.0 },
       uFade: { value: 1 },
+      uChart: { value: 0 },
     },
     vertexShader: particleVertexShader,
     fragmentShader: particleFragmentShader,
