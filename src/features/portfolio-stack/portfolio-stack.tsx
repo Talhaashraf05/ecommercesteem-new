@@ -28,10 +28,8 @@ export interface PortfolioStackItem {
 export interface PortfolioStackProps {
   heading: string;
   items: PortfolioStackItem[];
-  /** Eager-load the first card image when the stack is above the fold (/work). The blurred backdrop stays lazy so it does not compete with the LCP image. */
+  /** Eager-load the first card + backdrop when the stack is above the fold (/work). */
   priority?: boolean;
-  /** "h1" when the stack is the page hero (/work); omitted, AnimatedHeading renders its default "h2" (home). */
-  headingAs?: "h1" | "h2";
 }
 
 const SCROLL_PER_CARD = 60; // vh of scroll per card
@@ -69,7 +67,7 @@ const cardFrame = (i: number, v: number) => {
 
 const scrimOpacity = (i: number, v: number) => Math.min(0.45, Math.abs(i - v) * 0.25);
 
-const PortfolioStackInner = ({ heading, items, priority = false, headingAs }: PortfolioStackProps) => {
+const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStackProps) => {
   const count = items.length;
   const router = useRouter();
   const sectionRef = useRef<HTMLElement>(null);
@@ -82,13 +80,9 @@ const PortfolioStackInner = ({ heading, items, priority = false, headingAs }: Po
   const f = useSpringValue(0);
   // Flipped after mount so SSR markup matches; only affects card tab order.
   const [reduce, setReduce] = useState(false);
-  // Above the fold (/work), only the first card's images are in the SSR markup so the
-  // LCP image doesn't share bandwidth with the rest; the others mount after hydration.
-  const [mounted, setMounted] = useState(!priority);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setMounted(true);
     setReduce(reduced);
     if (reduced) return;
     return subscribeToTicker(
@@ -151,16 +145,14 @@ const PortfolioStackInner = ({ heading, items, priority = false, headingAs }: Po
                 transform: f.to((v) => backdropFrame(i, v).transform),
               }}
             >
-              {(mounted || i === 0) && (
-                <Image src={item.image} alt="" fill sizes="60vw" quality={30} className="object-cover blur-2xl" />
-              )}
+              <Image src={item.image} alt="" fill sizes="60vw" quality={30} priority={priority && i === 0} className="object-cover blur-2xl" />
             </animated.div>
           ))}
           <div className="absolute inset-0 bg-bg/60" />
         </div>
 
         <AnimatedHeading
-          as={headingAs}
+          as="h2"
           className="absolute inset-x-0 top-24 z-30 px-gutter text-center font-display text-display-sm font-semibold leading-title tracking-title motion-reduce:static motion-reduce:mb-12 motion-reduce:px-0 motion-reduce:text-left"
         >
           {heading}
@@ -184,16 +176,14 @@ const PortfolioStackInner = ({ heading, items, priority = false, headingAs }: Po
                 tabIndex={reduce ? undefined : -1}
                 className="absolute inset-0 block focus-visible:-outline-offset-4"
               >
-                {(mounted || i === 0) && (
-                  <Image
-                    src={item.image}
-                    alt={item.client}
-                    fill
-                    sizes="(max-width: 768px) 90vw, 736px"
-                    priority={priority && i === 0}
-                    className="object-cover"
-                  />
-                )}
+                <Image
+                  src={item.image}
+                  alt={item.client}
+                  fill
+                  sizes="(max-width: 768px) 90vw, 736px"
+                  priority={priority && i === 0}
+                  className="object-cover"
+                />
                 {/* Scrim only on off-focus cards; the focused card stays clear. */}
                 <animated.span
                   aria-hidden="true"

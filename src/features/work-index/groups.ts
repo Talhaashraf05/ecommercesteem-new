@@ -1,4 +1,4 @@
-// Filter groups for the /work grid. Zod-free, so the client grid can import it.
+// Filter groups for the /work index. Zod-free, so the client index can import it.
 import type { ServiceSlug } from "@/content/service-slugs";
 
 export type WorkGroup = "all" | "amazon" | "meta" | "google" | "retention";

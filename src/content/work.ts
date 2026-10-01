@@ -1,15 +1,26 @@
 /** Page copy for /work. Figures come from `stats` and `caseStudies` (both unverified). */
 export const workPage = {
-  stack: { heading: "Brands we've grown" },
-  results: {
-    eyebrow: "Results in numbers",
-    heading: "Growth you can measure",
-    /** Case study whose headline metric joins the three agency stats. */
-    highlightSlug: "huskey-parts",
+  hero: {
+    eyebrow: "Work",
+    title: "Brands we've grown",
+    lead: "Selected case studies across Amazon, Meta, Google and retention, with the numbers behind each one.",
+    primary: { label: "Book a free audit", href: "/contact" },
+    secondary: { label: "See all work", href: "#index" },
+    /** `stats` entries shown under the hero, looked up by id. */
+    statIds: ["clients", "countries", "projects"],
   },
-  grid: {
-    heading: "All case studies",
-    lead: "Filter by the channel we grew. Every study links to the full story: the challenge, what we did and the numbers.",
+  featured: {
+    /** Case study given the editorial spotlight above the index. */
+    slug: "huskey-parts",
+    eyebrow: "Featured",
+    challengeLabel: "The challenge",
+    metricsLabel: "Key results",
+    cta: "Read the case study",
+  },
+  index: {
+    heading: "All work",
+    /** Column labels over the index rows (desktop). */
+    columns: { client: "Client", result: "Result", services: "Services" },
     filterLabel: "Filter case studies",
     /** `{n}` is the visible count; `{group}` the chip label, dropped for "All" so each change is re-announced. */
     count: "Showing {n} {group} case studies",

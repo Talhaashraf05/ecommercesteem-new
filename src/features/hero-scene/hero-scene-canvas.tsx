@@ -32,14 +32,16 @@ const TILT_LERP = 0.06;
 /**
  * Extra distance the camera backs away along its view line. At home's rest
  * distance the sphere fills the frame; a hero needs it whole with margin.
+ * The funnel is ~49 units tall, so the camera backs far out to hold all of it.
  */
-const DOLLY: Record<HeroShape, number> = { sphere: 7, helix: 0, wave: 0 };
+const DOLLY: Record<HeroShape, number> = { sphere: 7, funnel: 58, helix: 0, wave: 0 };
 /**
  * Extra camera pitch in radians (negative looks down). Home's wave camera
  * looks up the scroll path, leaving the plane in the bottom third of a still
- * frame; pitching down lifts its horizon toward the middle.
+ * frame; pitching down lifts its horizon toward the middle. The funnel's
+ * mouth sits above the camera, so a slight upward pitch centres it vertically.
  */
-const PITCH: Record<HeroShape, number> = { sphere: 0, helix: 0, wave: -0.35 };
+const PITCH: Record<HeroShape, number> = { sphere: 0, funnel: 0.07, helix: 0, wave: -0.35 };
 /** Distance ahead of the camera the tilt pivots around (the sphere's centre at rest). */
 const PIVOT_DISTANCE = 8;
 

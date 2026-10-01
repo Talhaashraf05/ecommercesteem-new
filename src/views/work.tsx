@@ -1,57 +1,67 @@
 import { caseStudies, getService, stats, workPage as copy } from "@/content";
 import { AnimatedHeading } from "@/components/ui/animated-heading";
+import { CinematicHero } from "@/components/ui/cinematic-hero";
 import { Container } from "@/components/ui/container";
+import { GlassButton } from "@/components/ui/glass-button";
 import { Section } from "@/components/ui/section";
 import { CtaBand } from "@/features/cta/cta-band";
-import { PortfolioStack } from "@/features/portfolio-stack/portfolio-stack";
-import { ResultsBand } from "@/features/work-grid/results-band";
-import { WorkGrid } from "@/features/work-grid/work-grid";
+import { HeroScene } from "@/features/hero-scene/hero-scene";
+import { FeaturedCase } from "@/features/work-featured/featured-case";
+import { WorkIndex } from "@/features/work-index/work-index";
 
-const highlight = caseStudies.find((c) => c.slug === copy.results.highlightSlug);
+const heroStats = copy.hero.statIds.flatMap((id) => {
+  const s = stats.find((x) => x.id === id);
+  return s ? [{ value: s.value, label: s.label }] : [];
+});
 
-const results = [
-  ...stats.slice(0, 3).map((s) => ({ value: s.value, label: s.label })),
-  ...(highlight ? [{ value: highlight.headlineMetric.value, label: highlight.headlineMetric.label }] : []),
-];
+const featured = caseStudies.find((c) => c.slug === copy.featured.slug);
 
 export const WorkView = () => (
   <main id="main">
-    <PortfolioStack
-      headingAs="h1"
-      heading={copy.stack.heading}
-      priority
-      items={caseStudies.map((c) => ({
-        slug: c.slug,
-        client: c.client,
-        headline: `${c.headlineMetric.value} ${c.headlineMetric.label}`,
-        image: c.image,
-      }))}
+    <CinematicHero
+      size="full"
+      eyebrow={copy.hero.eyebrow}
+      title={copy.hero.title}
+      lead={copy.hero.lead}
+      scene={<HeroScene shape="funnel" />}
+      stats={heroStats}
+      actions={
+        <>
+          <GlassButton href={copy.hero.primary.href} withArrow>
+            {copy.hero.primary.label}
+          </GlassButton>
+          <GlassButton href={copy.hero.secondary.href} variant="secondary">
+            {copy.hero.secondary.label}
+          </GlassButton>
+        </>
+      }
     />
 
-    <ResultsBand eyebrow={copy.results.eyebrow} heading={copy.results.heading} items={results} />
+    {featured && <FeaturedCase study={featured} copy={copy.featured} />}
 
-    <Section id="all" labelledBy="all-title" className="scroll-mt-18">
+    <Section id="index" labelledBy="index-title" className="scroll-mt-18">
       <Container>
         <AnimatedHeading
           as="h2"
-          id="all-title"
+          id="index-title"
           className="font-display text-display-sm font-semibold leading-title tracking-title text-fg"
         >
-          {copy.grid.heading}
+          {copy.index.heading}
         </AnimatedHeading>
-        <p className="mt-6 max-w-lead text-lead text-muted">{copy.grid.lead}</p>
-        <div className="mt-12">
-          <WorkGrid
+        <div className="mt-10">
+          <WorkIndex
             copy={{
-              filterLabel: copy.grid.filterLabel,
-              count: copy.grid.count,
-              countOne: copy.grid.countOne,
-              empty: copy.grid.empty,
+              columns: copy.index.columns,
+              filterLabel: copy.index.filterLabel,
+              count: copy.index.count,
+              countOne: copy.index.countOne,
+              empty: copy.index.empty,
             }}
             items={caseStudies.map((c) => ({
               slug: c.slug,
               client: c.client,
               category: c.category,
+              year: c.year,
               headline: c.headlineMetric,
               services: c.services,
               serviceNames: c.services.map((s) => getService(s)?.name ?? s),

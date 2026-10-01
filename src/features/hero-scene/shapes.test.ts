@@ -9,6 +9,11 @@ describe("hero shapes", () => {
     expect(SHAPE_PROGRESS.wave).toBeGreaterThanOrEqual(0.5);
     expect(SHAPE_PROGRESS.wave).toBeLessThanOrEqual(0.6);
   });
+  it("holds the funnel fully formed, before the DNA phase", () => {
+    expect(SHAPE_PROGRESS.funnel).toBeGreaterThanOrEqual(0.12);
+    expect(SHAPE_PROGRESS.funnel).toBeLessThanOrEqual(0.16);
+    for (const v of Object.values(cameraAt(SHAPE_PROGRESS.funnel))) expect(Number.isFinite(v)).toBe(true);
+  });
   it("camera is finite for every shape", () => {
     for (const p of Object.values(SHAPE_PROGRESS)) for (const v of Object.values(cameraAt(p))) expect(Number.isFinite(v)).toBe(true);
   });
