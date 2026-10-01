@@ -28,7 +28,8 @@ Web3Forms or the Apps Script. There is nothing to configure for it on the Web3Fo
 ⚠  src/content/stats.ts: 3 unverified entries — verify before launch
 ⚠  src/content/timeline.ts: 6 unverified entries — verify before launch
 ⚠  src/content/careers.ts: 4 unverified entries — verify before launch
-⚠  src/content/contact.ts: 2 unverified entries — verify before launch
+⚠  src/content/contact.ts: 3 unverified entries — verify before launch
+⚠  src/content/about.ts: 1 unverified entry — verify before launch
 ```
 
 Every entry is `verified: false`. Confirm each number with the client or replace it, then set
@@ -92,6 +93,17 @@ All four are `verified: false`. Confirm that this is the real process.
 3. **Short task:** "A small, paid-time-respecting task close to the real work."
 4. **Offer:** "We move quickly — most candidates hear back within a week."
 
+### Flagged page claims (`src/content/about.ts`, `src/content/contact.ts`)
+
+Both are `verified: false` and counted by the script above.
+
+- **About, "Where we work" lead** (`aboutPage.offices.lead`): "Three hubs across three
+  continents, one team running your growth **around the clock**." Confirm the hubs really cover
+  all hours, or soften the wording.
+- **Contact trust line** (`contactPage.trust.line`): "**5.0 ★ · 7 verified reviews** on Upwork &
+  Clutch". It must match the live Upwork/Clutch profiles and `src/content/testimonials.ts`. The
+  About "Client rating 5.0★" card (`aboutPage.stats.commitment`) states the same rating.
+
 ### Inner-page copy (drafted, not flagged by the script)
 
 - **`careersPage`** (`src/content/careers.ts`): all of its copy was drafted for the redesign.
@@ -101,10 +113,9 @@ All four are `verified: false`. Confirm that this is the real process.
   people…"), "Four steps, no endless rounds." and the closing CTA.
 - **`contactPage`** (`src/content/contact.ts`):
   - "What happens next" steps 2–3 are `verified: false`: **"Free audit call — 30 minutes on your
-    account"** and **"Your growth plan — priorities, budget and timeline"**. Confirm that the audit
+    account"** and **"Your growth plan — Priorities, budget and timeline"**. Confirm that the audit
     call really is 30 minutes and free.
-  - The trust line **"5.0 ★ · 7 verified reviews on Upwork & Clutch"** must match the live
-    Upwork/Clutch profiles and `src/content/testimonials.ts`.
+  - The trust line is flagged `verified: false` (see "Flagged page claims" above).
   - The closing CTA body ("Browse the brands we've grown on Amazon, Meta and Google…").
 - **`workPage`** (`src/content/work.ts`):
   - The hero lead: "Selected case studies across Amazon, Meta, Google and retention, with the
@@ -221,37 +232,40 @@ below 5. The table shows the median of the 3 runs.
 
 | Page | Mobile Perf (runs) | LCP (sim) | CLS | TBT | A11y | BP | SEO |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `/about` | **93** (93 / 93 / 93) | 3.3 s | 0 | 19 ms | 100 | 100 | 100 |
+| `/about`³ | **93** (93 / 93 / 93) | 3.3 s | 0 | 41 ms | 100 | 100 | 100 |
 | `/careers` | **93** (92 / 93 / 93) | 3.2 s | 0 | 65 ms | 100 | 100 | 100 |
 | `/careers/full-stack-developer` | **94** (92 / 94 / 94) | 3.1 s | 0 | 7 ms | 100 | 100 | 69¹ |
 | `/work` | **91** (91 / 91 / 92) | 3.4 s | 0 | 13 ms | 100 | 96² | 100 |
 | `/work/hulkfit` | **94** (94 / 94 / 94) | 3.1 s | 0 | 9 ms | 100 | 96² | 100 |
-| `/contact` | **90** (90 / 87 / 91); re-run at load < 3: **91** (92 / 91 / 90) | 3.5 s | 0 | 72 ms | 100 | 100 | 100 |
+| `/contact`³ | **91** (91 / 92 / 91) | 3.4 s | 0 | 24 ms | 100 | 100 | 100 |
 
 Targets: mobile Perf ≥ 90 ✅ · A11y/BP/SEO ≥ 95 ✅ on the five target pages · CLS < 0.05 ✅.
 `/contact` scores at the edge of the target, so check it on PageSpeed Insights after deploy.
 
 1. SEO 69 is intentional. Closed roles render `robots: noindex, follow`
    (`src/app/careers/[id]/page.tsx`), and every role is currently closed. Open roles are indexable.
-2. BP 96 comes from the "legible font sizes" audit. `text-xs` renders at about 11.1px, which
-   affects the work-index meta lines and the footer.
+2. BP 96 comes from the "legible font sizes" audit. `text-xs` renders at about 11.1px on mobile
+   (the root font size scales down below 640px). It's used in the footer, the services menu and
+   the testimonial wheel, all shared with home; the work-index meta lines are `text-sm`.
+3. Re-measured after the final fix wave (2026-10-01) with Lighthouse 13.5.0, same method
+   (load average 3.1–4.8 during the runs).
 
 First-load JS (gzip -9 over the module `<script src>` chunks in `.next/server/app/<route>.html`,
 excluding the noModule polyfill and the lazily loaded three.js chunk), after the inner-pages
-redesign (2026-10-01):
+redesign and the final fix wave (2026-10-01):
 
 | Route | Bytes | KiB |
 | --- | --- | --- |
 | `/` | 199,366 | 194.69 |
-| `/about` | 197,079 | 192.46 |
-| `/careers` | 193,266 | 188.74 |
+| `/about` | 197,278 | 192.65 |
+| `/careers` | 193,312 | 188.78 |
 | `/careers/[id]` (full-stack-developer) | 189,312 | 184.88 |
-| `/work` | 193,496 | 188.96 |
-| `/work/[slug]` (hulkfit) | 189,683 | 185.24 |
-| `/contact` | 193,633 | 189.09 |
+| `/work` | 193,517 | 188.98 |
+| `/work/[slug]` (hulkfit) | 189,688 | 185.24 |
+| `/contact` | 193,661 | 189.12 |
 
 The budget is < 200 KiB per route, and home must not exceed 200,660 B. `/about` has only about
-7.7 KiB of headroom, so check the budget before adding client-side code.
+7.3 KiB of headroom, so check the budget before adding client-side code.
 
 ## 8. Post-deploy checks
 

@@ -94,6 +94,7 @@ describe("contact page", () => {
   it("has three next steps, drafted ones flagged unverified", () => {
     const steps = C.contactPage.nextSteps.steps;
     expect(steps.map((s) => s.title)).toEqual(["We reply within one business day", "Free audit call", "Your growth plan"]);
+    expect(steps.every((s) => !s.detail || !/^[a-z]/.test(s.detail))).toBe(true);
     expect(steps.filter((s) => s.detail).every((s) => s.verified === false)).toBe(true);
   });
 });
@@ -107,5 +108,27 @@ describe("images", () => {
     const files = readdirSync(pub("/images")).filter((f) => f.endsWith(".webp"));
     expect(files.length).toBeGreaterThan(0);
     for (const f of files) expect(statSync(pub(`/images/${f}`)).size, f).toBeLessThanOrEqual(400_000);
+  });
+});
+
+describe("work page", () => {
+  it("featured slug resolves to an existing case study", () => {
+    expect(C.caseStudies.some((cs) => cs.slug === C.workPage.featured.slug), C.workPage.featured.slug).toBe(true);
+  });
+});
+
+describe("about page", () => {
+  it("stat ids resolve to stats", () => {
+    const ids = new Set(C.stats.map((s) => s.id));
+    const { collabStatId, dataStatId, reachStatId } = C.aboutPage.stats;
+    for (const id of [collabStatId, dataStatId, reachStatId]) expect(ids.has(id), id).toBe(true);
+  });
+  it("quoted testimonial exists by name", () => {
+    const author = C.aboutPage.stats.commitment.quoteAuthor;
+    expect(C.testimonials.some((t) => t.name === author), author).toBe(true);
+  });
+  it("drafted claims are flagged unverified", () => {
+    expect(C.aboutPage.offices.lead.verified).toBe(false);
+    expect(C.contactPage.trust.line.verified).toBe(false);
   });
 });

@@ -43,7 +43,7 @@ export const CaseStudyView = ({ study }: { study: CaseStudy }) => {
         </Container>
       </Section>
 
-      <Section label={`${study.client} story`}>
+      <Section label={copy.storyLabel.replace("{client}", study.client)}>
         <Container>
           <StoryScroll
             blocks={[

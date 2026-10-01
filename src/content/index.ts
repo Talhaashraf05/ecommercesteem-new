@@ -16,3 +16,4 @@ export * from "./careers";
 export * from "./team";
 export * from "./work";
 export * from "./contact";
+export * from "./about";

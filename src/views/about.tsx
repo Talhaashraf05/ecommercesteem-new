@@ -1,4 +1,4 @@
-import { clients, officeMarkers as MARKERS, offices, site, stats, team, testimonials, timeline, values } from "@/content";
+import { aboutPage as copy, clients, officeMarkers as MARKERS, offices, site, stats, team, testimonials, timeline, values } from "@/content";
 import { AnimatedHeading } from "@/components/ui/animated-heading";
 import { CinematicHero } from "@/components/ui/cinematic-hero";
 import { Container } from "@/components/ui/container";
@@ -16,51 +16,67 @@ import { Testimonials } from "@/features/testimonials/testimonials";
 import { TimelineSection } from "@/features/timeline/timeline-section";
 import { ValuesBento } from "@/features/values/values-bento";
 
-const [brands, countries, projects] = stats;
+// Fail the build (not the page) if a content id drifts.
+const must = <T,>(value: T | undefined, what: string): T => {
+  if (value === undefined) throw new Error(`about: missing ${what}`);
+  return value;
+};
+const statById = (id: string) => must(stats.find((s) => s.id === id), `stat "${id}"`);
+
+const brands = statById(copy.stats.collabStatId);
+const projects = statById(copy.stats.dataStatId);
+const countries = statById(copy.stats.reachStatId);
+const quote = must(
+  testimonials.find((t) => t.name === copy.stats.commitment.quoteAuthor),
+  `testimonial "${copy.stats.commitment.quoteAuthor}"`,
+);
+const parentLine = copy.offices.parentLine
+  .replace("{name}", site.parentCompany.name)
+  .replace("{address}", site.parentCompany.address);
 
 const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
 
 export const AboutView = () => (
   <main id="main">
     <CinematicHero
-      eyebrow="About"
-      title="From vision to digital leadership"
+      eyebrow={copy.hero.eyebrow}
+      title={copy.hero.title}
       lead={site.about.story}
       scene={<HeroScene shape="helix" />}
       stats={stats.map((s) => ({ value: s.value, label: s.label }))}
       actions={
         <>
-          <GlassButton href="/contact" withArrow>
-            Book a free audit
+          <GlassButton href={copy.hero.primary.href} withArrow>
+            {copy.hero.primary.label}
           </GlassButton>
-          <GlassButton href="/work" variant="secondary">
-            See our work
+          <GlassButton href={copy.hero.secondary.href} variant="secondary">
+            {copy.hero.secondary.label}
           </GlassButton>
         </>
       }
     />
 
-    <TimelineSection items={timeline} />
+    <TimelineSection items={timeline} eyebrow={copy.timeline.eyebrow} heading={copy.timeline.heading} />
 
     <StatsBento
       content={{
         heading: site.about.missionTitle,
         lead: site.about.mission,
-        photo: { src: "/images/team.webp", alt: "EcommerceSteem team at work" },
-        collab: { value: brands.value, desc: "brands trust us with their Amazon, Meta and Google growth." },
+        photo: copy.stats.photo,
+        collab: { value: brands.value, desc: copy.stats.collabDesc },
         commitment: {
-          eyebrow: "Client rating",
-          value: "5.0★",
-          quote: testimonials[6].quote,
-          author: testimonials[6].name,
-          initials: ["BI", "AE", "MD", "MS"],
+          eyebrow: copy.stats.commitment.eyebrow,
+          value: copy.stats.commitment.value,
+          quote: quote.quote,
+          author: quote.name,
+          initials: copy.stats.commitment.initials,
         },
         data: { label: projects.label, value: projects.value, desc: projects.description },
-        reach: { label: "Countries served", value: countries.value },
+        reach: { label: copy.stats.reachLabel, value: countries.value },
       }}
     />
 
-    <ValuesBento values={values} />
+    <ValuesBento values={values} heading={copy.values.heading} />
 
     <Section labelledBy="offices-title">
       <Container>
@@ -69,11 +85,9 @@ export const AboutView = () => (
           id="offices-title"
           className="font-display text-display-sm font-semibold leading-title tracking-title text-fg"
         >
-          Where we work
+          {copy.offices.heading}
         </AnimatedHeading>
-        <p className="mt-6 max-w-lead text-lead text-muted">
-          Three hubs across three continents, one team running your growth around the clock.
-        </p>
+        <p className="mt-6 max-w-lead text-lead text-muted">{copy.offices.lead.text}</p>
         <OfficeMap
           className="mx-auto mt-12 max-w-5xl"
           markers={offices.flatMap((o) => (MARKERS[o.countryCode] ? [MARKERS[o.countryCode]] : []))}
@@ -102,20 +116,13 @@ export const AboutView = () => (
             </HoverRing>
           ))}
         </RevealGrid>
-        <p className="mt-10 text-muted">
-          EcommerceSteem is part of {site.parentCompany.name}, {site.parentCompany.address}.
-        </p>
+        <p className="mt-10 text-muted">{parentLine}</p>
       </Container>
     </Section>
 
-    <LogoMarquee clients={clients} label="Brands we've grown" />
+    <LogoMarquee clients={clients} label={copy.clientsLabel} />
     <Testimonials items={testimonials} />
-    <Team members={team} />
-    <CtaBand
-      title="Let's grow your brand"
-      body="Book a free audit and we'll show you where your next stage of growth is hiding."
-      primary={{ label: "Book a free audit", href: "/contact" }}
-      secondary={{ label: "Explore services", href: "/services" }}
-    />
+    <Team members={team} heading={copy.team.heading} />
+    <CtaBand title={copy.cta.title} body={copy.cta.body} primary={copy.cta.primary} secondary={copy.cta.secondary} />
   </main>
 );

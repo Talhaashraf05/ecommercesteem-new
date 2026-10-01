@@ -63,7 +63,7 @@ export const ContactView = () => (
           </div>
         </section>
 
-        <aside aria-label="How we work with you" className="grid gap-6">
+        <aside aria-label={copy.asideLabel} className="grid gap-6">
           <div className={CARD}>
             <NextSteps heading={copy.nextSteps.heading} steps={copy.nextSteps.steps} />
           </div>
@@ -128,7 +128,7 @@ export const ContactView = () => (
 
     <div className="mt-24 md:mt-32">
       <p className="px-gutter pb-8 text-center text-lead text-fg">
-        {copy.trust.line}
+        {copy.trust.line.text}
       </p>
       <LogoMarquee clients={clients} label={copy.trust.label} />
     </div>

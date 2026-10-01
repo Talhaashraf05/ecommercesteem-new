@@ -10,10 +10,10 @@ const HEADING_ID = "team-title";
 
 export interface TeamProps {
   members: TeamMember[];
-  heading?: string;
+  heading: string;
 }
 
-export const Team = ({ members, heading = "The people behind the growth" }: TeamProps) => {
+export const Team = ({ members, heading }: TeamProps) => {
   if (members.length === 0) return null;
   return (
     <Section labelledBy={HEADING_ID}>

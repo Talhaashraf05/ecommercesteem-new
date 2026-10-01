@@ -20,8 +20,8 @@ import { focusIndex, focusOpacity, followFactor, trackOffset } from "./timeline-
 
 export interface TimelineSectionProps {
   items: TimelineItem[];
-  heading?: string;
-  eyebrow?: string;
+  heading: string;
+  eyebrow: string;
 }
 
 const HEADING_ID = "timeline-title";
@@ -41,11 +41,7 @@ const FILL_ANCHOR = 0.65;
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 
-export const TimelineSection = ({
-  items,
-  heading = "How we got here",
-  eyebrow = "Our journey",
-}: TimelineSectionProps) => {
+export const TimelineSection = ({ items, heading, eyebrow }: TimelineSectionProps) => {
   const n = items.length;
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLOListElement>(null);

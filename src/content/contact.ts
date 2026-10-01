@@ -15,7 +15,7 @@ export const contactPage = {
     steps: [
       { title: "We reply within one business day", verified: true },
       { title: "Free audit call", detail: "30 minutes on your account", verified: false },
-      { title: "Your growth plan", detail: "priorities, budget and timeline", verified: false },
+      { title: "Your growth plan", detail: "Priorities, budget and timeline", verified: false },
     ],
   },
   direct: {
@@ -27,9 +27,11 @@ export const contactPage = {
   offices: {
     heading: "Our offices",
   },
+  /** Accessible name of the aside beside the form (next steps, direct contact, offices). */
+  asideLabel: "How we work with you",
   trust: {
     label: "Brands we've grown",
-    line: "5.0 ★ · 7 verified reviews on Upwork & Clutch",
+    line: { text: "5.0 ★ · 7 verified reviews on Upwork & Clutch", verified: false },
   },
   faq: {
     heading: "Before you reach out",

@@ -74,10 +74,10 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
 export interface ValuesBentoProps {
   values: Value[];
-  heading?: string;
+  heading: string;
 }
 
-export const ValuesBento = ({ values, heading = "What we stand for" }: ValuesBentoProps) => (
+export const ValuesBento = ({ values, heading }: ValuesBentoProps) => (
   <Section labelledBy={HEADING_ID} tone="raised">
     <Container>
       <AnimatedHeading

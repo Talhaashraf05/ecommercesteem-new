@@ -43,6 +43,8 @@ export const caseStudyPage = {
     approach: "What we did",
     outcome: "The outcome",
   },
+  /** Accessible name of the story section; `{client}` is the case study's client. */
+  storyLabel: "{client} story",
   services: "Services used",
   next: "Next case study",
   cta: {
