@@ -51,11 +51,12 @@ export const FeaturedImage = ({ src, alt }: { src: string; alt: string }) => {
   }, []);
 
   return (
-    <div ref={frameRef} className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-line bg-surface shadow-card">
+    <div ref={frameRef} className="relative aspect-[4/3] overflow-hidden lg:aspect-[4/5] rounded-[2rem] border border-line bg-surface shadow-card">
       {/* Oversized by 2×RANGE so the drift never shows an edge. The photos are ~3:2, so
-          covering this taller frame needs about twice its width in pixels (hence `sizes`). */}
+          covering the frame needs ~1.25× its width on mobile (4:3) and ~2× at lg (4:5),
+          hence `sizes`. */}
       <div ref={layerRef} className="absolute inset-x-0 -inset-y-[5%] will-change-transform motion-reduce:will-change-auto">
-        <Image src={src} alt={alt} fill sizes="(min-width: 1024px) 75vw, 200vw" className="object-cover" />
+        <Image src={src} alt={alt} fill sizes="(min-width: 1024px) 75vw, 125vw" className="object-cover" />
       </div>
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-inset ring-line" />
     </div>

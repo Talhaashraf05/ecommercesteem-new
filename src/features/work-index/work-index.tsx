@@ -62,6 +62,8 @@ const FLIP_MS = 320;
 const FOLLOW = 0.18; // share of the remaining distance covered per 60 fps frame
 const FRAME_MS = 1000 / 60;
 const SHIFT_REM = 0.5;
+/** The fixed site header's height (4.5rem, as `scroll-mt-18`); the preview never tucks under it. */
+const HEADER_REM = 4.5;
 const DIM = 0.45;
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
@@ -79,7 +81,7 @@ interface RowProps {
   current: boolean;
   /** Another row is hovered. */
   dimmed: boolean;
-  onHover: (slug: string) => void;
+  onHover: (slug: string, pointerType: string) => void;
 }
 
 const Row = ({ item, index, current, dimmed, onHover }: RowProps) => {
@@ -91,7 +93,7 @@ const Row = ({ item, index, current, dimmed, onHover }: RowProps) => {
   return (
     <Link
       href={`/work/${item.slug}`}
-      onPointerEnter={() => onHover(item.slug)}
+      onPointerEnter={(e) => onHover(item.slug, e.pointerType)}
       className="group block border-t border-line py-7 outline-offset-4 md:py-9"
     >
       <animated.div
@@ -112,7 +114,7 @@ const Row = ({ item, index, current, dimmed, onHover }: RowProps) => {
             <h3 className="font-display text-display-sm font-semibold leading-title tracking-title text-fg">
               {item.client}
             </h3>
-            <span className="mt-2 block text-sm text-muted">
+            <span className="mt-2 block text-sm text-muted transition-colors duration-200 group-hover:text-fg">
               {item.category}
               {/* Real spaces, so the row's accessible name doesn't read "Retail2024". */}
               <span className="whitespace-pre px-1"> · </span>
@@ -123,7 +125,7 @@ const Row = ({ item, index, current, dimmed, onHover }: RowProps) => {
 
         <Cell shift={shift} className="col-span-2 mt-6 lg:col-span-3 lg:col-start-6 lg:row-start-1 lg:mt-0">
           <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1 lg:flex-col lg:gap-1.5">
-            <span className="font-display text-3xl font-semibold leading-none tracking-title text-brand">
+            <span className="font-display text-3xl font-semibold leading-none tracking-title text-brand transition-colors duration-200 group-hover:text-brand-glow">
               {item.headline.value}
             </span>
             <span className="text-sm text-fg">{item.headline.label}</span>
@@ -133,7 +135,7 @@ const Row = ({ item, index, current, dimmed, onHover }: RowProps) => {
         <Cell shift={shift} className="col-span-2 mt-3 lg:col-span-3 lg:col-start-9 lg:row-start-1 lg:mt-0">
           {/* One service per line on desktop; a dotted run on mobile. The separator stays
               in the accessible name (sr-only on desktop) so names never run together. */}
-          <span className="flex flex-wrap text-sm text-muted lg:flex-col lg:gap-1">
+          <span className="flex flex-wrap text-sm text-muted transition-colors duration-200 group-hover:text-fg lg:flex-col lg:gap-1">
             {item.serviceNames.map((name, i) => (
               <span key={name}>
                 {i > 0 && <span className="whitespace-pre lg:sr-only"> · </span>}
@@ -188,7 +190,7 @@ const Preview = ({
     <div
       ref={frameRef}
       aria-hidden="true"
-      className="pointer-events-none fixed left-0 top-0 z-40 w-[22rem] will-change-transform"
+      className="pointer-events-none fixed left-0 top-0 z-0 w-[22rem] will-change-transform"
       style={{ transform: "translate3d(-200%, 0, 0)" }}
     >
       <animated.div
@@ -196,6 +198,8 @@ const Preview = ({
         className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-line-strong bg-surface shadow-card"
       >
         {loaded && items.map((item) => <PreviewImage key={item.slug} src={item.image} on={item.slug === shown} />)}
+        {/* Legibility scrim: the photo sits behind the rows, so darken it under their text. */}
+        <div className="absolute inset-0 bg-bg/80" />
       </animated.div>
     </div>
   );
@@ -241,11 +245,16 @@ export const WorkIndex = ({ items, copy }: WorkIndexProps) => {
     if (frame) frame.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
   };
 
+  const headerPx = useRef(0);
+
   const target = () => {
     const frame = frameRef.current;
     const w = frame?.offsetWidth ?? 0;
     const h = frame?.offsetHeight ?? 0;
-    return previewPosition(pointer.current.x, pointer.current.y, w, h, document.documentElement.clientWidth, window.innerHeight);
+    // Clamp within the viewport below the fixed header: shift into that band and back.
+    const top = headerPx.current;
+    const p = previewPosition(pointer.current.x, pointer.current.y - top, w, h, document.documentElement.clientWidth, window.innerHeight - top);
+    return { x: p.x, y: p.y + top };
   };
 
   const stopFollowing = () => {
@@ -256,6 +265,7 @@ export const WorkIndex = ({ items, copy }: WorkIndexProps) => {
   const onListEnter = (e: React.PointerEvent) => {
     if (!canPreview || e.pointerType !== "mouse") return;
     pointer.current = { x: e.clientX, y: e.clientY };
+    headerPx.current = HEADER_REM * parseFloat(getComputedStyle(document.documentElement).fontSize);
     // Appear at the cursor rather than gliding in from the last exit point.
     pos.current = target();
     place(pos.current.x, pos.current.y);
@@ -287,8 +297,9 @@ export const WorkIndex = ({ items, copy }: WorkIndexProps) => {
     setHovered(null);
   };
 
-  const onRowHover = (slug: string) => {
-    if (!canPreview) return;
+  const onRowHover = (slug: string, pointerType: string) => {
+    // Hybrid devices: a touch or pen contact must not open the mouse-only preview.
+    if (!canPreview || pointerType !== "mouse") return;
     setHovered(slug);
     setShown(slug);
   };
@@ -312,6 +323,11 @@ export const WorkIndex = ({ items, copy }: WorkIndexProps) => {
       snap.set(slug, { rect: el.getBoundingClientRect(), opacity: Number(getComputedStyle(el).opacity) });
     });
     snapshot.current = snap;
+    // A hovered row that the filter removes must not keep the preview up; an empty
+    // group unmounts the list (no pointerleave), so stop following too.
+    const nextVisible = items.filter((item) => inGroup(item.services, next));
+    if (nextVisible.length === 0) stopFollowing();
+    if (hovered !== null && !nextVisible.some((item) => item.slug === hovered)) setHovered(null);
     setGroup(next);
   };
 
@@ -414,13 +430,15 @@ export const WorkIndex = ({ items, copy }: WorkIndexProps) => {
           {copy.empty}
         </p>
       ) : (
-        <div className="mt-14">
+        // `isolate` keeps the preview's stacking inside this block, under the fixed
+        // header; the list (z-10) paints over the preview (z-0), so row text stays on top.
+        <div className="relative isolate mt-14">
           <div aria-hidden="true" className="hidden gap-8 pb-4 text-kicker uppercase tracking-widest text-muted lg:grid lg:grid-cols-12">
             <span className="col-span-4 col-start-2">{copy.columns.client}</span>
             <span className="col-span-3">{copy.columns.result}</span>
             <span className="col-span-3">{copy.columns.services}</span>
           </div>
-          <ul onPointerEnter={onListEnter} onPointerMove={onListMove} onPointerLeave={onListLeave} className="border-b border-line">
+          <ul onPointerEnter={onListEnter} onPointerMove={onListMove} onPointerLeave={onListLeave} className="relative z-10 border-b border-line">
             {visible.map((item, i) => (
               <li
                 key={item.slug}
@@ -439,10 +457,10 @@ export const WorkIndex = ({ items, copy }: WorkIndexProps) => {
               </li>
             ))}
           </ul>
+          {canPreview && <Preview items={items} shown={shown} active={hovered !== null} loaded={loaded} frameRef={frameRef} />}
         </div>
       )}
 
-      {canPreview && <Preview items={items} shown={shown} active={hovered !== null} loaded={loaded} frameRef={frameRef} />}
     </div>
   );
 };
