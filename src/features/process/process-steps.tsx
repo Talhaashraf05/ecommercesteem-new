@@ -4,7 +4,7 @@ import type { ProcessStep } from "@/content/schemas";
 
 export const ProcessSteps = ({ steps }: { steps: ProcessStep[] }) => (
   <Container>
-    <AnimatedHeading id="process-title" as="h2" className="font-display text-display-sm text-fg">
+    <AnimatedHeading id="process-title" as="h2" className="font-display text-display-sm font-semibold leading-title tracking-title text-fg">
       How we work
     </AnimatedHeading>
     <p className="mt-6 max-w-lead text-lead text-muted">

@@ -16,7 +16,7 @@ export const ServicesView = () => (
     {serviceGroups.map((group) => (
       <Section key={group.id} labelledBy={`group-${group.id}`} className="!py-12 md:!py-16">
         <Container>
-          <h2 id={`group-${group.id}`} className="font-display text-display-sm text-fg">
+          <h2 id={`group-${group.id}`} className="font-display text-display-sm font-semibold leading-title tracking-title text-fg">
             {group.label}
           </h2>
           <ul className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">

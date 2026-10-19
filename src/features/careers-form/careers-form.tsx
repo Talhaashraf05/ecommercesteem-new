@@ -89,7 +89,7 @@ export const CareersForm = ({ position }: { position: string }) => {
   if (status === "success") {
     return (
       <div role="status" className="rounded-3xl border border-line bg-surface p-8 sm:p-10">
-        <h2 className="font-display text-display-sm text-fg">Thanks — we&apos;ve received your application.</h2>
+        <h2 className="font-display text-display-sm font-semibold leading-title tracking-title text-fg">Thanks — we&apos;ve received your application.</h2>
         <p className="mt-4 text-muted">Our team will review it and get back to you if there&apos;s a fit.</p>
       </div>
     );

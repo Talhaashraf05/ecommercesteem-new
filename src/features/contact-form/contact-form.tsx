@@ -96,7 +96,7 @@ export const ContactForm = ({ serviceOptions, service = "", plan = "" }: Contact
   if (status === "success") {
     return (
       <div role="status">
-        <h2 className="font-display text-display-sm text-fg">Thanks — we&apos;ll reply within one business day.</h2>
+        <h2 className="font-display text-display-sm font-semibold leading-title tracking-title text-fg">Thanks — we&apos;ll reply within one business day.</h2>
       </div>
     );
   }

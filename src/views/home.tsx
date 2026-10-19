@@ -68,13 +68,13 @@ export const HomeView = () => (
         image: c.image,
       }))}
     />
-    <Section id="process" labelledBy="process-title" className="!pb-8">
+    <Section id="process" labelledBy="process-title" className="pb-8!">
       <ProcessSteps steps={processSteps} />
     </Section>
     {SHOW_PRICING && (
       <Section id="pricing" labelledBy="pricing-title" tone="raised">
         <Container>
-          <AnimatedHeading id="pricing-title" as="h2" className="font-display text-display-sm text-fg">
+          <AnimatedHeading id="pricing-title" as="h2" className="font-display text-display-sm font-semibold leading-title tracking-title text-fg">
             Simple, transparent pricing
           </AnimatedHeading>
           <div className="mt-12">
@@ -86,7 +86,7 @@ export const HomeView = () => (
     <Testimonials items={testimonials} />
     <Section id="faq" labelledBy="faq-title">
       <Container width="title">
-        <AnimatedHeading id="faq-title" as="h2" className="font-display text-display-sm text-fg">
+        <AnimatedHeading id="faq-title" as="h2" className="font-display text-display-sm font-semibold leading-title tracking-title text-fg">
           Questions we get most
         </AnimatedHeading>
         <div className="mt-12">

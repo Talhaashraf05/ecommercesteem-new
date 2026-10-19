@@ -10,7 +10,7 @@ import { CtaBand } from "@/features/cta/cta-band";
 import { FaqList } from "@/features/faq/faq-list";
 import { PricingCard } from "@/features/pricing/pricing-card";
 
-const H2 = "font-display text-display-sm text-fg";
+const H2 = "font-display text-display-sm font-semibold leading-title tracking-title text-fg";
 
 export const ServiceView = ({ service }: { service: Service }) => {
   const groupLabel = serviceGroups.find((g) => g.id === service.group)?.label ?? "Services";

@@ -43,6 +43,8 @@ const nextConfig: NextConfig = {
   images: {
     // Modern formats — smaller than JPEG/PNG; the browser picks what it supports.
     formats: ["image/avif", "image/webp"],
+    // 75 is the default; 30 is used by the blurred backdrops (portfolio stack).
+    qualities: [30, 75],
     // Breakpoints `next/image` uses to build `srcset`. `deviceSizes` covers
     // full-width images (aligned with the adaptive-grid breakpoints + retina);
     // `imageSizes` covers smaller, fixed-width images and icons.
