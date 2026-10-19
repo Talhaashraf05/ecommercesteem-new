@@ -38,7 +38,7 @@ export const HomeView = () => (
       content={{
         heading: "Results that compound",
         lead: "We run the channels that move e-commerce revenue — and connect them so every dollar works harder.",
-        photo: { src: "/images/team-work.webp", alt: "EcommerceSteem team at work" },
+        photo: { src: "/images/team-dashboard.webp", alt: "EcommerceSteem team reviewing performance dashboards" },
         collab: { value: stats[0].value, desc: "brands trust us with their Amazon growth." },
         commitment: {
           eyebrow: "Client rating",

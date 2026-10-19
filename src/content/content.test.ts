@@ -99,7 +99,7 @@ describe("contact page", () => {
 
 describe("images", () => {
   it("every referenced image exists", () => {
-    const refs = [...C.services.map((s) => s.image), ...C.caseStudies.map((c) => c.image), ...C.caseStudies.flatMap((c) => (c.workImage ? [c.workImage] : [])), ...C.homeWork.map((w) => w.image), "/images/team-work.webp"];
+    const refs = [...C.services.map((s) => s.image), ...C.caseStudies.map((c) => c.image), ...C.caseStudies.flatMap((c) => (c.workImage ? [c.workImage] : [])), ...C.homeWork.map((w) => w.image), "/images/team-dashboard.webp"];
     for (const r of refs) expect(existsSync(pub(r)), r).toBe(true);
   });
   it("every optimised photo is at most 400 KB", () => {

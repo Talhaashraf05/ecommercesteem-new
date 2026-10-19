@@ -49,7 +49,7 @@ const Card = ({ item }: { item: ServiceCardItem }) => {
           onPointerMove={onPointerMove}
           className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-surface-card transition-colors duration-200 hover:border-brand/50 focus-visible:border-brand"
         >
-          <div className="relative aspect-3/2 overflow-hidden">
+          <div className="relative z-10 aspect-3/2 overflow-hidden">
             <Hover trigger={ref} tag="div" from={{ scale: 1 }} to={{ scale: 1.07 }} config={SOFT} className="absolute inset-0">
               <Image
                 src={item.image}
