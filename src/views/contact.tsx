@@ -37,7 +37,7 @@ export const ContactView = () => (
       eyebrow={copy.hero.eyebrow}
       title={copy.hero.title}
       lead={copy.hero.lead}
-      scene={<HeroScene shape="sphere" interactive />}
+      scene={<HeroScene shape="wave" interactive />}
       actions={<ReplyBadge>{copy.hero.badge}</ReplyBadge>}
     />
 
