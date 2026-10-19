@@ -1,5 +1,8 @@
 import type { PricingGroup, PricingGroupId } from "./schemas";
 
+/** Pricing is hidden site-wide while false (home + service pages). Flip to true to restore. */
+export const SHOW_PRICING = false;
+
 export const pricing: PricingGroup[] = [
   {
     id: "amazon",
@@ -14,36 +17,6 @@ export const pricing: PricingGroup[] = [
         features: ["Up to 31 Listings Complete Management", "Premium A+ Content Creation", "Advanced Video Uploading & Optimization", "Customer Returns Management & Review Response", "Dedicated Account Manager"] },
       { name: "Custom", price: "Custom", priceNote: "Custom Quote", highlighted: false,
         features: ["Fully Customized Account Strategy", "Custom Budget Management", "Advanced PPC Management", "Inventory & Branding Optimization", "Dedicated Support Team"] },
-    ],
-  },
-  {
-    id: "meta-ads",
-    label: "Meta Ads",
-    intro: "Professional Facebook & Instagram advertising to grow your brand and drive conversions.",
-    tiers: [
-      { name: "Starter", price: "$449/mo", priceNote: "Up to 3 campaigns", highlighted: false,
-        features: ["Campaign Setup & Management", "Up to 3 campaigns", "Traffic, Engagement, Conversions", "Basic Image Ad Design", "Basic account support"] },
-      { name: "Growth", price: "$749/mo", priceNote: "Up to 5 campaigns", highlighted: true,
-        features: ["Up to 5 campaigns", "All Placements (Traffic, Engagement, Conversions, Sales)", "Carousel, Video & Design Ads", "Up to 5 A/B designs/month", "Weekly strategy reviews"] },
-      { name: "Enterprise", price: "$1,199/mo", priceNote: "Ad Spend Management", highlighted: false,
-        features: ["Unlimited campaigns", "All Placements (Traffic, Engagement, Conversions, Sales, Video)", "Advanced Retargeting Strategy", "Dedicated account manager", "Custom reporting dashboards"] },
-      { name: "Custom", price: "Custom", priceNote: "Custom Quote", highlighted: false,
-        features: ["Fully Customized Ad Strategy", "Custom Budget Management", "Dedicated Creative Team", "Real-time Performance Monitoring", "Dedicated Account Manager"] },
-    ],
-  },
-  {
-    id: "google-ads",
-    label: "Google Ads",
-    intro: "Professional Google Ads campaign management to maximize your ROI and drive quality leads.",
-    tiers: [
-      { name: "Starter", price: "$349/mo", priceNote: "Up to $1,000/month ad spend", highlighted: false,
-        features: ["Campaign Setup & Management", "Monthly Ad Spend Management", "Active Campaigns Management", "Basic Keyword Research", "Performance Reports"] },
-      { name: "Growth", price: "$699/mo", priceNote: "Up to $5,000/month ad spend", highlighted: true,
-        features: ["Up to 5 Active Campaigns", "All Campaign Types (Search, Display, Shopping)", "Competitor Analysis & Keyword Research", "A/B Testing & Optimization", "Weekly Performance Reviews"] },
-      { name: "Enterprise", price: "$998/mo", priceNote: "Unlimited ad spend management", highlighted: false,
-        features: ["Unlimited Campaigns Management", "All Placements (Search, Display, Shopping, Video)", "Advanced Bidding Strategies", "Conversion Tracking & Google Analytics Integration", "Dedicated Account Manager"] },
-      { name: "Custom", price: "Custom", priceNote: "Custom Quote", highlighted: false,
-        features: ["Fully Customized Campaign Strategy", "Custom Budget Management", "Multi-Channel Campaign Integration", "Real-time Performance Optimization", "Dedicated Support Team"] },
     ],
   },
   {

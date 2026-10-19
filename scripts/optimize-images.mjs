@@ -6,13 +6,10 @@ const MAP = {
   "amazon-1": "amazon-1.jpg",
   "amazon-2": "setup.jpg", // analytics dashboard (was a courier: contradicted no-freight)
   ecommerce: "ecommerce-3562005_1920.jpg",
-  "meta-ads": "man-8488203_1920.jpg",
-  "google-ads": "google-ads.jpg",
   "email-marketing": "email-marketing.jpg",
   seo: "op.jpg",
   team: "about.jpg",
   "case-hulkfit": "office2.jpg",
-  "case-nfinity": "jindal-marketing-10095618_1920.png",
   "case-sinkliners": "op.jpg", // analytics close-up, a different crop from `seo` (was a tax form)
   "case-huskey": "office3.jpg",
   "case-revival": "hand-shake.jpg",
@@ -25,7 +22,6 @@ const QUALITY = { team: 64 };
 // Fractional pre-crops [left, top, width, height]: keep the subject in tall
 // object-cover crops, or frame out third-party branding.
 const CROP = {
-  "meta-ads": [0.42, 0, 0.58, 1],
   "case-sinkliners": [0.42, 0.33, 0.58, 0.54],
 };
 

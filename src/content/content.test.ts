@@ -30,8 +30,8 @@ describe("core content", () => {
 
 describe("services & pricing", () => {
   it("validates", () => {
-    z.array(S.ServiceSchema).length(7).parse(C.services);
-    z.array(S.PricingGroupSchema).length(5).parse(C.pricing);
+    z.array(S.ServiceSchema).length(5).parse(C.services);
+    z.array(S.PricingGroupSchema).length(3).parse(C.pricing);
   });
   it("every service has a tagline of at most 40 characters", () => {
     for (const s of C.services) {
@@ -40,7 +40,7 @@ describe("services & pricing", () => {
     }
   });
   it("every service slug is unique and resolves", () => {
-    expect(new Set(C.services.map((s) => s.slug)).size).toBe(7);
+    expect(new Set(C.services.map((s) => s.slug)).size).toBe(5);
     for (const s of C.services) expect(C.getService(s.slug)).toBe(s);
     expect(C.getService("ftl-shipping")).toBeUndefined();
   });
@@ -53,8 +53,6 @@ describe("services & pricing", () => {
   it("uses the agreed starting prices", () => {
     const first = (id: S.PricingGroupId) => C.getPricing(id).tiers[0].price;
     expect(first("amazon")).toBe("$500/mo");
-    expect(first("meta-ads")).toBe("$449/mo");
-    expect(first("google-ads")).toBe("$349/mo");
     expect(first("email-marketing")).toBe("$749/mo");
     expect(first("seo")).toBe("$700/mo");
   });
@@ -62,7 +60,7 @@ describe("services & pricing", () => {
 
 describe("case studies, faq, jobs", () => {
   it("validates", () => {
-    z.array(S.CaseStudySchema).length(6).parse(C.caseStudies);
+    z.array(S.CaseStudySchema).length(5).parse(C.caseStudies);
     z.array(S.FaqSchema).min(6).max(8).parse(C.homeFaq);
     z.array(S.JobSchema).min(1).parse(C.jobs);
   });

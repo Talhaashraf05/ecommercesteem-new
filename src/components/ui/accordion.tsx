@@ -22,13 +22,13 @@ export const Accordion = ({ items }: { items: AccordionItem[] }) => {
                 aria-expanded={isOpen}
                 aria-controls={panelId}
                 onClick={() => setOpen(isOpen ? null : item.id)}
-                className="flex w-full items-center justify-between gap-6 py-6 text-left font-display text-h3 text-fg"
+                className="flex w-full items-center justify-between gap-6 py-5 text-left font-display text-lg text-fg"
               >
                 {item.q}
                 <span aria-hidden="true" className={`text-brand ${isOpen ? "rotate-45" : ""}`}>+</span>
               </button>
             </h3>
-            <div id={panelId} role="region" aria-labelledby={btnId} hidden={!isOpen} className="pb-6 pr-10 text-lead text-muted">
+            <div id={panelId} role="region" aria-labelledby={btnId} hidden={!isOpen} className="pb-5 pr-10 text-[0.9375rem] text-muted">
               {item.a}
             </div>
           </div>

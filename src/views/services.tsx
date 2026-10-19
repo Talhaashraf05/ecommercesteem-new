@@ -11,7 +11,7 @@ export const ServicesView = () => (
     <PageHero
       eyebrow="Services"
       title="Everything your e-commerce brand needs to grow"
-      lead="Amazon, Meta and Google at the core — with email and SEO to keep customers coming back."
+      lead="Amazon at the core — with email and SEO to keep customers coming back."
     />
     {serviceGroups.map((group) => (
       <Section key={group.id} labelledBy={`group-${group.id}`} className="!py-12 md:!py-16">

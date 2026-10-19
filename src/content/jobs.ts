@@ -389,7 +389,7 @@ export const jobs: Job[] = [
     "whatYoullBring": [
       "3-5 years of experience in digital marketing, preferably in eCommerce",
       "Proven track record of successful marketing campaigns",
-      "Strong knowledge of Google Ads, Facebook Ads, and SEO",
+      "Strong knowledge of Amazon advertising, email marketing, and SEO",
       "Experience with marketing analytics tools (Google Analytics, SEMrush, etc.)",
       "Excellent strategic thinking and creative problem-solving",
       "Team leadership and project management skills",

@@ -30,7 +30,7 @@ const assistant = Assistant({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
-  title: { default: "EcommerceSteem | E-commerce Growth Agency for Amazon, Meta & Google", template: "%s | EcommerceSteem" },
+  title: { default: "EcommerceSteem | E-commerce Growth Agency for Amazon", template: "%s | EcommerceSteem" },
   description: siteConfig.description,
   icons: { icon: "/icon.png", apple: "/apple-icon-180x180.png" },
   manifest: "/manifest.json",

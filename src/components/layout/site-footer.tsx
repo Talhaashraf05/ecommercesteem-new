@@ -22,7 +22,7 @@ export const SiteFooter = () => (
         <div className="flex flex-wrap items-center gap-6">
           <Logo />
           <p className="text-muted">
-            E-commerce growth for brands on Amazon, Meta and Google.
+            E-commerce growth for brands on Amazon.
           </p>
         </div>
         <a

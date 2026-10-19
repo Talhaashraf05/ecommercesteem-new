@@ -99,68 +99,6 @@ export const services: Service[] = [
     pdf: "/files/amazon-pricing.pdf",
   },
   {
-    slug: "meta-ads",
-    group: "paid",
-    name: "Meta Ads Management",
-    shortName: "Meta Ads",
-    tagline: "Facebook & Instagram campaigns",
-    summary: "Precision-targeted Facebook and Instagram campaigns with engaging creatives, built to maximize conversions.",
-    description:
-      "Reach your ideal audience across Facebook, Instagram, and the Meta network with data-driven ad campaigns designed to deliver measurable results. Our Meta Ads management focuses on precision targeting, engaging creatives, and continuous optimization to drive leads, sales, and brand awareness. From audience research and ad creation to campaign monitoring and performance reporting, we manage every aspect of your Meta Ads to ensure your marketing budget is spent efficiently and effectively.",
-    image: "/images/meta-ads.webp",
-    included: [
-      "Advanced targeting to reach the right audience at the right time",
-      "Creative ad designs optimized for engagement and conversions",
-      "Continuous monitoring and optimization for maximum ROI",
-      "Transparent reporting with actionable insights",
-    ],
-    steps: [
-      { title: "Audit & Research", description: "Analyze your current Meta Ads performance and identify high-value audience segments." },
-      { title: "Strategy & Targeting", description: "Define objectives, select audiences, and plan campaigns for optimal engagement and conversions." },
-      { title: "Campaign Setup & Launch", description: "Create compelling ad creatives, configure tracking, and launch campaigns effectively." },
-      { title: "Optimization & Reporting", description: "Monitor performance, test variations, adjust budgets and bids, and provide actionable insights to maximize ROI." },
-    ],
-    tags: ["Facebook Ads", "Instagram Ads", "Retargeting", "Lookalike Audiences", "Pixel Setup", "UGC Strategy"],
-    faq: [
-      { q: "Do you create the ad creatives?", a: "Yes. Image, carousel and video ad design is part of our packages, and we test several variations so the best performers get the budget." },
-      { q: "Can you retarget people who visited my store?", a: "Yes. We set up the Meta pixel and Conversion API, then build retargeting audiences from visitors, add-to-carts and past customers." },
-      { q: "Is my ad budget included in your fee?", a: "No. Our fee covers management and creative work; your ad spend is paid directly to Meta." },
-    ],
-    pricingGroup: "meta-ads",
-    pdf: "/files/meta-ads-pricing.pdf",
-  },
-  {
-    slug: "google-ads",
-    group: "paid",
-    name: "Google Ads Management",
-    shortName: "Google Ads",
-    tagline: "Search, Shopping & PMax",
-    summary: "Data-driven Google Ads campaigns that attract high-intent traffic and deliver measurable business growth.",
-    description:
-      "Unlock the full potential of Google Ads with campaigns designed to attract high-intent customers and maximize ROI. Our team creates tailored strategies that focus on your business goals, leveraging precise targeting, persuasive ad copy, and data-driven optimization to deliver measurable results. We handle everything from keyword research and campaign setup to ongoing performance monitoring, ensuring your ad spend drives tangible growth. Whether you aim to increase leads, sales, or brand awareness, our Google Ads management services give you a competitive edge.",
-    image: "/images/google-ads.webp",
-    included: [
-      "Customized campaigns aligned with your business objectives",
-      "Advanced audience targeting for maximum reach and relevance",
-      "Continuous optimization to reduce costs and increase ROI",
-      "Transparent reporting and actionable insights",
-    ],
-    steps: [
-      { title: "Audit & Research", description: "Analyze current campaigns, competitor strategies, and keyword opportunities to identify gaps and growth potential." },
-      { title: "Strategy & Targeting", description: "Define campaign goals, select high-performing keywords, and create audience segments for precise targeting." },
-      { title: "Campaign Setup & Launch", description: "Develop compelling ad copies, configure tracking, and launch campaigns optimized for conversions." },
-      { title: "Optimization & Reporting", description: "Continuously monitor performance, adjust bids, test creatives, and provide actionable insights to maximize ROI." },
-    ],
-    tags: ["Search Ads", "Display Network", "YouTube Ads", "Google Shopping", "Keyword Research", "ROAS Scaling"],
-    faq: [
-      { q: "Which Google campaign types do you manage?", a: "Search, Display, Shopping and Video, depending on your package and goals." },
-      { q: "Do you set up conversion tracking?", a: "Yes. We configure Google Tag Manager and GA4 so every lead and sale is tied back to the campaign that produced it." },
-      { q: "Is ad spend included in your fee?", a: "No. Our fee covers management; your ad spend is paid directly to Google." },
-    ],
-    pricingGroup: "google-ads",
-    pdf: "/files/google-ads-pricing.pdf",
-  },
-  {
     slug: "email-marketing",
     group: "retention",
     name: "Email Marketing",
@@ -226,7 +164,6 @@ export const services: Service[] = [
 
 export const serviceGroups = [
   { id: "amazon", label: "Amazon" },
-  { id: "paid", label: "Paid Social & Search" },
   { id: "retention", label: "Retention & Organic" },
 ] as const;
 

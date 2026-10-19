@@ -40,6 +40,8 @@ import {
 const DRAG_THRESHOLD = 6; // px of horizontal travel before a drag is recognised
 const FLING_WINDOW = 80; // ms — a release later than this after the last move doesn't fling
 const STEP_MS = 450; // arrow-key tween
+const SETTLE_MS = 800; // glide to the nearest card after a drag
+const DRAG_EASE = 0.78; // share of the gap to the pointer left per 60 fps frame (higher = silkier, laggier)
 
 // Pre-mount defaults: the same maths as wheelLayout() in CSS, against the section's
 // box (h-lvh, min 40rem), so the fan is in place before hydration and doesn't move.
@@ -105,7 +107,8 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
     let vel = 0; // deg per 60 fps frame
     let topSlot = 0;
     let lastTime: number | null = null;
-    let tween: { from: number; to: number; start: number | null } | null = null;
+    let tween: { from: number; to: number; start: number | null; ms: number } | null = null;
+    let dragTarget = 0; // where the pointer says the wheel should be; rot eases toward it
     let hovered = false;
     let focused = false;
     const stopForGood = () => {
@@ -154,9 +157,8 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
         const d = (e.clientX - lastX) * DRAG;
         lastX = e.clientX;
         lastMove = performance.now();
-        rot += d;
+        dragTarget += d;
         vel = d;
-        apply();
         return;
       }
       if (!pending || e.pointerId !== pending.id) return;
@@ -168,7 +170,12 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
         lastMove = performance.now();
         vel = 0;
         tween = null;
-        stage.setPointerCapture(e.pointerId);
+        dragTarget = rot;
+        try {
+          stage.setPointerCapture(e.pointerId);
+        } catch {
+          // pointer already gone (released mid-move): the drag still works without capture
+        }
         stage.setAttribute("data-dragging", "");
         stopForGood();
       } else if (dy > DRAG_THRESHOLD) {
@@ -184,7 +191,15 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
       suppressClick = true;
       if (stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId);
       stage.removeAttribute("data-dragging");
-      if (reducedMotion.matches || performance.now() - lastMove > FLING_WINDOW) vel = 0;
+      if (performance.now() - lastMove > FLING_WINDOW) vel = 0;
+      if (reducedMotion.matches) {
+        vel = 0;
+        return;
+      }
+      // Carry the fling's momentum, then glide onto the nearest card instead of stopping mid-slot.
+      const coast = vel * (INERTIA / (1 - INERTIA));
+      vel = 0;
+      tween = { from: rot, to: stepTarget(dragTarget + coast, 0), start: null, ms: SETTLE_MS };
     };
 
     const onClickCapture = (e: MouseEvent) => {
@@ -207,7 +222,7 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
         rot = to;
         apply();
       } else {
-        tween = { from: rot, to, start: null };
+        tween = { from: rot, to, start: null, ms: STEP_MS };
       }
       const idx = nearestSlot(to) % count;
       if (liveRef.current) {
@@ -219,15 +234,20 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
     const tick = (time: number) => {
       const k = lastTime === null ? 0 : frameSteps(time - lastTime);
       lastTime = time;
+      if (dragging) {
+        rot += (dragTarget - rot) * (1 - DRAG_EASE ** k);
+        apply();
+        return;
+      }
       if (tween) {
         tween.start ??= time;
-        const t = Math.min(1, (time - tween.start) / STEP_MS);
+        const t = Math.min(1, (time - tween.start) / tween.ms);
         rot = tween.from + (tween.to - tween.from) * easeOutCubic(t);
         if (t >= 1) tween = null;
         apply();
         return;
       }
-      if (dragging || reducedMotion.matches) return;
+      if (reducedMotion.matches) return;
       const spin = autoSpinRate({ paused: pausedRef.current, hovered, focused });
       if (spin === 0 && Math.abs(vel) < 1e-3) {
         vel = 0; // fling has coasted to a stop and the drift is held: nothing to draw
@@ -350,7 +370,7 @@ export const TestimonialWheel = ({ items, children }: TestimonialWheelProps) => 
       </div>
 
       {/* Top-left UI — source label, live counter, summary. In front of the fan. */}
-      <div className="pointer-events-none absolute left-gutter top-[calc(4.5rem+clamp(0.625rem,2.5vh,2.5rem))] z-[4] flex flex-col gap-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+      <div className="pointer-events-none absolute right-gutter items-end text-right top-24 md:top-32 z-[4] flex flex-col gap-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
         <span className="text-fg">Upwork · Clutch</span>
         <span className="flex items-center gap-3">
           <span aria-hidden="true" className="flex items-center gap-3 tabular-nums">

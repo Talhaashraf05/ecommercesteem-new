@@ -9,7 +9,7 @@ const url =
 export const siteConfig = {
   name: "EcommerceSteem",
   description:
-    "E-commerce growth agency. We run Amazon, Meta Ads and Google Ads for online brands — as one growth engine.",
+    "E-commerce growth agency. We run Amazon, email and SEO for online brands — as one growth engine.",
   url,
   ogImage: "/opengraph-image",
   twitterHandle: "",

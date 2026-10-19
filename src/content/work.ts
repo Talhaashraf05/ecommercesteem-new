@@ -3,7 +3,7 @@ export const workPage = {
   hero: {
     eyebrow: "Work",
     title: "Brands we've grown",
-    lead: "Selected case studies across Amazon, Meta, Google and retention, with the numbers behind each one.",
+    lead: "Selected case studies across Amazon and retention, with the numbers behind each one.",
     primary: { label: "Book a free audit", href: "/contact" },
     secondary: { label: "See all work", href: "#index" },
     /** `stats` entries shown under the hero, looked up by id. */

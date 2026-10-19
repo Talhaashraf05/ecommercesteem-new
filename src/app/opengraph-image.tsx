@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "EcommerceSteem — Amazon · Meta · Google, one growth engine";
+export const alt = "EcommerceSteem — Amazon growth, done right";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -25,7 +25,7 @@ export default function OpengraphImage() {
           <span style={{ color: "#DC3326" }}>Steem</span>
         </div>
         <div style={{ display: "flex", marginTop: 28, fontSize: 40, color: "#9A9AA5" }}>
-          Amazon · Meta · Google — one growth engine
+          Amazon growth, done right
         </div>
       </div>
     ),

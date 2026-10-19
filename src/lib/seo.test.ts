@@ -14,9 +14,9 @@ describe("seo", () => {
     expect(m.openGraph?.title).toBe("About | EcommerceSteem");
     expect(m.twitter?.title).toBe("About | EcommerceSteem");
     const home = pageMetadata({ description: "d", path: "/" });
-    expect(home.title).toEqual({ absolute: "EcommerceSteem | E-commerce Growth Agency for Amazon, Meta & Google" });
-    expect(home.openGraph?.title).toBe("EcommerceSteem | E-commerce Growth Agency for Amazon, Meta & Google");
-    expect(home.twitter?.title).toBe("EcommerceSteem | E-commerce Growth Agency for Amazon, Meta & Google");
+    expect(home.title).toEqual({ absolute: "EcommerceSteem | E-commerce Growth Agency for Amazon" });
+    expect(home.openGraph?.title).toBe("EcommerceSteem | E-commerce Growth Agency for Amazon");
+    expect(home.twitter?.title).toBe("EcommerceSteem | E-commerce Growth Agency for Amazon");
   });
   it("defaults OG and twitter image, allows override", () => {
     const d = pageMetadata({ description: "d", path: "/x" });

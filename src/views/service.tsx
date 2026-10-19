@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { caseStudies, getPricing, serviceGroups } from "@/content";
+import { caseStudies, getPricing, serviceGroups, SHOW_PRICING } from "@/content";
 import type { Service } from "@/content/schemas";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
@@ -28,9 +28,11 @@ export const ServiceView = ({ service }: { service: Service }) => {
             <ButtonLink href={`/contact?service=${service.slug}`} size="lg" withArrow>
               Book a free audit
             </ButtonLink>
-            <ButtonLink href="#pricing" variant="secondary" size="lg">
-              See pricing
-            </ButtonLink>
+            {SHOW_PRICING && (
+              <ButtonLink href="#pricing" variant="secondary" size="lg">
+                See pricing
+              </ButtonLink>
+            )}
           </>
         }
       />
@@ -112,21 +114,23 @@ export const ServiceView = ({ service }: { service: Service }) => {
           </Container>
         </Section>
       )}
-      <Section id="pricing" labelledBy="pricing-title">
-        <Container>
-          <h2 id="pricing-title" className={H2}>Pricing</h2>
-          <p className="mt-6 max-w-lead text-lead text-muted">{pricing.intro}</p>
-          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            {pricing.tiers.map((tier) => (
-              <PricingCard key={tier.name} tier={tier} serviceSlug={service.slug} />
-            ))}
-          </div>
-          <p className="mt-8 text-sm text-muted">Ad spend is billed directly by the platform and is not included.</p>
-          <ButtonLink href={pdf} variant="ghost" external className="mt-4 text-sm">
-            Download full pricing (PDF)
-          </ButtonLink>
-        </Container>
-      </Section>
+      {SHOW_PRICING && (
+        <Section id="pricing" labelledBy="pricing-title">
+          <Container>
+            <h2 id="pricing-title" className={H2}>Pricing</h2>
+            <p className="mt-6 max-w-lead text-lead text-muted">{pricing.intro}</p>
+            <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+              {pricing.tiers.map((tier) => (
+                <PricingCard key={tier.name} tier={tier} serviceSlug={service.slug} />
+              ))}
+            </div>
+            <p className="mt-8 text-sm text-muted">Ad spend is billed directly by the platform and is not included.</p>
+            <ButtonLink href={pdf} variant="ghost" external className="mt-4 text-sm">
+              Download full pricing (PDF)
+            </ButtonLink>
+          </Container>
+        </Section>
+      )}
       <Section labelledBy="faq-title" tone="raised">
         <Container width="title">
           <h2 id="faq-title" className={H2}>Frequently asked questions</h2>

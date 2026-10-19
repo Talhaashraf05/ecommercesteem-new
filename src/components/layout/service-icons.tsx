@@ -1,9 +1,7 @@
 import {
-  ChatIcon,
   DocumentIcon,
   type IconProps,
   MailIcon,
-  SearchIcon,
   StorefrontIcon,
   TargetIcon,
   TrendingUpIcon,
@@ -17,8 +15,6 @@ export const serviceIcon: Record<ServiceSlug, (props: IconProps) => React.JSX.El
   "amazon-account-management": StorefrontIcon,
   "amazon-ppc": TargetIcon,
   "amazon-listings-a-plus": DocumentIcon,
-  "meta-ads": ChatIcon,
-  "google-ads": SearchIcon,
   "email-marketing": MailIcon,
   seo: TrendingUpIcon,
 };

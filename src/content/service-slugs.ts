@@ -4,8 +4,6 @@ export const SERVICE_SLUGS = [
   "amazon-account-management",
   "amazon-ppc",
   "amazon-listings-a-plus",
-  "meta-ads",
-  "google-ads",
   "email-marketing",
   "seo",
 ] as const;

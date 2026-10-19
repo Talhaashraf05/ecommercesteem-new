@@ -65,11 +65,11 @@ export type ProcessStep = z.infer<typeof ProcessStepSchema>;
 export type Value = z.infer<typeof ValueSchema>;
 
 export { SERVICE_SLUGS };
-export const PRICING_GROUPS = ["amazon", "meta-ads", "google-ads", "email-marketing", "seo"] as const;
+export const PRICING_GROUPS = ["amazon", "email-marketing", "seo"] as const;
 
 export const ServiceSchema = z.object({
   slug: z.enum(SERVICE_SLUGS),
-  group: z.enum(["amazon", "paid", "retention"]),
+  group: z.enum(["amazon", "retention"]),
   name: z.string(),
   shortName: z.string(),
   tagline: z.string().max(40),
@@ -115,7 +115,7 @@ export const CaseStudySchema = z.object({
   year: z.string().regex(/^\d{4}$/),
   services: z.array(z.enum(SERVICE_SLUGS)).min(1),
   headlineMetric: MetricSchema,
-  metrics: z.array(MetricSchema).length(3),
+  metrics: z.array(MetricSchema).min(1).max(3),
   challenge: z.string(),
   approach: z.array(z.string()).min(3).max(5),
   outcome: z.string(),

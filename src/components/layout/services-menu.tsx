@@ -126,7 +126,7 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
               <p className="text-kicker uppercase tracking-wider text-muted">Free audit</p>
               <p className="mt-2 font-display text-h3 text-fg">Not sure where to start?</p>
               <p className="mt-2 text-sm text-muted">
-                We&apos;ll review your Amazon, Meta or Google account and show you where the money&apos;s leaking.
+                We&apos;ll review your Amazon account and show you where the money&apos;s leaking.
               </p>
             </div>
             <div className="mt-4 flex flex-col items-start gap-3">

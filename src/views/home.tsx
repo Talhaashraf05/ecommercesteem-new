@@ -1,4 +1,4 @@
-import { caseStudies, clients, homeFaq, pricing, processSteps, stats, testimonials } from "@/content";
+import { caseStudies, clients, homeFaq, pricing, SHOW_PRICING, processSteps, stats, testimonials } from "@/content";
 import { Container } from "@/components/ui/container";
 import { AnimatedHeading } from "@/components/ui/animated-heading";
 import { Section } from "@/components/ui/section";
@@ -17,12 +17,12 @@ const copy = {
   hero: {
     eyebrow: "E-commerce growth agency",
     title: "Build. Grow. Scale.",
-    subtitle: "We run Amazon, Meta and Google for e-commerce brands — as one growth engine.",
+    subtitle: "We run Amazon, email and SEO for e-commerce brands — as one growth engine.",
   },
   cards: stats.map((s) => ({ id: s.id, title: s.label, stat: s.value, description: s.description })),
   wave: {
     eyebrow: "One growth engine",
-    title: "Amazon, Meta & Google — run as one",
+    title: "Amazon, email & SEO — run as one",
     body: "Most brands run each channel in isolation. We connect marketplace, social and search so every dollar of spend lifts the others — with one team, one strategy and one report.",
   },
 };
@@ -36,7 +36,7 @@ export const HomeView = () => (
         heading: "Results that compound",
         lead: "We run the channels that move e-commerce revenue — and connect them so every dollar works harder.",
         photo: { src: "/images/team.webp", alt: "EcommerceSteem team at work" },
-        collab: { value: stats[0].value, desc: "brands trust us with their Amazon, Meta and Google growth." },
+        collab: { value: stats[0].value, desc: "brands trust us with their Amazon growth." },
         commitment: {
           eyebrow: "Client rating",
           value: "5.0★",
@@ -53,8 +53,6 @@ export const HomeView = () => (
       cta={{ label: "All services", href: "/services" }}
       items={[
         { prefix: "Amazon", name: "Marketplace", image: "/images/amazon-1.webp", href: "/services/amazon-account-management" },
-        { prefix: "Meta", name: "Ads", image: "/images/meta-ads.webp", href: "/services/meta-ads" },
-        { prefix: "Google", name: "Ads", image: "/images/google-ads.webp", href: "/services/google-ads" },
         { prefix: "Retention", name: "& SEO", image: "/images/email-marketing.webp", href: "/services/email-marketing" },
       ]}
     />
@@ -67,19 +65,21 @@ export const HomeView = () => (
         image: c.image,
       }))}
     />
-    <Section id="process" labelledBy="process-title">
+    <Section id="process" labelledBy="process-title" className="!pb-8">
       <ProcessSteps steps={processSteps} />
     </Section>
-    <Section id="pricing" labelledBy="pricing-title" tone="raised">
-      <Container>
-        <AnimatedHeading id="pricing-title" as="h2" className="font-display text-display-sm text-fg">
-          Simple, transparent pricing
-        </AnimatedHeading>
-        <div className="mt-12">
-          <PricingTabs groups={pricing} />
-        </div>
-      </Container>
-    </Section>
+    {SHOW_PRICING && (
+      <Section id="pricing" labelledBy="pricing-title" tone="raised">
+        <Container>
+          <AnimatedHeading id="pricing-title" as="h2" className="font-display text-display-sm text-fg">
+            Simple, transparent pricing
+          </AnimatedHeading>
+          <div className="mt-12">
+            <PricingTabs groups={pricing} />
+          </div>
+        </Container>
+      </Section>
+    )}
     <Testimonials items={testimonials} />
     <Section id="faq" labelledBy="faq-title">
       <Container width="title">
@@ -93,7 +93,7 @@ export const HomeView = () => (
     </Section>
     <CtaBand
       title="Ready to grow?"
-      body="Book a free audit of your Amazon, Meta or Google account. We'll show you where the money is leaking — and what we'd do about it."
+      body="Book a free audit of your Amazon account. We'll show you where the money is leaking — and what we'd do about it."
       primary={{ label: "Book a free audit", href: "/contact" }}
       secondary={{ label: "See our work", href: "/work" }}
     />

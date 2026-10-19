@@ -2,7 +2,7 @@ import type { Metadata, MetadataRoute } from "next";
 import { caseStudies, jobs, services } from "@/content";
 import { siteConfig } from "@/lib/site";
 
-const HOME_TITLE = "EcommerceSteem | E-commerce Growth Agency for Amazon, Meta & Google";
+const HOME_TITLE = "EcommerceSteem | E-commerce Growth Agency for Amazon";
 
 export const pageMetadata = ({ title, description, path, image = siteConfig.ogImage }: { title?: string; description: string; path: string; image?: string }): Metadata => {
   // The root layout's "%s | EcommerceSteem" template covers <title> only, so the

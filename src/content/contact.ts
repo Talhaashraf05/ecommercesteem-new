@@ -38,7 +38,7 @@ export const contactPage = {
   },
   cta: {
     title: "Rather see the results first?",
-    body: "Browse the brands we've grown on Amazon, Meta and Google, then tell us about yours.",
+    body: "Browse the brands we've grown on Amazon and beyond, then tell us about yours.",
     primary: { label: "See our work", href: "/work" },
     secondary: { label: "Explore services", href: "/services" },
   },

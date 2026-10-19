@@ -8,5 +8,7 @@ export const redirects = [
   { source: "/privacy-policy", destination: "/privacy" },
   { source: "/services/amazon", destination: "/services/amazon-account-management" },
   { source: "/services/ftl-shipping", destination: "/services" },
+  { source: "/services/meta-ads", destination: "/services" },
+  { source: "/services/google-ads", destination: "/services" },
   { source: "/services/web-development", destination: "/services" },
 ].map((r) => ({ ...r, permanent: true as const }));

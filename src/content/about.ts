@@ -14,7 +14,7 @@ export const aboutPage = {
     photo: { src: "/images/team.webp", alt: "EcommerceSteem team at work" },
     /** `stats` entries by id (src/content/stats.ts). */
     collabStatId: "clients",
-    collabDesc: "brands trust us with their Amazon, Meta and Google growth.",
+    collabDesc: "brands trust us with their Amazon growth.",
     dataStatId: "projects",
     reachStatId: "countries",
     reachLabel: "Countries served",
