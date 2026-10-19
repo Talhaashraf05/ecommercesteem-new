@@ -166,7 +166,7 @@ const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStac
             <animated.div
               key={item.slug}
               suppressHydrationWarning
-              className="absolute left-1/2 top-1/2 aspect-[16/9] w-[min(90vw,52rem,max(16rem,calc((100lvh-22.5rem)*1.78)))] overflow-hidden rounded-3xl bg-surface shadow-2xl [backface-visibility:hidden] [will-change:transform] motion-reduce:static motion-reduce:w-full motion-reduce:opacity-100! motion-reduce:transform-none! motion-reduce:shadow-none"
+              className="absolute left-1/2 top-1/2 aspect-[16/9] w-[min(92vw,62rem,max(16rem,calc((100lvh-19.5rem)*1.78)))] overflow-hidden rounded-3xl bg-surface shadow-2xl [backface-visibility:hidden] [will-change:transform] motion-reduce:static motion-reduce:w-full motion-reduce:opacity-100! motion-reduce:transform-none! motion-reduce:shadow-none"
               style={{
                 transform: f.to((v) => cardFrame(i, v).transform),
                 opacity: f.to((v) => cardFrame(i, v).opacity),
@@ -203,14 +203,15 @@ const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStac
           ))}
         </div>
 
-        {/* Metadata row — index left, client + headline centred, case-study link right.
+        {/* Metadata row — index left, client + headline centred, case-study link right. From sm the
+            index and link sit mid-height and the client label drops to the bottom.
             Below sm it drops under the card: client + headline span the full width,
             index and link share the line beneath. */}
-        <div className="pointer-events-none absolute inset-x-4 bottom-10 z-30 grid grid-cols-[auto_1fr_auto] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] gap-y-5 text-sm tracking-wide sm:inset-x-8 sm:gap-6 motion-reduce:hidden">
+        <div className="pointer-events-none absolute inset-x-4 bottom-6 z-30 grid sm:bottom-0 sm:top-0 sm:grid-rows-1 grid-cols-[auto_1fr_auto] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] gap-y-5 text-sm tracking-wide sm:inset-x-8 sm:gap-6 motion-reduce:hidden">
           <span className="row-start-2 justify-self-start rounded-full bg-bg/90 px-3 py-1 tabular-nums text-fg sm:row-start-1">
             <span ref={indexElRef}>{pad(1)}</span> / {pad(count)}
           </span>
-          <span className="col-span-3 row-start-1 flex min-w-0 max-w-full flex-col items-center gap-1 justify-self-center rounded-2xl bg-bg/90 px-5 py-3 text-center backdrop-blur-md sm:col-span-1 sm:col-start-2">
+          <span className="col-span-3 row-start-1 flex min-w-0 max-w-full flex-col items-center gap-1 justify-self-center rounded-2xl bg-bg/90 px-5 py-3 text-center backdrop-blur-md sm:col-span-1 sm:col-start-2 sm:mb-6 sm:self-end">
             <span
               ref={nameElRef}
               className="max-w-full truncate font-display text-lg font-semibold leading-snug tracking-tight text-fg sm:text-2xl"
