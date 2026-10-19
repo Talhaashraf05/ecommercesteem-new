@@ -21,6 +21,8 @@ export const caseStudies: CaseStudy[] = [
     ],
     outcome: "Lower ad costs and higher conversion let HulkFit scale spend profitably into peak season.",
     image: "/images/case-hulkfit.webp",
+    workImage: "/images/work-amrita.webp",
+    hoverImage: "/images/case-amrita-thumb.webp",
     verified: false,
   },
   {
@@ -43,6 +45,8 @@ export const caseStudies: CaseStudy[] = [
     ],
     outcome: "SinkLiners built a healthy, growing Amazon business from zero.",
     image: "/images/case-sinkliners.webp",
+    workImage: "/images/work-lorafied.webp",
+    hoverImage: "/images/case-lorafied-thumb.webp",
     verified: false,
   },
   {
@@ -63,6 +67,8 @@ export const caseStudies: CaseStudy[] = [
     ],
     outcome: "More qualified organic traffic across a catalog of 1,200+ product pages.",
     image: "/images/case-huskey.webp",
+    workImage: "/images/work-nfinity.webp",
+    hoverImage: "/images/case-nfinity-thumb.webp",
     verified: false,
   },
   {
@@ -84,6 +90,8 @@ export const caseStudies: CaseStudy[] = [
     ],
     outcome: "Retention became a predictable revenue channel.",
     image: "/images/case-revival.webp",
+    workImage: "/images/work-revival.webp",
+    hoverImage: "/images/case-revival-thumb.webp",
     verified: false,
   },
   {
@@ -105,6 +113,8 @@ export const caseStudies: CaseStudy[] = [
     ],
     outcome: "A tighter Amazon PPC structure with more sales from the same budget.",
     image: "/images/case-bluestem.webp",
+    workImage: "/images/work-sturdy-essentials.webp",
+    hoverImage: "/images/case-sturdy-essentials-thumb.webp",
     verified: false,
   },
 ];

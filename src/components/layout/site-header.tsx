@@ -1,9 +1,11 @@
 import { ButtonLink } from "@/components/ui/button";
+import { ArrowIcon } from "@/components/ui/icons";
 import { site } from "@/content";
 
 import { HeaderPill } from "./header-pill";
 import { Logo } from "./logo";
-import { NAV_LINK, NavLink } from "./nav-link";
+import { NavLink } from "./nav-link";
+import { NAV_LINK } from "./nav-styles";
 import { MobileMenu } from "./mobile-menu";
 import { serviceNav } from "./service-nav";
 import { ServicesMenu } from "./services-menu";
@@ -22,8 +24,9 @@ export const SiteHeader = () => (
         <NavLink href="/work">Work</NavLink>
         <NavLink href="/about">About</NavLink>
         <NavLink href="/careers">Careers</NavLink>
-        <a href={site.portal} className={NAV_LINK} target="_blank" rel="noopener noreferrer">
-          Portal ↗
+        <a href={site.portal} className={`${NAV_LINK} inline-flex items-center gap-1`} target="_blank" rel="noopener noreferrer">
+          Portal
+          <ArrowIcon className="size-[0.9375rem]" aria-hidden="true" />
         </a>
       </nav>
       <div className="flex items-center gap-3 justify-self-end">

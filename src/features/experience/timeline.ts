@@ -14,7 +14,7 @@ export const sectionProgress = (rectTop: number, rectHeight: number, viewportH: 
 /** Beat windows in legacy units (New Era values). */
 export const BEATS = {
   hero: { outStart: 0.02, outEnd: 0.06 },
-  orbit: { inStart: 0.15, inEnd: 0.18, outStart: 0.35, outEnd: 0.38 },
+  orbit: { inStart: 0.08, inEnd: 0.11, outStart: 0.35, outEnd: 0.38 },
   wave: { inStart: 0.46, inEnd: 0.5, outStart: 0.6, outEnd: 0.63 },
   release: { start: 0.6, end: LEGACY_END },
 } as const;

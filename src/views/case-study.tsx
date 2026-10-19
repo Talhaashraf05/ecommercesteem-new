@@ -16,10 +16,9 @@ export const CaseStudyView = ({ study }: { study: CaseStudy }) => {
   const next = caseStudies[(index + 1) % caseStudies.length];
   return (
     <main id="main">
-      {/* The hero photo is decorative (alt=""): the h1 already names the client. */}
       <ParallaxHero
-        image={study.image}
-        alt=""
+        image={study.hoverImage ?? study.image}
+        alt={`${study.client} case study results`}
         eyebrow={`${study.category} · ${study.year}`}
         title={study.client}
         metric={study.headlineMetric}
@@ -82,7 +81,7 @@ export const CaseStudyView = ({ study }: { study: CaseStudy }) => {
           slug={next.slug}
           client={next.client}
           metric={next.headlineMetric}
-          image={next.image}
+          image={next.hoverImage ?? next.image}
           label={copy.next}
         />
       )}

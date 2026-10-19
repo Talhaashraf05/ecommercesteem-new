@@ -37,7 +37,7 @@ export const WorkView = () => (
       }
     />
 
-    {featured && <FeaturedCase study={featured} copy={copy.featured} />}
+    {featured && <FeaturedCase study={{ ...featured, image: featured.workImage ?? featured.image }} copy={copy.featured} />}
 
     <Section id="index" labelledBy="index-title" className="scroll-mt-18">
       <Container>
@@ -65,7 +65,8 @@ export const WorkView = () => (
               headline: c.headlineMetric,
               services: c.services,
               serviceNames: c.services.map((s) => getService(s)?.name ?? s),
-              image: c.image,
+              image: c.workImage ?? c.image,
+              previewImage: c.hoverImage ?? c.workImage ?? c.image,
             }))}
           />
         </div>

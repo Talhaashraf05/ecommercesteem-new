@@ -120,6 +120,10 @@ export const CaseStudySchema = z.object({
   approach: z.array(z.string()).min(3).max(5),
   outcome: z.string(),
   image: z.string().startsWith("/images/"),
+  /** Vertical image used on the /work page (index preview, featured card); falls back to `image`. */
+  workImage: z.string().startsWith("/images/").optional(),
+  /** Landscape image: the /work hover preview and the case-study page hero. */
+  hoverImage: z.string().startsWith("/images/").optional(),
   verified: z.boolean(),
 });
 

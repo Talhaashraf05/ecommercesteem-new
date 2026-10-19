@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { ButtonLink } from "@/components/ui/button";
+import { ArrowIcon } from "@/components/ui/icons";
 import { useScroll } from "@/hooks/smooth-scroll/use-scroll";
 
 import { serviceIcon } from "./service-icons";
@@ -137,8 +138,9 @@ export const MobileMenu = ({ groups, portal }: { groups: ServiceNavGroup[]; port
             <li><Link href="/careers">Careers</Link></li>
             <li><Link href="/contact">Contact</Link></li>
             <li>
-              <a href={portal} target="_blank" rel="noopener noreferrer">
-                Client portal ↗
+              <a href={portal} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5">
+                Client portal
+                <ArrowIcon className="size-[0.9375rem]" aria-hidden="true" />
               </a>
             </li>
           </ul>

@@ -38,7 +38,7 @@ export const HomeView = () => (
       content={{
         heading: "Results that compound",
         lead: "We run the channels that move e-commerce revenue — and connect them so every dollar works harder.",
-        photo: { src: "/images/team.webp", alt: "EcommerceSteem team at work" },
+        photo: { src: "/images/team-work.webp", alt: "EcommerceSteem team at work" },
         collab: { value: stats[0].value, desc: "brands trust us with their Amazon growth." },
         commitment: {
           eyebrow: "Client rating",
@@ -52,10 +52,9 @@ export const HomeView = () => (
       }}
     />
     <ServiceCards
-      eyebrow="Services"
+      eyebrow="What we do"
       heading="What we run"
-      lead="Four ways we grow your brand, each run by specialists and reported in one place."
-      core="One growth engine"
+      lead="Four jobs we do for you every day, handled by one team that actually talks to each other, so you always know who to call."
       cta={{ label: "All services", href: "/services" }}
       items={RUN_SLUGS.map((slug) => services.find((s) => s.slug === slug)!)}
     />

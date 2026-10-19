@@ -8,7 +8,7 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { subscribeToTicker } from "@/lib/animation/ticker";
 
-const RANGE = 4; // % of the photo's height, either side of centre
+const RANGE = 2; // % of the photo's height, either side of centre
 
 export const FeaturedImage = ({ src, alt }: { src: string; alt: string }) => {
   const frameRef = useRef<HTMLDivElement>(null);
@@ -51,14 +51,18 @@ export const FeaturedImage = ({ src, alt }: { src: string; alt: string }) => {
   }, []);
 
   return (
-    <div ref={frameRef} className="relative aspect-[4/3] overflow-hidden lg:aspect-[4/5] rounded-[2rem] border border-line bg-surface shadow-card">
-      {/* Oversized by 2×RANGE so the drift never shows an edge. The photos are ~3:2, so
-          covering the frame needs ~1.25× its width on mobile (4:3) and ~2× at lg (4:5),
-          hence `sizes`. */}
-      <div ref={layerRef} className="absolute inset-x-0 -inset-y-[5%] will-change-transform motion-reduce:will-change-auto">
-        <Image src={src} alt={alt} fill sizes="(min-width: 1024px) 75vw, 125vw" className="object-cover" />
+    <div
+      ref={frameRef}
+      className="relative mx-auto aspect-[9/13] w-[min(100%,calc(85lvh*9/13))] overflow-hidden rounded-xl border border-line bg-surface shadow-card"
+    >
+      {/* The case-study images are 9:16 with an empty stage below the last figure, so the
+          frame is 9:13 and anchored to the top: the bottom ~20% is cropped, down to just under
+          the last callout. The width is capped so the frame is never taller than 85% of the
+          window. */}
+      <div ref={layerRef} className="absolute inset-x-0 -inset-y-[2%] will-change-transform motion-reduce:will-change-auto">
+        <Image src={src} alt={alt} fill sizes="(min-width: 1024px) 30vw, 92vw" className="object-cover object-top" />
       </div>
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-inset ring-line" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-line" />
     </div>
   );
 };

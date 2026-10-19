@@ -1,10 +1,11 @@
 "use client";
 
-// Case-study hero: a full-bleed photo (the LCP image) under a scrim, with the client
-// name (the page's h1) and the headline metric over its base. While the hero is in
-// view, the shared ticker drifts the photo down by up to 8% of its height as the page
-// scrolls past, so it trails the copy (a subtle parallax). The transform is written
-// straight to the DOM; nothing re-renders. Reduced motion: no subscription, static photo.
+// Case-study hero: the client name (the page's h1) and the headline metric on one side, the
+// case-study image on the other, shown whole in a frame (it carries its own headline and
+// figures, so it is never cropped or covered by text). Behind them a soft red glow drifts
+// down by up to 8% of the hero's height as the page scrolls past, via the shared ticker
+// (a subtle parallax); the transform is written straight to the DOM, nothing re-renders.
+// Reduced motion: no subscription, the glow stays put.
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { subscribeToTicker } from "@/lib/animation/ticker";
@@ -59,32 +60,29 @@ export const ParallaxHero = ({ image, alt, eyebrow, title, metric }: ParallaxHer
   }, []);
 
   return (
-    <header ref={heroRef} className="relative isolate flex h-[80lvh] min-h-[34rem] items-end overflow-hidden">
-      <div ref={layerRef} className="absolute inset-0 -z-20 will-change-transform motion-reduce:will-change-auto">
-        <Image src={image} alt={alt} fill priority sizes="100vw" className="object-cover" />
+    <header ref={heroRef} className="relative isolate overflow-hidden px-gutter pb-16 pt-32 md:pb-24 md:pt-40">
+      <div ref={layerRef} className="absolute -inset-y-[8%] inset-x-0 -z-10 will-change-transform motion-reduce:will-change-auto">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-[radial-gradient(ellipse_55%_55%_at_72%_45%,color-mix(in_srgb,var(--brand)_26%,transparent),transparent_70%)]"
+        />
       </div>
-      {/* Scrim: page background rising from the base (copy contrast), plus a light
-          veil at the top so the fixed header stays legible over the photo. The bottom half
-          stays >= 85% bg so the red metric (text-brand) holds >= 3:1 even over a white
-          photo (needs >= 84.5%); the copy block never rises above it, even at min-h. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 bg-linear-to-t from-bg via-bg/85 via-50% to-bg/25"
-      />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-40 bg-linear-to-b from-bg/70 to-transparent" />
 
-      <div className="w-full px-gutter pb-14 md:pb-20">
-        <div className="mx-auto flex w-full max-w-page flex-col gap-6 lg:flex-row lg:gap-10 lg:items-end lg:justify-between">
-          <div className="max-w-title">
+      <div className="mx-auto grid w-full max-w-page items-center gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+        <div className="flex flex-col gap-10">
+          <div>
             <Eyebrow>{eyebrow}</Eyebrow>
             <h1 className="mt-6 font-display text-display font-semibold leading-title tracking-title text-fg">{title}</h1>
           </div>
-          <p className="flex max-w-md flex-col gap-2 lg:items-end lg:text-right">
-            <span className="font-display text-display font-semibold leading-none tracking-title text-brand">
+          <p className="flex flex-col gap-2 border-l-2 border-brand pl-6">
+            <span className="font-display text-display-sm font-semibold leading-none tracking-title text-brand">
               {metric.value}
             </span>
             <span className="text-lead text-fg">{metric.label}</span>
           </p>
+        </div>
+        <div className="relative aspect-[16/9] overflow-hidden rounded-3xl border border-line-strong bg-surface shadow-card">
+          <Image src={image} alt={alt} fill priority sizes="(min-width: 1024px) 58vw, 92vw" className="object-cover" />
         </div>
       </div>
     </header>

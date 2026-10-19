@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { ButtonLink } from "@/components/ui/button";
 
-import { NAV_ACTIVE, NAV_LINK, isActive } from "./nav-link";
+import { NAV_ACTIVE, NAV_LINK, isActive } from "./nav-styles";
 import { serviceIcon } from "./service-icons";
 import type { ServiceNavGroup } from "./service-nav";
 

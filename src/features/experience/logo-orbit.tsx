@@ -42,7 +42,7 @@ export const LogoOrbit = ({ logos }: { logos: Client[] }) => {
       if (opacity <= 0) return;
 
       const orbit = (p - BEATS.orbit.inStart) / ORBIT_SPAN;
-      const globalYOffset = 600 - orbit * 1200;
+      const globalYOffset = 420 - orbit * 1020; // starts closer to the viewport so the logos show up sooner; still ends at -600
       const baseAngle = orbit * Math.PI * 2;
       const cx = container.clientWidth / 2;
       const cy = container.clientHeight / 2;

@@ -37,6 +37,8 @@ export interface WorkIndexItem {
   /** Display names for `services`, resolved on the server. */
   serviceNames: string[];
   image: string;
+  /** Landscape image for the floating hover preview; falls back to `image`. */
+  previewImage?: string;
 }
 
 export interface WorkIndexCopy {
@@ -108,7 +110,7 @@ const Row = ({ item, index, current, dimmed, onHover }: RowProps) => {
 
         <Cell shift={shift} className="col-start-1 row-start-1 flex min-w-0 items-center gap-4 md:gap-5 lg:col-span-4 lg:col-start-2">
           <span className={`relative size-16 shrink-0 overflow-hidden rounded-xl border border-line bg-surface md:size-20 ${THUMB}`}>
-            <Image src={item.image} alt="" fill sizes="8rem" className="object-cover" />
+            <Image src={item.image} alt="" fill sizes="8rem" className="object-cover object-top" />
           </span>
           <div className="min-w-0">
             <h3 className="font-display text-display-sm font-semibold leading-title tracking-title text-fg">
@@ -166,7 +168,7 @@ const PreviewImage = ({ src, on }: { src: string; on: boolean }) => {
   const style = useSpring({ opacity: on ? 1 : 0, config: { tension: 320, friction: 32 } });
   return (
     <animated.div style={style} className="absolute inset-0">
-      <Image src={src} alt="" fill sizes="25rem" loading="eager" className="object-cover" />
+      <Image src={src} alt="" fill sizes="26rem" loading="eager" className="object-cover" />
     </animated.div>
   );
 };
@@ -190,19 +192,14 @@ const Preview = ({
     <div
       ref={frameRef}
       aria-hidden="true"
-      className="pointer-events-none fixed left-0 top-0 z-0 w-[22rem] will-change-transform"
+      className="pointer-events-none fixed left-0 top-0 z-20 w-[26rem] will-change-transform"
       style={{ transform: "translate3d(-200%, 0, 0)" }}
     >
       <animated.div
         style={style}
-        className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-line-strong bg-surface shadow-card"
+        className="relative aspect-[16/9] overflow-hidden rounded-2xl border border-line-strong bg-surface shadow-card"
       >
-        {loaded && items.map((item) => <PreviewImage key={item.slug} src={item.image} on={item.slug === shown} />)}
-        {/* Legibility scrim: the photo sits behind the rows. It's uniform because the frame
-            follows the cursor (and flips sides), so text can land on any part of it. 60% keeps
-            white row text >= 4.5:1 over a white photo on its own; the hovered row's
-            text-halo (a dark outline that inherits to all its text) covers the red metric. */}
-        <div className="absolute inset-0 bg-bg/60" />
+        {loaded && items.map((item) => <PreviewImage key={item.slug} src={item.previewImage ?? item.image} on={item.slug === shown} />)}
       </animated.div>
     </div>
   );

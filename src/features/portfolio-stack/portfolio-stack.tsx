@@ -47,6 +47,9 @@ const OVERSCAN = 0.2;
 const FOLLOW = 0.14; // per-frame low-pass of the scroll read
 
 const pad = (n: number) => String(n).padStart(2, "0");
+/** Blurred, dimmed photo behind the cards. Off: the section uses the plain page background. */
+const SHOW_BACKDROP = false;
+
 const workHref = (item: { slug: string; href?: string }) => item.href ?? `/work/${item.slug}`;
 const linkLabel = (client: string) => `View case study: ${client}`;
 
@@ -133,32 +136,38 @@ const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStac
       className="relative bg-bg text-fg motion-reduce:h-auto! motion-reduce:px-gutter motion-reduce:py-24"
       style={{ height: `${100 + (count - 1) * SCROLL_PER_CARD}vh` }}
     >
+      {/* The title belongs to the section, not the sticky stage, so it scrolls away with the page. */}
+      <AnimatedHeading
+        as="h2"
+        className="absolute inset-x-0 top-24 z-30 px-gutter text-center font-display text-display-sm font-semibold leading-title tracking-title motion-reduce:static motion-reduce:mb-12 motion-reduce:px-0 motion-reduce:text-left"
+      >
+        {heading}
+      </AnimatedHeading>
       <div className="sticky top-0 h-lvh overflow-hidden motion-reduce:static motion-reduce:h-auto motion-reduce:overflow-visible">
-        {/* Blurred backdrop — each card's photo, cross-fading to the focused one and
-            drifting bottom-to-top with scroll, dimmed so cards and caption lead. */}
-        <div className="absolute inset-0 motion-reduce:hidden" aria-hidden="true">
-          {items.map((item, i) => (
-            <animated.div
-              key={item.slug}
-              suppressHydrationWarning
-              className="absolute inset-0 [will-change:transform,opacity]"
-              style={{
-                opacity: f.to((v) => backdropFrame(i, v).opacity),
-                transform: f.to((v) => backdropFrame(i, v).transform),
-              }}
-            >
-              <Image src={item.image} alt="" fill sizes="60vw" quality={30} priority={priority && i === 0} className="object-cover blur-2xl" />
-            </animated.div>
-          ))}
-          <div className="absolute inset-0 bg-bg/60" />
-        </div>
-
-        <AnimatedHeading
-          as="h2"
-          className="absolute inset-x-0 top-24 z-30 px-gutter text-center font-display text-display-sm font-semibold leading-title tracking-title motion-reduce:static motion-reduce:mb-12 motion-reduce:px-0 motion-reduce:text-left"
-        >
-          {heading}
-        </AnimatedHeading>
+        {/* Soft red glow behind the card (the thumbnails' own backdrop colour); the stage stays still. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_50%_50%,color-mix(in_srgb,var(--brand)_24%,transparent),transparent_70%)] motion-reduce:hidden"
+        />
+        {/* Blurred backdrop — each card's photo, cross-fading to the focused one and drifting with scroll. */}
+        {SHOW_BACKDROP && (
+          <div className="absolute inset-0 motion-reduce:hidden" aria-hidden="true">
+            {items.map((item, i) => (
+              <animated.div
+                key={item.slug}
+                suppressHydrationWarning
+                className="absolute inset-0 [will-change:transform,opacity]"
+                style={{
+                  opacity: f.to((v) => backdropFrame(i, v).opacity),
+                  transform: f.to((v) => backdropFrame(i, v).transform),
+                }}
+              >
+                <Image src={item.image} alt="" fill sizes="60vw" quality={30} priority={priority && i === 0} className="object-cover blur-2xl" />
+              </animated.div>
+            ))}
+            <div className="absolute inset-0 bg-bg/60" />
+          </div>
+        )}
 
         {/* 3D stage — cards on a cylinder; preserve-3d sorts them by depth. */}
         <div className="absolute inset-0 [perspective:118.75rem] [transform-style:preserve-3d] motion-reduce:static motion-reduce:grid motion-reduce:gap-6 motion-reduce:[perspective:none] md:motion-reduce:grid-cols-2 lg:motion-reduce:grid-cols-3">
@@ -208,10 +217,10 @@ const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStac
             Below sm it drops under the card: client + headline span the full width,
             index and link share the line beneath. */}
         <div className="pointer-events-none absolute inset-x-4 bottom-6 z-30 grid sm:bottom-0 sm:top-0 sm:grid-rows-1 grid-cols-[auto_1fr_auto] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] gap-y-5 text-sm tracking-wide sm:inset-x-8 sm:gap-6 motion-reduce:hidden">
-          <span className="row-start-2 justify-self-start rounded-full bg-bg/90 px-3 py-1 tabular-nums text-fg sm:row-start-1">
+          <span className="row-start-2 justify-self-start rounded-full border border-line-strong bg-bg/90 px-4 py-2 tabular-nums text-fg backdrop-blur sm:px-6 sm:py-3 sm:row-start-1">
             <span ref={indexElRef}>{pad(1)}</span> / {pad(count)}
           </span>
-          <span className="col-span-3 row-start-1 flex min-w-0 max-w-full flex-col items-center gap-1 justify-self-center rounded-2xl bg-bg/90 px-5 py-3 text-center backdrop-blur-md sm:col-span-1 sm:col-start-2 sm:mb-6 sm:self-end">
+          <span className="col-span-3 row-start-1 flex min-w-0 max-w-full flex-col items-center gap-1 justify-self-center rounded-2xl border border-line-strong bg-bg/90 px-5 py-3 text-center backdrop-blur-md sm:col-span-1 sm:col-start-2 sm:mb-6 sm:self-end">
             <span
               ref={nameElRef}
               className="max-w-full truncate font-display text-lg font-semibold leading-snug tracking-tight text-fg sm:text-2xl"
