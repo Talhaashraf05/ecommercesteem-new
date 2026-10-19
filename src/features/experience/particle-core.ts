@@ -89,6 +89,7 @@ export const createParticleRig = ({ container, tier, transparent, onContextLost 
       uScroll: { value: 0.0 },
       uIntro: { value: 0.0 },
       uFade: { value: 1 },
+      uDim: { value: w < 640 ? 0.45 : 1 },
       uChart: { value: 0 },
     },
     vertexShader: particleVertexShader,
@@ -126,6 +127,7 @@ export const createParticleRig = ({ container, tier, transparent, onContextLost 
   const resize = (nextW: number, nextH: number) => {
     w = Math.max(1, nextW);
     h = Math.max(1, nextH);
+    material.uniforms.uDim.value = w < 640 ? 0.45 : 1;
     camera.aspect = w / h;
     camera.fov = fovFor(w / h);
     camera.updateProjectionMatrix();

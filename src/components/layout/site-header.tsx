@@ -26,7 +26,9 @@ export const SiteHeader = () => (
         <NavLink href="/careers">Careers</NavLink>
         <a href={site.portal} className={`${NAV_LINK} inline-flex items-center gap-1`} target="_blank" rel="noopener noreferrer">
           Portal
-          <ArrowIcon className="size-[0.9375rem]" aria-hidden="true" />
+          <span className="grid size-5 place-items-center rounded-full border border-current">
+            <ArrowIcon className="size-2.5"aria-hidden="true" />
+          </span>
         </a>
       </nav>
       <div className="flex items-center gap-3 justify-self-end">

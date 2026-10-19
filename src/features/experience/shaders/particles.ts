@@ -12,6 +12,7 @@ export const particleVertexShader = /* glsl */ `
     uniform float uScroll;
     uniform float uIntro; // 0 = on-load filled/appearing, 1 = settled
     uniform float uFade;  // 1 = visible, 0 = released (end of section)
+    uniform float uDim;   // brightness scale; below 1 on phones
     uniform float uChart; // 1 = growth chart (inner-page hero), 0 = home morph
     varying float vEdgeFade;
     varying vec3 vColor;
@@ -208,7 +209,7 @@ export const particleVertexShader = /* glsl */ `
         vEdgeFade = mix(vEdgeFade, 0.3, uChart);
         sizeMultiplier = mix(sizeMultiplier, 2.5, uChart);
         vEdgeFade *= smoothstep(0.0, 0.2, uIntro);
-        vEdgeFade *= uFade;
+        vEdgeFade *= uFade * uDim;
 
         // --- COLORS ---
         vec3 cBottom = vec3(0.55, 0.04, 0.03); // deep brand red
