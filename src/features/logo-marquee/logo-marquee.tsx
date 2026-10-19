@@ -96,7 +96,7 @@ const Row = ({
 };
 
 export const LogoMarquee = ({ clients, label }: LogoMarqueeProps) => (
-  <section aria-label={label} className="overflow-hidden border-y border-line py-12">
+  <section aria-label={label} className="relative z-10 overflow-hidden border-y border-line bg-bg py-12">
     <Row clients={clients} direction="left" speed={0.005} primary />
   </section>
 );

@@ -75,7 +75,9 @@ export const ExperienceSection = ({ copy }: { copy: ExperienceCopy }) => {
     <section
       ref={sectionRef}
       aria-label="Introduction"
-      className="relative motion-reduce:h-auto!"
+      // The negative bottom margin lets the next section (the client logo strip) slide up over
+      // the pinned stage once its content has faded, instead of waiting for an empty screen.
+      className="relative -mb-[30lvh] motion-reduce:mb-0 motion-reduce:h-auto!"
       style={{ height: `${SECTION_VH}vh` }}
     >
       <div className="sticky top-0 h-lvh overflow-hidden bg-[radial-gradient(ellipse_at_50%_40%,var(--brand)_0%,transparent_55%)] motion-reduce:static motion-reduce:h-auto motion-reduce:overflow-visible">

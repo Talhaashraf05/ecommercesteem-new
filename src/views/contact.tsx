@@ -41,8 +41,8 @@ export const ContactView = () => (
       actions={<ReplyBadge>{copy.hero.badge}</ReplyBadge>}
     />
 
-    {/* Pulled up into the hero's bottom glow; z-10 keeps it above the hero's layers. */}
-    <div className="relative z-10 -mt-24 px-gutter">
+    {/* Pulled up a little to cut the empty space under the hero, but not over its reply badge; z-10 keeps it above the hero's layers. */}
+    <div className="relative z-10 -mt-8 px-gutter">
       <Container className="grid items-start gap-8 lg:grid-cols-[3fr_2fr] lg:gap-10">
         <section
           aria-labelledby="contact-form-title"
