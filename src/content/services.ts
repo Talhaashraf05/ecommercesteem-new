@@ -10,7 +10,7 @@ export const services: Service[] = [
     summary: "End-to-end Amazon support, from product research and listings to storefront design, A+ content and account health.",
     description:
       "Maximize your success on Amazon with our end-to-end FBA services. From product research and listing creation to optimization, storefront design, and A+ content, we help brands dominate the marketplace. Our strategies are designed to increase visibility, boost conversions, and improve overall brand performance on Amazon. Whether you're launching a new product or scaling an existing catalog, we provide comprehensive solutions that handle every aspect of your Amazon business, so you can focus on growth while we manage the details.",
-    image: "/images/amazon-1.webp",
+    image: "/images/service-amazon-account-management.webp",
     included: [
       "End-to-end product launch strategy and listing optimization",
       "Optimized listings with SEO-driven copy and A+ content",
@@ -41,7 +41,7 @@ export const services: Service[] = [
     summary: "Sponsored Products, Brands and Display campaigns managed daily for profitable growth, not just spend.",
     description:
       "We build and manage Amazon advertising around your margins. Every campaign is structured by intent, every keyword is harvested from real search-term data, and bids are adjusted daily against your target ACoS and TACoS so ad spend compounds into organic rank.",
-    image: "/images/amazon-2.webp",
+    image: "/images/service-amazon-ppc.webp",
     included: [
       "Account and campaign structure audit",
       "Sponsored Products, Brands and Display management",
@@ -74,7 +74,7 @@ export const services: Service[] = [
     summary: "Keyword-rich listings, A+ content and storefronts that rank higher and convert more of the traffic you pay for.",
     description:
       "Your listing is your salesperson. We research the terms shoppers actually use, write titles, bullets and descriptions that rank and persuade, and design A+ content and Brand Store pages that lift conversion across your catalog.",
-    image: "/images/ecommerce.webp",
+    image: "/images/service-amazon-listings-a-plus.webp",
     included: [
       "Keyword research from search-volume data",
       "Title, bullet point and description copywriting",
@@ -107,7 +107,7 @@ export const services: Service[] = [
     summary: "Personalized email journeys and automated workflows that turn subscribers into loyal, repeat customers.",
     description:
       "Turn subscribers into loyal customers with strategic, results-driven email marketing campaigns. Our team designs personalized email journeys that deliver the right message to the right audience at the right time, increasing engagement, boosting conversions, and building long-term brand loyalty. From list segmentation and campaign creation to automation and performance analysis, we handle every step of your email marketing strategy to ensure measurable growth and maximum ROI.",
-    image: "/images/email-marketing.webp",
+    image: "/images/service-email-marketing.webp",
     included: [
       "Targeted campaigns to reach the right audience with personalized messaging",
       "Automated workflows for timely and consistent engagement",
@@ -138,7 +138,7 @@ export const services: Service[] = [
     summary: "Data-driven SEO that lifts organic visibility and attracts qualified traffic for long-term search growth.",
     description:
       "Increase your website's visibility and attract qualified traffic with our comprehensive SEO management services. We create data-driven strategies that improve search rankings, enhance user experience, and drive measurable results. From on-page optimization to technical SEO and link-building, we ensure your website ranks higher and reaches the right audience. Our team focuses on long-term growth, keeping up with algorithm updates and industry best practices to deliver sustainable results for your business.",
-    image: "/images/seo.webp",
+    image: "/images/service-seo.webp",
     included: [
       "Improve search engine rankings and website traffic",
       "Optimize on-page content, technical structure, and backlinks",
