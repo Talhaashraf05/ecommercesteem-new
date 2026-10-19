@@ -42,7 +42,10 @@ export const HeaderPill = () => {
       const w0 = nav?.offsetWidth ?? 0;
       const h0 = nav?.offsetHeight ?? 0;
       Object.assign(box, w0 > 0 ? { w0, h0, w1, h1, fade: false } : { w0: w1, h0: h1, w1, h1, fade: true });
-      p.set(p.get()); // re-run the interpolations with the new box
+      // Re-run the interpolations with the new box. Setting an unchanged value is a no-op,
+      // so nudge it by a hair (otherwise the pill stays 0 wide until the first scroll).
+      const v = p.get();
+      p.set(v + (v < 1 ? 1e-6 : -1e-6));
     };
     measure();
     const ro = new ResizeObserver(measure);
