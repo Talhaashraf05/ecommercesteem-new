@@ -83,7 +83,7 @@ export const GlassButton = ({
           borderColor: BORDER_GLASS_STRONG,
         }}
         config={HOVER_CONFIG}
-        className="pointer-events-auto inline-flex h-11 cursor-pointer items-center justify-center rounded-full border px-6 text-button font-medium backdrop-blur-md"
+        className="pointer-events-auto inline-flex h-9 cursor-pointer items-center justify-center rounded-full border px-5 text-button font-medium backdrop-blur-md"
         {...buttonProps}
       >
         {children}
@@ -97,7 +97,7 @@ export const GlassButton = ({
       from={{ y: 0, backgroundColor: SURFACE_BUTTON }}
       to={{ y: -2, backgroundColor: SURFACE_BUTTON_HOVER }}
       config={HOVER_CONFIG}
-      className="pointer-events-auto relative inline-flex h-11 cursor-pointer items-center justify-center gap-3 rounded-full pl-6 pr-2.5 text-button font-medium text-fg shadow-glass-btn backdrop-blur-2xl backdrop-saturate-150"
+      className="pointer-events-auto relative inline-flex h-9 cursor-pointer items-center justify-center gap-3 rounded-full pl-5 pr-1.5 text-button font-medium text-fg shadow-glass-btn backdrop-blur-2xl backdrop-saturate-150"
       {...buttonProps}
     >
       <AnimatedGradientBorder

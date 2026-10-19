@@ -60,6 +60,7 @@ export const TimelineSection = ({ items, heading, eyebrow }: TimelineSectionProp
 
     let cardW = 0; // measured card width (px)
     let gap = 0; // measured gap between cards (px)
+    let maxTravel = Infinity; // how far the track can slide before the last card meets the right edge (px)
     let current: number | null = null; // low-passed progress
     let written: number | null = null; // progress last written to the DOM
     let lastTime: number | null = null; // ticker timestamp of the previous frame
@@ -74,6 +75,7 @@ export const TimelineSection = ({ items, heading, eyebrow }: TimelineSectionProp
       const b = lis[1] as HTMLElement;
       cardW = a.offsetWidth;
       gap = b.offsetLeft - a.offsetLeft - cardW;
+      maxTravel = Math.max(0, track.scrollWidth - track.clientWidth);
     };
 
     const setFocus = (idx: number) => {
@@ -123,7 +125,7 @@ export const TimelineSection = ({ items, heading, eyebrow }: TimelineSectionProp
       // First frame snaps (deep link / restored scroll), then follows smoothly.
       const p = follow(sectionProgress(rect.top, rect.height, window.innerHeight), time);
       if (p === null) return;
-      track.style.transform = `translate3d(${trackOffset(p, n, cardW, gap).toFixed(2)}px,0,0)`;
+      track.style.transform = `translate3d(${trackOffset(p, n, cardW, gap, maxTravel).toFixed(2)}px,0,0)`;
       if (railFillRef.current) railFillRef.current.style.transform = `scaleX(${p.toFixed(4)})`;
       const f = p * (n - 1);
       setDim(yearRefs.current, (i) => focusOpacity(i, f, YEAR_DIM).toFixed(3));

@@ -19,6 +19,12 @@ describe("trackOffset", () => {
     expect(trackOffset(1, 6, 400, 32)).toBe(-2160);
     expect(trackOffset(0.5, 6, 400, 32)).toBe(-1080);
   });
+
+  it("stops at maxTravel so the last card does not slide past the right edge", () => {
+    expect(trackOffset(1, 6, 400, 32, 1500)).toBe(-1500);
+    expect(trackOffset(0.5, 6, 400, 32, 1500)).toBe(-750);
+    expect(trackOffset(1, 6, 400, 32, 5000)).toBe(-2160);
+  });
 });
 
 describe("followFactor", () => {

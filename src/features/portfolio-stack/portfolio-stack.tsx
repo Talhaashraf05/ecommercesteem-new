@@ -217,7 +217,7 @@ const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStac
             Below sm it drops under the card: client + headline span the full width,
             index and link share the line beneath. */}
         <div className="pointer-events-none absolute inset-x-4 bottom-6 z-30 grid sm:bottom-0 sm:top-0 sm:grid-rows-1 grid-cols-[auto_1fr_auto] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] gap-y-5 text-sm tracking-wide sm:inset-x-8 sm:gap-6 motion-reduce:hidden">
-          <span className="row-start-2 justify-self-start rounded-full border border-line-strong bg-bg/90 px-4 py-2 tabular-nums text-fg backdrop-blur sm:px-6 sm:py-3 sm:row-start-1">
+          <span className="row-start-2 justify-self-start inline-flex h-9 items-center rounded-full border border-line-strong bg-bg/90 px-5 text-button tabular-nums text-fg backdrop-blur sm:row-start-1">
             <span ref={indexElRef}>{pad(1)}</span> / {pad(count)}
           </span>
           <span className="col-span-3 row-start-1 flex min-w-0 max-w-full flex-col items-center gap-1 justify-self-center rounded-2xl border border-line-strong bg-bg/90 px-5 py-3 text-center backdrop-blur-md sm:col-span-1 sm:col-start-2 sm:mb-6 sm:self-end">
@@ -236,7 +236,7 @@ const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStac
             href={workHref(items[0])}
             aria-label={linkLabel(items[0].client)}
             onClick={onViewClick}
-            className="pointer-events-auto col-start-3 row-start-2 justify-self-end whitespace-nowrap sm:row-start-1 rounded-full border border-line-strong bg-bg/90 px-4 py-2.5 text-sm font-medium text-fg backdrop-blur transition-colors duration-200 hover:border-fg/60 hover:text-fg sm:px-6 sm:py-3"
+            className="pointer-events-auto col-start-3 row-start-2 justify-self-end whitespace-nowrap sm:row-start-1 inline-flex h-9 items-center rounded-full border border-line-strong bg-bg/90 px-5 text-button font-medium text-fg backdrop-blur transition-colors duration-200 hover:border-fg/60 hover:text-fg"
           >
             View case study
           </Link>

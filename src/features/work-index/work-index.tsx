@@ -406,7 +406,7 @@ export const WorkIndex = ({ items, copy }: WorkIndexProps) => {
                 type="button"
                 aria-pressed={pressed}
                 onClick={() => select(g.id)}
-                className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-5 text-sm font-medium transition-colors duration-200 ${
+                className={`inline-flex h-9 items-center gap-2 rounded-full border px-5 text-button font-medium transition-colors duration-200 ${
                   pressed
                     ? "border-brand bg-brand-strong text-fg"
                     : "border-line-strong bg-surface-glass text-muted hover:bg-surface-glass-hover hover:text-fg"

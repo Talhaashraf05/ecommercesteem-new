@@ -9,7 +9,9 @@ const VARIANT: Record<Variant, string> = {
   secondary: "border border-line-strong text-fg hover:bg-surface-raised",
   ghost: "text-fg underline-offset-4 hover:underline",
 };
-const SIZE = { md: "h-9 px-4 text-sm", lg: "h-11 px-6 text-button" } as const;
+// One button size across the site: `md` and `lg` are kept so call sites keep compiling.
+const BUTTON = "h-9 px-5 text-button";
+const SIZE = { md: BUTTON, lg: BUTTON } as const;
 export type ButtonSize = keyof typeof SIZE;
 
 /** Shared button look for links, <button>s and form submits. */
