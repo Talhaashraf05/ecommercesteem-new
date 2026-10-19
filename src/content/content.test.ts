@@ -60,15 +60,13 @@ describe("services & pricing", () => {
 
 describe("case studies, faq, jobs", () => {
   it("validates", () => {
-    z.array(S.CaseStudySchema).length(6).parse(C.caseStudies);
+    z.array(S.CaseStudySchema).length(5).parse(C.caseStudies);
     z.array(S.FaqSchema).min(6).max(8).parse(C.homeFaq);
     z.array(S.JobSchema).min(1).parse(C.jobs);
   });
   it("case study clients are real clients", () => {
-    // These clients have no logo file yet, so they are not in the logo strip.
-    const noLogoYet = new Set(["LORAfied", "Sturdy Essentials", "Wondery Outdoors"]);
     const names = new Set(C.clients.map((c) => c.name));
-    for (const cs of C.caseStudies) expect(names.has(cs.client) || noLogoYet.has(cs.client), cs.client).toBe(true);
+    for (const cs of C.caseStudies) expect(names.has(cs.client), cs.client).toBe(true);
   });
   it("drafts are flagged unverified", () => {
     expect(C.caseStudies.every((cs) => cs.verified === false)).toBe(true);
@@ -101,7 +99,7 @@ describe("contact page", () => {
 
 describe("images", () => {
   it("every referenced image exists", () => {
-    const refs = [...C.services.map((s) => s.image), ...C.caseStudies.map((c) => c.image), "/images/team.webp"];
+    const refs = [...C.services.map((s) => s.image), ...C.caseStudies.map((c) => c.image), ...C.homeWork.map((w) => w.image), "/images/team.webp"];
     for (const r of refs) expect(existsSync(pub(r)), r).toBe(true);
   });
   it("every optimised photo is at most 400 KB", () => {

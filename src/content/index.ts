@@ -8,6 +8,7 @@ export * from "./values";
 export * from "./services";
 export * from "./pricing";
 export * from "./case-studies";
+export * from "./home-work";
 export * from "./faq";
 export * from "./jobs";
 export * from "./privacy";

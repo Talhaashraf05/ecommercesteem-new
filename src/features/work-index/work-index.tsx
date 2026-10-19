@@ -233,8 +233,6 @@ export const WorkIndex = ({ items, copy }: WorkIndexProps) => {
   }, []);
 
   const visible = items.filter((item) => inGroup(item.services, group));
-  // Groups with no case studies are hidden, and the filter is dropped when only one remains.
-  const groups = WORK_GROUPS.filter((g) => g.id === "all" || items.some((item) => inGroup(item.services, g.id)));
   // Naming the group makes the live region change (and re-announce) even when two
   // groups have the same count.
   const groupLabel = group === "all" ? "" : (WORK_GROUPS.find((g) => g.id === group)?.label ?? "");
@@ -401,9 +399,8 @@ export const WorkIndex = ({ items, copy }: WorkIndexProps) => {
   return (
     <div>
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        {groups.length > 2 && (
         <div role="group" aria-label={copy.filterLabel} className="flex flex-wrap gap-2">
-          {groups.map((g) => {
+          {WORK_GROUPS.map((g) => {
             const pressed = g.id === group;
             const n = items.filter((item) => inGroup(item.services, g.id)).length;
             return (
@@ -426,7 +423,6 @@ export const WorkIndex = ({ items, copy }: WorkIndexProps) => {
             );
           })}
         </div>
-        )}
         <p aria-live="polite" className="text-sm text-muted">
           {countText}
         </p>

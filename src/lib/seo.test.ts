@@ -28,7 +28,7 @@ describe("seo", () => {
   });
   it("sitemap lists every static and dynamic page once", () => {
     const urls = sitemapEntries().map((e) => new URL(e.url).pathname);
-    for (const p of ["/", "/services", "/services/amazon-ppc", "/work", "/work/amrita", "/about", "/contact", "/careers", "/privacy"]) {
+    for (const p of ["/", "/services", "/services/amazon-ppc", "/work", "/work/hulkfit", "/about", "/contact", "/careers", "/privacy"]) {
       expect(urls).toContain(p);
     }
     expect(new Set(urls).size).toBe(urls.length);

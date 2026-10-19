@@ -19,6 +19,8 @@ import { AnimatedHeading } from "@/components/ui/animated-heading";
 
 export interface PortfolioStackItem {
   slug: string;
+  /** Overrides the default `/work/<slug>` link. */
+  href?: string;
   client: string;
   headline: string;
   /** Card image (public path). */
@@ -45,7 +47,7 @@ const OVERSCAN = 0.2;
 const FOLLOW = 0.14; // per-frame low-pass of the scroll read
 
 const pad = (n: number) => String(n).padStart(2, "0");
-const workHref = (slug: string) => `/work/${slug}`;
+const workHref = (item: { slug: string; href?: string }) => item.href ?? `/work/${item.slug}`;
 const linkLabel = (client: string) => `View case study: ${client}`;
 
 const backdropFrame = (i: number, v: number) => ({
@@ -106,7 +108,7 @@ const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStac
           if (nameElRef.current) nameElRef.current.textContent = item.client;
           if (headlineElRef.current) headlineElRef.current.textContent = item.headline;
           if (linkRef.current) {
-            linkRef.current.href = workHref(item.slug);
+            linkRef.current.href = workHref(item);
             linkRef.current.setAttribute("aria-label", linkLabel(item.client));
           }
         }
@@ -121,7 +123,7 @@ const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStac
   const onViewClick = (e: MouseEvent<HTMLAnchorElement>) => {
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();
-    router.push(workHref(items[idxRef.current].slug));
+    router.push(workHref(items[idxRef.current]));
   };
 
   return (
@@ -171,7 +173,7 @@ const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStac
               }}
             >
               <Link
-                href={workHref(item.slug)}
+                href={workHref(item)}
                 aria-label={item.client}
                 tabIndex={reduce ? undefined : -1}
                 className="absolute inset-0 block focus-visible:-outline-offset-4"
@@ -221,7 +223,7 @@ const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStac
           </span>
           <Link
             ref={linkRef}
-            href={workHref(items[0].slug)}
+            href={workHref(items[0])}
             aria-label={linkLabel(items[0].client)}
             onClick={onViewClick}
             className="pointer-events-auto col-start-3 row-start-2 justify-self-end whitespace-nowrap sm:row-start-1 rounded-full border border-line-strong bg-bg/90 px-4 py-2.5 text-sm font-medium text-fg backdrop-blur transition-colors duration-200 hover:border-fg/60 hover:text-fg sm:px-6 sm:py-3"

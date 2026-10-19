@@ -1,4 +1,4 @@
-import { caseStudies, clients, homeFaq, pricing, SHOW_PRICING, processSteps, services, stats, testimonials } from "@/content";
+import { clients, homeWork, homeFaq, pricing, SHOW_PRICING, processSteps, services, stats, testimonials } from "@/content";
 import { Container } from "@/components/ui/container";
 import { AnimatedHeading } from "@/components/ui/animated-heading";
 import { Section } from "@/components/ui/section";
@@ -61,12 +61,7 @@ export const HomeView = () => (
     />
     <PortfolioStack
       heading="Selected work"
-      items={caseStudies.map((c) => ({
-        slug: c.slug,
-        client: c.client,
-        headline: `${c.headlineMetric.value} ${c.headlineMetric.label}`,
-        image: c.image,
-      }))}
+      items={homeWork}
     />
     <Section id="process" labelledBy="process-title" className="pb-8!">
       <ProcessSteps steps={processSteps} />

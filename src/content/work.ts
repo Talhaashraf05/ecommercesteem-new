@@ -11,7 +11,7 @@ export const workPage = {
   },
   featured: {
     /** Case study given the editorial spotlight above the index. */
-    slug: "sturdy-essentials",
+    slug: "huskey-parts",
     eyebrow: "Featured",
     challengeLabel: "The challenge",
     metricsLabel: "Key results",

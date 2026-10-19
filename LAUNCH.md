@@ -48,15 +48,16 @@ Every entry is `verified: false`. Confirm each number with the client or replace
 
 | Client | Headline metric | Other metrics |
 | --- | --- | --- |
-| Amrita | −50% TACoS in 25 days | +47% projected monthly net profit · −55% projected monthly ad spend · 13.43× phrase-match campaign ROAS |
-| LORAfied | $21K launch-day sales | 285 units on day one · #1 new release in women's crossbody handbags · 32× branded campaign ROAS |
-| Nfinity | +44.7% year-over-year sales growth | $483.8K across five non-branded campaigns · +78.8% repeat customers · 18.31× non-branded hero campaign ROAS |
-| Revival | +66% monthly net profit | +24.5% year-over-year sales · TACoS 20% → 15% · 6.93% branded campaign ACoS |
-| Sturdy Essentials | +417% net profit in three months | $44.5K net profit May 1–25 · +154% daily sales · 27.82× B2B campaign ROAS |
-| Wondery Outdoors | +182% sales growth in 90 days | +16.6 pts margin · #4 market share → category leader · 5 keywords ranked #1 |
+| HulkFit (2025) | +142% Amazon revenue in 6 months | −31% ACoS · +58% conversion rate · Top 10 rank for 12 core keywords |
+| SinkLiners (2024) | 0 → 7-figure annualized Amazon run-rate | 14 ASINs launched · 4.6★ average rating · 100% account health score |
+| Huskey Parts (2024) | +210% organic traffic | 1,200+ product pages optimized |
+| Revival (2025) | 34% revenue from email | +48% repeat purchase rate · 9 automated flows live |
+| Bluestem (2024) | −38% wasted ad spend | +71% ad-attributed sales · 22% TACoS |
 
-Figures come from the client thumbnails. The years, categories, services and the challenge/approach/outcome text are draft wording: confirm them, and add logos for LORAfied, Sturdy Essentials and Wondery Outdoors (the logo strip does not have them yet). Also confirm the client names,
+Also confirm the client names, categories, years, services, challenge/approach/outcome text,
 and that each client agrees to be named.
+
+The home page "Selected work" cards use a separate list, `src/content/home-work.ts` (Amrita, LORAfied, Nfinity, Revival, Sturdy Essentials, Wondery Outdoors; figures printed on their thumbnails, unverified). They link to /work. LORAfied, Sturdy Essentials and Wondery Outdoors have no logo file yet.
 
 ### Copy claims
 
