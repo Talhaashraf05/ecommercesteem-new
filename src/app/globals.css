@@ -56,7 +56,7 @@
   --text-lead: clamp(1rem, 1.25vw, 1.125rem);
   --text-eyebrow: 0.875rem;
   --text-kicker: 0.8125rem;
-  --text-button: 1rem;
+  --text-button: 0.875rem;
 
   --leading-title: 1.1;
   --tracking-title: -0.03em;

@@ -1,7 +1,7 @@
 "use client";
 
-// Two rows of client logos whose horizontal motion is tied to scroll position
-// (opposite directions), not autoplay. Ported from Stride's logo marquee. The list is
+// A row of client logos whose horizontal motion is tied to scroll position,
+// not autoplay. Ported from Stride's logo marquee. The list is
 // repeated COPIES times and each row's translate is wrapped into the [-ONE_SET, 0]
 // band, so it's seamless and always filled edge-to-edge at any width. A react-spring
 // value follows a low-passed scroll offset fed by the shared ticker (ADR-0015: no
@@ -97,9 +97,6 @@ const Row = ({
 
 export const LogoMarquee = ({ clients, label }: LogoMarqueeProps) => (
   <section aria-label={label} className="overflow-hidden border-y border-line py-12">
-    <div className="flex flex-col gap-10">
-      <Row clients={clients} direction="left" speed={0.005} primary />
-      <Row clients={clients} direction="right" speed={0.0038} primary={false} />
-    </div>
+    <Row clients={clients} direction="left" speed={0.005} primary />
   </section>
 );

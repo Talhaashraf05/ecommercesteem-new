@@ -164,7 +164,7 @@ const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStac
             <animated.div
               key={item.slug}
               suppressHydrationWarning
-              className="absolute left-1/2 top-1/2 aspect-[16/10] w-[min(90vw,46rem,max(16rem,calc((100lvh-22.5rem)*1.6)))] overflow-hidden rounded-3xl bg-surface shadow-2xl [backface-visibility:hidden] [will-change:transform] motion-reduce:static motion-reduce:w-full motion-reduce:opacity-100! motion-reduce:transform-none! motion-reduce:shadow-none"
+              className="absolute left-1/2 top-1/2 aspect-[16/9] w-[min(90vw,52rem,max(16rem,calc((100lvh-22.5rem)*1.78)))] overflow-hidden rounded-3xl bg-surface shadow-2xl [backface-visibility:hidden] [will-change:transform] motion-reduce:static motion-reduce:w-full motion-reduce:opacity-100! motion-reduce:transform-none! motion-reduce:shadow-none"
               style={{
                 transform: f.to((v) => cardFrame(i, v).transform),
                 opacity: f.to((v) => cardFrame(i, v).opacity),
@@ -204,7 +204,7 @@ const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStac
         {/* Metadata row — index left, client + headline centred, case-study link right.
             Below sm it drops under the card: client + headline span the full width,
             index and link share the line beneath. */}
-        <div className="pointer-events-none absolute inset-x-4 bottom-10 z-30 grid grid-cols-[auto_1fr_auto] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] gap-y-5 text-sm tracking-wide sm:inset-x-8 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 sm:gap-6 motion-reduce:hidden">
+        <div className="pointer-events-none absolute inset-x-4 bottom-10 z-30 grid grid-cols-[auto_1fr_auto] items-center gap-x-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] gap-y-5 text-sm tracking-wide sm:inset-x-8 sm:gap-6 motion-reduce:hidden">
           <span className="row-start-2 justify-self-start rounded-full bg-bg/90 px-3 py-1 tabular-nums text-fg sm:row-start-1">
             <span ref={indexElRef}>{pad(1)}</span> / {pad(count)}
           </span>

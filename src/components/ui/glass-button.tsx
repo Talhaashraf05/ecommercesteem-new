@@ -83,7 +83,7 @@ export const GlassButton = ({
           borderColor: BORDER_GLASS_STRONG,
         }}
         config={HOVER_CONFIG}
-        className="pointer-events-auto inline-flex h-14 cursor-pointer items-center justify-center rounded-full border px-8 text-button font-medium backdrop-blur-md"
+        className="pointer-events-auto inline-flex h-11 cursor-pointer items-center justify-center rounded-full border px-6 text-button font-medium backdrop-blur-md"
         {...buttonProps}
       >
         {children}
@@ -97,7 +97,7 @@ export const GlassButton = ({
       from={{ y: 0, backgroundColor: SURFACE_BUTTON }}
       to={{ y: -2, backgroundColor: SURFACE_BUTTON_HOVER }}
       config={HOVER_CONFIG}
-      className="pointer-events-auto relative inline-flex h-14 cursor-pointer items-center justify-center gap-3 rounded-full pl-8 pr-4 text-button font-medium text-fg shadow-glass-btn backdrop-blur-2xl backdrop-saturate-150"
+      className="pointer-events-auto relative inline-flex h-11 cursor-pointer items-center justify-center gap-3 rounded-full pl-6 pr-2.5 text-button font-medium text-fg shadow-glass-btn backdrop-blur-2xl backdrop-saturate-150"
       {...buttonProps}
     >
       <AnimatedGradientBorder
@@ -107,7 +107,7 @@ export const GlassButton = ({
       />
       <span className="relative">{children}</span>
       {withArrow && (
-        <span className="relative flex size-8 items-center justify-center rounded-full bg-surface-glass">
+        <span className="relative flex size-6 items-center justify-center rounded-full bg-surface-glass">
           <span
             aria-hidden="true"
             className="absolute inset-0 rounded-full"

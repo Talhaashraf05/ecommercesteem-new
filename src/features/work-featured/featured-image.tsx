@@ -51,7 +51,7 @@ export const FeaturedImage = ({ src, alt }: { src: string; alt: string }) => {
   }, []);
 
   return (
-    <div ref={frameRef} className="relative aspect-[4/3] overflow-hidden lg:aspect-[4/5] rounded-[2rem] border border-line bg-surface shadow-card">
+    <div ref={frameRef} className="relative aspect-[16/9] overflow-hidden rounded-[2rem] border border-line bg-surface shadow-card">
       {/* Oversized by 2×RANGE so the drift never shows an edge. The photos are ~3:2, so
           covering the frame needs ~1.25× its width on mobile (4:3) and ~2× at lg (4:5),
           hence `sizes`. */}

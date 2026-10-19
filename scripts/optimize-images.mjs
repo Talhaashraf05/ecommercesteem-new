@@ -9,11 +9,6 @@ const MAP = {
   "email-marketing": "email-marketing.jpg",
   seo: "op.jpg",
   team: "about.jpg",
-  "case-hulkfit": "office2.jpg",
-  "case-sinkliners": "op.jpg", // analytics close-up, a different crop from `seo` (was a tax form)
-  "case-huskey": "office3.jpg",
-  "case-revival": "hand-shake.jpg",
-  "case-bluestem": "work.jpg", // laptop in hand (was an IRS tax form)
 };
 
 // Busy photos need a lower quality to stay under the size budget.
@@ -22,7 +17,6 @@ const QUALITY = { team: 64 };
 // Fractional pre-crops [left, top, width, height]: keep the subject in tall
 // object-cover crops, or frame out third-party branding.
 const CROP = {
-  "case-sinkliners": [0.42, 0.33, 0.58, 0.54],
 };
 
 // Optional CLI filter: `node scripts/optimize-images.mjs amazon-2 case-bluestem`.

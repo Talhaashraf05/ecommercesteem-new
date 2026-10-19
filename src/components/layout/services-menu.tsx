@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { ButtonLink } from "@/components/ui/button";
 
+import { NAV_ACTIVE, NAV_LINK, isActive } from "./nav-link";
 import { serviceIcon } from "./service-icons";
 import type { ServiceNavGroup } from "./service-nav";
 
@@ -69,9 +70,7 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
         }}
         // The panel is positioned against the header container, so while open an
         // invisible strip under the trigger bridges the gap down to the panel.
-        className={`relative rounded-md text-sm text-muted transition-colors duration-200 hover:text-fg ${
-          open ? "after:absolute after:inset-x-0 after:top-full after:h-10" : ""
-        }`}
+        className={`${NAV_LINK} cursor-pointer ${isActive(pathname, "/services") ? NAV_ACTIVE : ""} ${open ? "text-fg before:absolute before:inset-x-0 before:top-full before:h-10" : ""}`}
       >
         Services
       </button>
@@ -82,7 +81,7 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
         onClick={(e) => {
           if ((e.target as Element).closest("a")) setOpen(false);
         }}
-        className="absolute inset-x-0 top-full mx-auto w-[min(72rem,calc(100%-2*var(--spacing-gutter)))] pt-3"
+        className="absolute inset-x-0 top-full mx-auto w-[min(56rem,calc(100%-2*var(--spacing-gutter)))] pt-3"
       >
         <animated.div
           style={{
@@ -90,7 +89,7 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
             transform: spring.y.to((v) => `translateY(${v}px)`),
             visibility: spring.opacity.to((o) => (o > 0 ? "visible" : "hidden")),
           }}
-          className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_14rem] gap-2 rounded-3xl border border-line bg-surface/95 p-3 shadow-card backdrop-blur-xl"
+          className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_16rem] gap-2 rounded-3xl border border-line bg-surface/95 p-3 shadow-card backdrop-blur-xl"
         >
           {groups.map((g) => (
             <div key={g.id} className="min-w-0">

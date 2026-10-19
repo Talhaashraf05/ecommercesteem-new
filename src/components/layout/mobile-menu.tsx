@@ -1,5 +1,6 @@
 "use client";
 
+import { animated, useSpring } from "@react-spring/web";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -16,6 +17,9 @@ export const MobileMenu = ({ groups, portal }: { groups: ServiceNavGroup[]; port
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  // Declarative: re-targeted by `open`, never self-running. Reduced motion is
+  // handled globally (ReducedMotion skips every spring), so it just appears.
+  const slide = useSpring({ x: open ? 0 : 100, config: { tension: 260, friction: 30 } });
 
   useEffect(() => {
     setOpen(false);
@@ -71,20 +75,24 @@ export const MobileMenu = ({ groups, portal }: { groups: ServiceNavGroup[]; port
           <span className="h-px bg-fg" />
         </span>
       </button>
-      <div
+      <animated.div
         ref={panelRef}
         id="mobile-menu"
         role="dialog"
         aria-modal="true"
         aria-label="Menu"
-        hidden={!open}
+        inert={!open}
         data-lenis-prevent
         // Close on any link tap — including one to the current route, which
         // doesn't change the pathname and so wouldn't close the menu otherwise.
         onClick={(e) => {
           if ((e.target as Element).closest("a")) setOpen(false);
         }}
-        className="fixed inset-0 z-50 overflow-y-auto bg-bg px-gutter pb-10 pt-6"
+        style={{
+          transform: slide.x.to((v) => `translateX(${v}%)`),
+          visibility: slide.x.to((v) => (v >= 100 ? "hidden" : "visible")),
+        }}
+        className="fixed inset-0 z-50 overflow-y-auto bg-bg px-gutter pb-10 pt-6 shadow-card"
       >
         <div className="flex justify-end">
           <button
@@ -97,13 +105,13 @@ export const MobileMenu = ({ groups, portal }: { groups: ServiceNavGroup[]; port
             <span aria-hidden="true">×</span>
           </button>
         </div>
-        <nav aria-label="Mobile" className="mt-6 flex flex-col gap-8">
+        <nav aria-label="Mobile" className="mt-4 flex flex-col gap-6">
           {groups.map((g) => (
             <div key={g.id}>
-              <p className="mb-3 text-kicker uppercase tracking-wider text-brand-glow">
+              <p className="mb-2 text-kicker uppercase tracking-wider text-brand-glow">
                 {g.label}
               </p>
-              <ul className="flex flex-col gap-3">
+              <ul className="flex flex-col gap-2.5">
                 {g.items.map((s) => {
                   const Icon = serviceIcon[s.slug];
                   return (
@@ -113,7 +121,7 @@ export const MobileMenu = ({ groups, portal }: { groups: ServiceNavGroup[]; port
                           <Icon />
                         </span>
                         <span>
-                          <span className="block text-lg">{s.name}</span>
+                          <span className="block text-base">{s.name}</span>
                           <span className="block text-sm text-muted">{s.tagline}</span>
                         </span>
                       </Link>
@@ -123,7 +131,7 @@ export const MobileMenu = ({ groups, portal }: { groups: ServiceNavGroup[]; port
               </ul>
             </div>
           ))}
-          <ul className="flex flex-col gap-4 border-t border-line pt-8 font-display text-2xl">
+          <ul className="flex flex-col gap-3 border-t border-line pt-6 font-display text-xl">
             <li><Link href="/work">Work</Link></li>
             <li><Link href="/about">About</Link></li>
             <li><Link href="/careers">Careers</Link></li>
@@ -138,7 +146,7 @@ export const MobileMenu = ({ groups, portal }: { groups: ServiceNavGroup[]; port
             Book a free audit
           </ButtonLink>
         </nav>
-      </div>
+      </animated.div>
     </>
   );
 };

@@ -4,19 +4,20 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
+import type { Client } from "@/content/schemas";
 import { subscribeToTicker } from "@/lib/animation/ticker";
 
 import { HeroOverlay, WaveOverlay } from "./overlays";
 import { experienceProgress, useExperiencePhase } from "./progress";
 import { hasWebGL, pickTier, type Tier } from "./quality";
-import { StatOrbit, type StatOrbitCard } from "./stat-orbit";
+import { LogoOrbit } from "./logo-orbit";
 import { SECTION_VH, sectionProgress, toLegacy } from "./timeline";
 
 const ParticleCanvas = dynamic(() => import("./particle-canvas").then((m) => m.ParticleCanvas), { ssr: false });
 
 export interface ExperienceCopy {
   hero: { eyebrow: string; title: string; subtitle: string };
-  cards: StatOrbitCard[];
+  logos: Client[];
   wave: { eyebrow: string; title: string; body: string };
 }
 
@@ -83,16 +84,11 @@ export const ExperienceSection = ({ copy }: { copy: ExperienceCopy }) => {
         {tier !== "off" && <ParticleCanvas tier={tier} active={active} onContextLost={() => setTier("off")} />}
         <HeroOverlay {...copy.hero} />
         {/* Screen-reader copy of the beats that are only visible mid-scroll (the
-            visual stat cards and wave text are aria-hidden). */}
+            visual client logos and wave text are aria-hidden). */}
         <div className="sr-only">
           <ul>
-            {copy.cards.map((card) => (
-              <li key={card.id}>
-                <p>
-                  {card.stat} {card.title}
-                </p>
-                <p>{card.description}</p>
-              </li>
+            {copy.logos.map((logo) => (
+              <li key={logo.name}>{logo.name}</li>
             ))}
           </ul>
           <p>{copy.wave.eyebrow}</p>
@@ -100,7 +96,7 @@ export const ExperienceSection = ({ copy }: { copy: ExperienceCopy }) => {
           <p>{copy.wave.body}</p>
           <Link href="/services">Explore services</Link>
         </div>
-        <StatOrbit cards={copy.cards} />
+        <LogoOrbit logos={copy.logos} />
         <WaveOverlay {...copy.wave} />
       </div>
     </section>

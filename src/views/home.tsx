@@ -1,4 +1,4 @@
-import { caseStudies, clients, homeFaq, pricing, SHOW_PRICING, processSteps, stats, testimonials } from "@/content";
+import { caseStudies, clients, homeFaq, pricing, SHOW_PRICING, processSteps, services, stats, testimonials } from "@/content";
 import { Container } from "@/components/ui/container";
 import { AnimatedHeading } from "@/components/ui/animated-heading";
 import { Section } from "@/components/ui/section";
@@ -10,8 +10,11 @@ import { Testimonials } from "@/features/testimonials/testimonials";
 import { ExperienceSection } from "@/features/experience/experience-section";
 import { LogoMarquee } from "@/features/logo-marquee/logo-marquee";
 import { PortfolioStack } from "@/features/portfolio-stack/portfolio-stack";
-import { ServiceColumns } from "@/features/service-columns/service-columns";
+import { ServiceCards } from "@/features/service-cards/service-cards";
 import { StatsBento } from "@/features/stats-bento/stats-bento";
+
+// The four services shown in "What we run" (Listings & A+ is covered under account management).
+const RUN_SLUGS = ["amazon-account-management", "amazon-ppc", "email-marketing", "seo"] as const;
 
 const copy = {
   hero: {
@@ -19,7 +22,7 @@ const copy = {
     title: "Build. Grow. Scale.",
     subtitle: "We run Amazon, email and SEO for e-commerce brands — as one growth engine.",
   },
-  cards: stats.map((s) => ({ id: s.id, title: s.label, stat: s.value, description: s.description })),
+  logos: clients,
   wave: {
     eyebrow: "One growth engine",
     title: "Amazon, email & SEO — run as one",
@@ -48,13 +51,13 @@ export const HomeView = () => (
         reach: { label: "Countries served", value: stats[1].value },
       }}
     />
-    <ServiceColumns
+    <ServiceCards
+      eyebrow="Services"
       heading="What we run"
+      lead="Four ways we grow your brand, each run by specialists and reported in one place."
+      core="One growth engine"
       cta={{ label: "All services", href: "/services" }}
-      items={[
-        { prefix: "Amazon", name: "Marketplace", image: "/images/amazon-1.webp", href: "/services/amazon-account-management" },
-        { prefix: "Retention", name: "& SEO", image: "/images/email-marketing.webp", href: "/services/email-marketing" },
-      ]}
+      items={RUN_SLUGS.map((slug) => services.find((s) => s.slug === slug)!)}
     />
     <PortfolioStack
       heading="Selected work"

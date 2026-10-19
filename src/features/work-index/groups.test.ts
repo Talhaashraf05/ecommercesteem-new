@@ -12,13 +12,12 @@ describe("work groups", () => {
     expect(slugsIn("all")).toEqual(caseStudies.map((c) => c.slug));
   });
   it("maps Amazon services", () => {
-    expect(slugsIn("amazon")).toEqual(expect.arrayContaining(["hulkfit", "sinkliners", "bluestem"]));
+    expect(slugsIn("amazon")).toEqual(expect.arrayContaining(["amrita", "nfinity", "revival"]));
   });
   it("maps email and SEO to Retention & SEO", () => {
-    expect(slugsIn("retention")).toEqual(expect.arrayContaining(["huskey-parts", "revival"]));
+    expect(slugsIn("retention")).toEqual([]);
   });
   it("excludes studies with no service in the group", () => {
-    expect(slugsIn("amazon")).not.toContain("revival");
-    expect(slugsIn("retention")).not.toContain("hulkfit");
+    expect(slugsIn("retention")).not.toContain("amrita");
   });
 });

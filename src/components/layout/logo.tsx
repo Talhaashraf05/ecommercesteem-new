@@ -14,7 +14,7 @@ export const Logo = ({ className = "" }: { className?: string }) => (
       height={240}
       priority
       sizes="14rem"
-      className="h-7 w-auto sm:h-8"
+      className="h-5 w-auto sm:h-6"
     />
   </Link>
 );
