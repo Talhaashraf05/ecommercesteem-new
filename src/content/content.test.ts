@@ -99,11 +99,11 @@ describe("contact page", () => {
 
 describe("images", () => {
   it("every referenced image exists", () => {
-    const refs = [...C.services.map((s) => s.image), ...C.caseStudies.map((c) => c.image), ...C.caseStudies.flatMap((c) => (c.workImage ? [c.workImage] : [])), ...C.homeWork.map((w) => w.image), "/images/team-dashboard.webp"];
+    const refs = [...C.services.map((s) => s.image), ...C.caseStudies.map((c) => c.image), ...C.caseStudies.flatMap((c) => (c.workImage ? [c.workImage] : [])), ...C.homeWork.map((w) => w.image), "/images/team/dashboard.webp"];
     for (const r of refs) expect(existsSync(pub(r)), r).toBe(true);
   });
   it("every optimised photo is at most 400 KB", () => {
-    const files = readdirSync(pub("/images")).filter((f) => f.endsWith(".webp"));
+    const files = readdirSync(pub("/images"), { recursive: true, encoding: "utf8" }).filter((f) => f.endsWith(".webp"));
     expect(files.length).toBeGreaterThan(0);
     for (const f of files) expect(statSync(pub(`/images/${f}`)).size, f).toBeLessThanOrEqual(400_000);
   });

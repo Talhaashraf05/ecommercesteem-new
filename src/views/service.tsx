@@ -92,7 +92,7 @@ export const ServiceView = ({ service }: { service: Service }) => {
                   >
                     <div className="relative aspect-[8/5] overflow-hidden">
                       <Image
-                        src={c.image}
+                        src={c.workImage ?? c.image}
                         alt={c.client}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"

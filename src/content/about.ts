@@ -11,7 +11,7 @@ export const aboutPage = {
     heading: "How we got here",
   },
   stats: {
-    photo: { src: "/images/team-dashboard.webp", alt: "EcommerceSteem team reviewing performance dashboards" },
+    photo: { src: "/images/team/dashboard.webp", alt: "EcommerceSteem team reviewing performance dashboards" },
     /** `stats` entries by id (src/content/stats.ts). */
     collabStatId: "clients",
     collabDesc: "brands trust us with their Amazon growth.",
