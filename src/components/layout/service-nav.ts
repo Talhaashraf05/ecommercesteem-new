@@ -1,5 +1,5 @@
 import type { ServiceSlug } from "./service-icons";
-import { serviceGroups, services } from "@/content";
+import { visibleServiceGroups, visibleServices } from "@/content";
 
 export type ServiceNavGroup = {
   id: string;
@@ -9,10 +9,11 @@ export type ServiceNavGroup = {
 
 // Built on the server and passed to the client menus as props, so the full
 // content barrel (service details, jobs, pricing…) stays out of the client bundle.
-export const serviceNav: ServiceNavGroup[] = serviceGroups.map((g) => ({
+// Hidden services (e.g. email & SEO, paused for now) are excluded via visibleServices.
+export const serviceNav: ServiceNavGroup[] = visibleServiceGroups.map((g) => ({
   id: g.id,
   label: g.label,
-  items: services
+  items: visibleServices
     .filter((s) => s.group === g.id)
     .map(({ slug, name, shortName, tagline }) => ({ slug, name, shortName, tagline })),
 }));

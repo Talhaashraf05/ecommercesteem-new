@@ -128,6 +128,7 @@ export const services: Service[] = [
     ],
     pricingGroup: "email-marketing",
     pdf: "/files/email-marketing-pricing.pdf",
+    hidden: true,
   },
   {
     slug: "seo",
@@ -159,6 +160,7 @@ export const services: Service[] = [
     ],
     pricingGroup: "seo",
     pdf: "/files/seo-pricing.pdf",
+    hidden: true,
   },
 ];
 
@@ -168,3 +170,9 @@ export const serviceGroups = [
 ] as const;
 
 export const getService = (slug: string): Service | undefined => services.find((s) => s.slug === slug);
+
+/** Services shown in nav + listings — excludes any flagged `hidden` (e.g. email & SEO, paused for now). */
+export const visibleServices = services.filter((s) => !s.hidden);
+
+/** Service groups that still have at least one visible service. */
+export const visibleServiceGroups = serviceGroups.filter((g) => visibleServices.some((s) => s.group === g.id));

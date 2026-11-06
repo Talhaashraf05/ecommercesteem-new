@@ -2,29 +2,25 @@
 
 // 📖 Docs: obsidian/frontend/components/ui.md
 import Link from "next/link";
+import { useRef } from "react";
 import { Hover } from "@/components/animation/springs/hover";
 import { AnimatedGradientBorder } from "./animated-gradient-border";
-import { ArrowIcon } from "./icons";
+import { buttonClasses } from "./button";
+import { HoverArrow } from "./hover-arrow";
 
 /**
  * Frosted-glass call-to-action button — the `.btn-primary` / `.btn-secondary`
  * pair from style.css.
  *
  * The source animated hover with `transition: all 0.2s` (a banned CSS
- * transition, hard rule #1), so the lift + colour shift run through the spring
- * `<Hover>` component instead. Colour literals mirror the tokens in globals.css
+ * transition, hard rule #1), so the colour shift runs through the spring
+ * `<Hover>` component instead; the arrow rotation lives in `HoverArrow`.
  * (spring `from`/`to` take raw animatable values, not class names — see
  * animation-system.md).
  */
 
 const SURFACE_BUTTON = "rgba(30, 12, 12, 0.45)";
 const SURFACE_BUTTON_HOVER = "rgba(50, 16, 16, 0.55)";
-const SURFACE_GLASS = "rgba(255, 255, 255, 0.04)";
-const SURFACE_GLASS_HOVER = "rgba(255, 255, 255, 0.08)";
-const BORDER_GLASS = "rgba(255, 255, 255, 0.08)";
-const BORDER_GLASS_STRONG = "rgba(255, 255, 255, 0.15)";
-const TEXT_DIM = "rgba(255, 255, 255, 0.75)";
-const TEXT_FULL = "rgba(255, 255, 255, 1)";
 
 const ACCENT_RING =
   "linear-gradient(90deg, var(--brand), var(--brand-glow), var(--brand))";
@@ -57,6 +53,8 @@ export const GlassButton = ({
   } as React.HTMLAttributes<HTMLElement>;
   // In link mode the Hover renders a span inside a Link (no nested interactives).
   const tag = href ? "span" : "button";
+  // Owns the arrow's hover trigger so the arrow animates on any part of the button.
+  const ref = useRef<HTMLElement>(null);
   const wrap = (node: React.ReactElement) =>
     href ? (
       <Link href={href} className="pointer-events-auto inline-flex">
@@ -67,35 +65,22 @@ export const GlassButton = ({
     );
 
   if (variant === "secondary") {
-    return wrap(
-      <Hover
-        tag={tag}
-        from={{
-          y: 0,
-          backgroundColor: SURFACE_GLASS,
-          color: TEXT_DIM,
-          borderColor: BORDER_GLASS,
-        }}
-        to={{
-          y: -2,
-          backgroundColor: SURFACE_GLASS_HOVER,
-          color: TEXT_FULL,
-          borderColor: BORDER_GLASS_STRONG,
-        }}
-        config={HOVER_CONFIG}
-        className="pointer-events-auto inline-flex h-9 cursor-pointer items-center justify-center rounded-full border px-5 text-button font-medium backdrop-blur-md"
-        {...buttonProps}
-      >
-        {children}
-      </Hover>
+    // Same hover as ButtonLink `secondary` (the client-portal button):
+    // plain background colour change, no spring lift.
+    const cls = `pointer-events-auto ${buttonClasses("secondary")}`;
+    return href ? (
+      <Link href={href} className={cls}>{children}</Link>
+    ) : (
+      <button type="button" className={cls} {...props}>{children}</button>
     );
   }
 
   return wrap(
     <Hover
+      ref={ref}
       tag={tag}
-      from={{ y: 0, backgroundColor: SURFACE_BUTTON }}
-      to={{ y: -2, backgroundColor: SURFACE_BUTTON_HOVER }}
+      from={{ backgroundColor: SURFACE_BUTTON }}
+      to={{ backgroundColor: SURFACE_BUTTON_HOVER }}
       config={HOVER_CONFIG}
       className="pointer-events-auto relative inline-flex h-9 cursor-pointer items-center justify-center gap-3 rounded-full pl-5 pr-1.5 text-button font-medium text-fg shadow-glass-btn backdrop-blur-2xl backdrop-saturate-150"
       {...buttonProps}
@@ -121,7 +106,7 @@ export const GlassButton = ({
               maskComposite: "exclude",
             }}
           />
-          <ArrowIcon className="relative size-3" />
+          <HoverArrow className="relative size-3" trigger={ref} />
         </span>
       )}
     </Hover>

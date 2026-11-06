@@ -1,9 +1,8 @@
 // 📖 Docs: obsidian/frontend/components/ui.md
 import { AnimatedGradientBorder } from "./animated-gradient-border";
-import { LayersIcon } from "./icons";
 
 /**
- * Frosted pill label with the layers glyph and an animated shimmer ring —
+ * Frosted pill label with a brand-accent dot and an animated shimmer ring —
  * the `.top-label` element from style.css.
  */
 export interface EyebrowProps {
@@ -16,7 +15,7 @@ const SHIMMER_RING =
 
 export const Eyebrow = ({ children, className }: EyebrowProps) => (
   <span
-    className={`relative inline-flex items-center gap-2 rounded-full bg-surface-glass px-5 py-2.5 text-eyebrow font-medium text-fg shadow-card backdrop-blur-md${
+    className={`relative inline-flex h-10 items-center gap-2 rounded-full bg-surface-glass px-5 text-eyebrow font-medium text-fg shadow-card backdrop-blur-md${
       className ? ` ${className}` : ""
     }`}
   >
@@ -25,7 +24,10 @@ export const Eyebrow = ({ children, className }: EyebrowProps) => (
       durationMs={3000}
       className="rounded-full"
     />
-    <LayersIcon className="relative size-3.5 shrink-0" />
+    <span
+      aria-hidden="true"
+      className="relative size-1.5 shrink-0 rounded-full bg-brand shadow-[0_0_0_0.25rem_color-mix(in_srgb,var(--brand)_25%,transparent)]"
+    />
     <span className="relative">{children}</span>
   </span>
 );

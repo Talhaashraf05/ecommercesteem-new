@@ -1,5 +1,6 @@
 import { Container } from "./container";
 import { Eyebrow } from "./eyebrow";
+import { ScrollCue } from "./scroll-cue";
 
 export interface PageHeroProps {
   eyebrow: string;
@@ -20,5 +21,6 @@ export const PageHero = ({ eyebrow, title, lead, actions }: PageHeroProps) => (
       {lead && <p className="mt-6 max-w-lead text-lead text-muted">{lead}</p>}
       {actions && <div className="mt-10 flex flex-wrap items-center gap-4">{actions}</div>}
     </Container>
+    <ScrollCue />
   </header>
 );

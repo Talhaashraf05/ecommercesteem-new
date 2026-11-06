@@ -37,6 +37,23 @@ export const ArrowIcon = ({ className, ...props }: IconProps) => (
   </svg>
 );
 
+/** Chevron pointing down — used by the hero scroll cue. */
+export const ChevronDownIcon = ({ className, ...props }: IconProps) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2.5}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    {...props}
+  >
+    <path d="M6 9l6 6 6-6" />
+  </svg>
+);
+
 /* Service glyphs: 20px line icons used in the services menus. */
 const ServiceGlyph = ({ className, children, ...props }: IconProps) => (
   <svg

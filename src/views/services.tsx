@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { clients, serviceGroups, services } from "@/content";
+import { clients, visibleServiceGroups, visibleServices } from "@/content";
 import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/ui/page-hero";
 import { Section } from "@/components/ui/section";
@@ -13,14 +13,14 @@ export const ServicesView = () => (
       title="Everything your e-commerce brand needs to grow"
       lead="Amazon at the core — with email and SEO to keep customers coming back."
     />
-    {serviceGroups.map((group) => (
+    {visibleServiceGroups.map((group) => (
       <Section key={group.id} labelledBy={`group-${group.id}`} className="!py-12 md:!py-16">
         <Container>
           <h2 id={`group-${group.id}`} className="font-display text-display-sm font-semibold leading-title tracking-title text-fg">
             {group.label}
           </h2>
           <ul className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {services
+            {visibleServices
               .filter((s) => s.group === group.id)
               .map((s) => (
                 <li key={s.slug}>

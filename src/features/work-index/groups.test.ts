@@ -5,8 +5,8 @@ import { WORK_GROUPS, inGroup, type WorkGroup } from "./groups";
 const slugsIn = (g: WorkGroup) => caseStudies.filter((c) => inGroup(c.services, g)).map((c) => c.slug);
 
 describe("work groups", () => {
-  it("lists All first, then the four service groups", () => {
-    expect(WORK_GROUPS.map((g) => g.id)).toEqual(["all", "amazon", "retention"]);
+  it("lists All first, then the visible service groups (Retention & SEO hidden)", () => {
+    expect(WORK_GROUPS.map((g) => g.id)).toEqual(["all", "amazon"]);
   });
   it("puts every case study in All", () => {
     expect(slugsIn("all")).toEqual(caseStudies.map((c) => c.slug));

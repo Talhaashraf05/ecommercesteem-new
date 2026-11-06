@@ -82,6 +82,8 @@ export const ServiceSchema = z.object({
   faq: z.array(z.object({ q: z.string(), a: z.string() })).min(3),
   pricingGroup: z.enum(PRICING_GROUPS),
   pdf: z.string().startsWith("/files/").optional(),
+  /** Keep the service in the content (detail page, pricing) but drop it from nav + listings. */
+  hidden: z.boolean().optional(),
 });
 
 export const PricingTierSchema = z.object({
@@ -151,6 +153,10 @@ export const TimelineItemSchema = z.object({
   year: z.string(),
   title: z.string(),
   body: z.string().max(140),
+  /** Map waypoint for the scroll journey: a place label and its lon/lat (degrees). */
+  place: z.string(),
+  lon: z.number().min(-180).max(180),
+  lat: z.number().min(-90).max(90),
   verified: z.boolean(),
 });
 

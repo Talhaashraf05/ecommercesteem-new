@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowIcon } from "./icons";
+import { useRef } from "react";
+import { HoverArrow } from "./hover-arrow";
 
 export type ButtonVariant = "primary" | "secondary" | "ghost";
 type Variant = ButtonVariant;
@@ -30,15 +33,17 @@ export interface ButtonLinkProps {
 
 export const ButtonLink = ({ href, children, variant = "primary", size = "md", withArrow, external, className = "" }: ButtonLinkProps) => {
   const cls = `${buttonClasses(variant, size)} ${className}`;
+  // Owns the arrow's hover trigger so the arrow animates on any part of the button.
+  const ref = useRef<HTMLAnchorElement>(null);
   const inner = (
     <>
       {children}
-      {withArrow && <ArrowIcon className="size-3.5" aria-hidden="true" />}
+      {withArrow && <HoverArrow className="size-3.5" trigger={ref} />}
     </>
   );
   return external ? (
-    <a href={href} className={cls} target="_blank" rel="noopener noreferrer">{inner}</a>
+    <a href={href} className={cls} target="_blank" rel="noopener noreferrer" ref={ref}>{inner}</a>
   ) : (
-    <Link href={href} className={cls}>{inner}</Link>
+    <Link href={href} className={cls} ref={ref}>{inner}</Link>
   );
 };

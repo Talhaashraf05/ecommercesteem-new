@@ -1,6 +1,7 @@
 import { Container } from "./container";
 import { CountUp } from "./count-up";
 import { Eyebrow } from "./eyebrow";
+import { ScrollCue } from "./scroll-cue";
 
 export interface CinematicHeroStat {
   value: string;
@@ -63,5 +64,6 @@ export const CinematicHero = ({ eyebrow, title, lead, actions, stats, scene, siz
         )}
       </div>
     </Container>
+    <ScrollCue />
   </header>
 );

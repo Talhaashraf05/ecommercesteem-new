@@ -191,7 +191,8 @@ const PortfolioStackInner = ({ heading, items, priority = false }: PortfolioStac
                   src={item.image}
                   alt={item.client}
                   fill
-                  sizes="(max-width: 768px) 90vw, 736px"
+                  sizes="(max-width: 768px) 92vw, 62rem"
+                  quality={90}
                   priority={priority && i === 0}
                   className="object-cover"
                 />

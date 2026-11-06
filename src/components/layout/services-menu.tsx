@@ -81,15 +81,24 @@ export const ServicesMenu = ({ groups }: { groups: ServiceNavGroup[] }) => {
         onClick={(e) => {
           if ((e.target as Element).closest("a")) setOpen(false);
         }}
-        className="absolute inset-x-0 top-full mx-auto w-[min(56rem,calc(100%-2*var(--spacing-gutter)))] pt-3"
+        style={{
+          // Width tracks the number of visible groups (~20rem each) plus the
+          // 20rem audit card, so the panel stays tight instead of stretching.
+          width: `min(${20 * groups.length + 22}rem, calc(100% - 2 * var(--spacing-gutter)))`,
+        }}
+        className="absolute inset-x-0 top-full mx-auto pt-3"
       >
         <animated.div
           style={{
             opacity: spring.opacity,
             transform: spring.y.to((v) => `translateY(${v}px)`),
             visibility: spring.opacity.to((o) => (o > 0 ? "visible" : "hidden")),
+            // One flex column per visible group, then a roomy audit card pinned
+            // to the right — wide enough to keep its copy short, so the panel
+            // stays compact whether one or many groups show.
+            gridTemplateColumns: `repeat(${groups.length}, minmax(0,1fr)) 20rem`,
           }}
-          className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_16rem] gap-2 rounded-3xl border border-line bg-surface/95 p-3 shadow-card backdrop-blur-xl"
+          className="grid gap-2 rounded-3xl border border-line bg-surface/95 p-3 shadow-card backdrop-blur-xl"
         >
           {groups.map((g) => (
             <div key={g.id} className="min-w-0">

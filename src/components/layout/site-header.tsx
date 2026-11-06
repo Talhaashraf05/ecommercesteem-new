@@ -18,7 +18,7 @@ export const SiteHeader = () => (
       <Logo />
       <nav
         aria-label="Primary"
-        className="hidden items-center gap-1 rounded-full p-1.5 lg:flex"
+        className="hidden items-center gap-0.5 rounded-full p-1 lg:flex"
       >
         <ServicesMenu groups={serviceNav} />
         <NavLink href="/work">Work</NavLink>

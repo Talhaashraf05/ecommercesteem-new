@@ -18,7 +18,7 @@ const RUN_SLUGS = ["amazon-account-management", "amazon-ppc", "email-marketing",
 
 const copy = {
   hero: {
-    eyebrow: "E-commerce growth agency",
+    eyebrow: "Amazon growth agency",
     title: "Build. Grow. Scale.",
     subtitle: "We run Amazon, email and SEO for e-commerce brands — as one growth engine.",
   },

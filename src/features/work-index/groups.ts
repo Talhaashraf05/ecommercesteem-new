@@ -6,7 +6,8 @@ export type WorkGroup = "all" | "amazon" | "retention";
 export const WORK_GROUPS: { id: WorkGroup; label: string }[] = [
   { id: "all", label: "All" },
   { id: "amazon", label: "Amazon" },
-  { id: "retention", label: "Retention & SEO" },
+  // Retention & SEO filter hidden for now; its studies still appear under "All".
+  // { id: "retention", label: "Retention & SEO" },
 ];
 
 const MAP: Record<ServiceSlug, Exclude<WorkGroup, "all">> = {
